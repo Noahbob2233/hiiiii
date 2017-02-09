@@ -149,14 +149,14 @@ function redraw()
 
 	// draw the path
 	console.log('Current path length: '+currentPath.length);
-	for (rp=0; rp<currentPath.length; rp++)
+	for (rp=0; rp<6; rp++)
 	{
 		switch(rp)
 		{
 		case 0:
 			spriteNum = 2; // start
 			break;
-		case currentPath.length-1:
+		case 6-1:
 			spriteNum = 3; // end
 			break;
 		default:
@@ -216,7 +216,12 @@ function canvasMove(e)
 }
 
 function canvasClick(e) {
-	pathStart = pathEnd;
+	if(currentPath.length<6) {
+		pathStart = pathEnd;
+	}
+	else {
+		pathStart = currentPath[5];
+	}
 }
 // world is a 2d array of integers (eg world[10][15] = 0)
 // pathStart and pathEnd are arrays like [5,10]

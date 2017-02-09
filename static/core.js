@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 	//Function to create the hero
 	var newHero = function(spec) {
-		var spec = spec || {};
+		spec = spec || {};
 		var imgPath = 'static/img/';
-		var img = spec.img || 'hero.png'
+		var img = spec.img || 'hero.png';
 		var imgW = spec.imgW || 128;
 		var imgH = spec.imgH || 208;
 		var width = imgW/4+'px';
@@ -39,22 +39,28 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 	//Adding the hero to the desired cell
 	var zack = newHero();
-	var cell = document.getElementById('72');
-	cell.appendChild(zack);
+	var cell;
+	/*var cell = document.getElementById('72');
+	cell.appendChild(zack);*/
 
 	//Moving the hero
 	table.onmousedown = function(e) {
 		var t = e.target || e.srcElement;
 		if(t.nodeName == 'TD' || t.id == 'hero') {
-			if(t.id == cell.id || t.id == 'hero') {
-				cell.style.backgroundColor = 'blue';
+			if(!cell) {
+				t.appendChild(zack);
+				cell = t;
+			}
+			else if(t.id == cell.id || t.id == 'hero') {
+				if(!cell.style.backgroundColor) cell.style.backgroundColor = 'blue';
+				else if(cell.style.backgroundColor) cell.removeAttribute('style');
 			}
 			else {
 				t.appendChild(zack);
-				cell.style.backgroundColor = 'white';
+				cell.removeAttribute('style');
 				cell = t;
 			}
 		}
-	}
+	};
 
 });

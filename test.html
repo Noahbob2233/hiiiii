@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Document</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	</head>
+	<body>
+		<form action="" method="GET">
+			<select name="apis" id="apis">
+				<option value="http://api.adrianarbosnavas.com;nacimientos;entero">Adrian</option>
+				<option value="birth">Daniel</option>
+				<option value="naixements">Marc</option>
+				<option value="http://api.heasheartfire.com;barri;string">Guillemmmmm</option>
+			</select>
+			<!-- <input id="any" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>Inserta un año </input> -->
+			<input id="data" type="text">Inserta un barrio</input>
+			<button id="button">boton</button>
+		</form>
+		<div id="info"></div>
+		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				var total, espanyols, estrangers, mixtes;
+				
+				$("#button").click(function(event) {
+					event.preventDefault();
+					var resultado = $("#apis").val().split(";");
+					//console.log(resultado[0]+"/api/"+resultado[1]+"/"+$("#data").val()+'?callback=?');
+					$.getJSON(resultado[0]+"/api/"+resultado[1]+"/"+$("#data").val()+'?callback=?', function(result){
+						//alert(JSON.stringify(result));
+						$.each(result, function(i, field){
+							//$("#info").append(field['total'] + " ");
+							total = parseInt(field.total);
+							espanyols = parseInt(field.espanyols);
+							estrangers = parseInt(field.estrangers);
+							mixtes = parseInt(field.mixtes);
+							Highcharts.chart('container', {
+							    chart: {
+							        type: 'column'
+							    },
+							    title: {
+							        text: 'Monthly Average Rainfall'
+							    },
+							    subtitle: {
+							        text: 'Source: WorldClimate.com'
+							    },
+							    xAxis: {
+							        categories: [
+							            field.barri
+							        ],
+							        crosshair: true
+							    },
+							    yAxis: {
+							        min: 0,
+							        title: {
+							            text: 'Rainfall (mm)'
+							        }
+							    },
+							    tooltip: {
+							        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+							        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+							            '<td style="padding:0"><b>{point.y:.1f} viviendas</b></td></tr>',
+							        footerFormat: '</table>',
+							        shared: true,
+							        useHTML: true
+							    },
+							    plotOptions: {
+							        column: {
+							            pointPadding: 0.2,
+							            borderWidth: 0
+							        }
+							    },
+							    series: [{
+							        name: 'Espanyols',
+							        data: [espanyols]
+							    },{
+							        name: 'Estrangers',
+							        data: [estrangers]
+							    },{
+							        name: 'Mixtes',
+							        data: [mixtes]
+							    },{
+							        name: 'Total',
+							        data: [total]
+							    }]
+							});
+						});
+					});
+				});
+			});
+		</script>
+	</body>
+</html>

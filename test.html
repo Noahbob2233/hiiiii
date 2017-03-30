@@ -8,23 +8,57 @@
 		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 	</head>
 	<body>
-		<form action="" method="GET">
-			<select name="apis" id="apis">
-				<option value="http://api.adrianarbosnavas.com;nacimientos;entero">Adrian</option>
-				<option value="birth">Daniel</option>
-				<option value="naixements">Marc</option>
-				<option value="http://api.heasheartfire.com;barri;string">Guillemmmmm</option>
-			</select>
-			<!-- <input id="any" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>Inserta un año </input> -->
-			<input id="data" type="text">Inserta un barrio</input>
-			<button id="button">boton</button>
-		</form>
-		<div id="info"></div>
+		<select name="apis" id="apis">
+			<option value="http://api.heasheartfire.com;districte;entero">Distrito</option>
+			<option value="http://api.heasheartfire.com;barri;string">Barrio</option>
+		</select>
+		<!-- <input id="any" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>Inserta un año </input> -->
+		<input id="data" type="text">Inserta un barrio</input>
+		<button id="button">boton</button>
+		<div id="filters"></div>
 		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 		<script type="text/javascript">
 			$(document).ready(function(){
-				var total, espanyols, estrangers, mixtes;
+				var total = [], espanyols = [], estrangers = [], mixtes = [], columnes = [];
+				var chart = Highcharts.chart('container', {
+				    chart: {
+				        type: 'column'
+				    },
+				    title: {
+				        text: 'Cantidad de viviendas por nacionalidad'
+				    },
+				    subtitle: {
+				        text: 'Filtro por barrio'
+				    },
+				    xAxis: {
+				        categories: [
+				            columnes,
+				        ],
+				        crosshair: true
+				    },
+				    yAxis: {
+				        min: 0,
+				        title: {
+				            text: 'Viviendas'
+				        }
+				    },
+				    tooltip: {
+				        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+				            '<td style="padding:0"><b>{point.y} viviendas</b></td></tr>',
+				        footerFormat: '</table>',
+				        shared: false,
+				        useHTML: true
+				    },
+				    plotOptions: {
+				        column: {
+				            pointPadding: 0.2,
+				            borderWidth: 0
+				        }
+				    },
+				    series: [{name:'Espanyols',data:[0]},{name:'Estrangers',data:[0]},{name:'Mixtes',data:[0]},{name:'Total',data:[0]}]
+				});
 				
 				$("#button").click(function(event) {
 					event.preventDefault();
@@ -34,61 +68,50 @@
 						//alert(JSON.stringify(result));
 						$.each(result, function(i, field){
 							//$("#info").append(field['total'] + " ");
-							total = parseInt(field.total);
-							espanyols = parseInt(field.espanyols);
-							estrangers = parseInt(field.estrangers);
-							mixtes = parseInt(field.mixtes);
-							Highcharts.chart('container', {
-							    chart: {
-							        type: 'column'
-							    },
-							    title: {
-							        text: 'Monthly Average Rainfall'
-							    },
-							    subtitle: {
-							        text: 'Source: WorldClimate.com'
-							    },
-							    xAxis: {
-							        categories: [
-							            field.barri
-							        ],
-							        crosshair: true
-							    },
-							    yAxis: {
-							        min: 0,
-							        title: {
-							            text: 'Rainfall (mm)'
-							        }
-							    },
-							    tooltip: {
-							        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-							        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-							            '<td style="padding:0"><b>{point.y:.1f} viviendas</b></td></tr>',
-							        footerFormat: '</table>',
-							        shared: true,
-							        useHTML: true
-							    },
-							    plotOptions: {
-							        column: {
-							            pointPadding: 0.2,
-							            borderWidth: 0
-							        }
-							    },
-							    series: [{
-							        name: 'Espanyols',
-							        data: [espanyols]
-							    },{
-							        name: 'Estrangers',
-							        data: [estrangers]
-							    },{
-							        name: 'Mixtes',
-							        data: [mixtes]
-							    },{
-							        name: 'Total',
-							        data: [total]
-							    }]
-							});
+							total.push(parseInt(field.total));
+							espanyols.push(parseInt(field.espanyols));
+							estrangers.push(parseInt(field.estrangers));
+							mixtes.push(parseInt(field.mixtes));
+							columnes.push(field.barri);
+							// chart.series[0].setData(espanyols,true, true);
+							// chart.series[1].setData(estrangers,true, true);
+						 	// chart.series[2].setData(mixtes,true, true);
+						 	// chart.series[3].setData(total,true, true);
+						    // var filter = $(document.createElement('button'));
+						    // filter.addClass('filter');
+						    // filter.text(field.barri);
+						    // $('#filters').append(filter);
+						    /*filter.click(function(event) {
+						    	var temp = [], temp1 = [], temp2 = [], temp3 = [], temp4 = [];
+								for(var i=0; i<chart.xAxis[0].categories.length; i++) {
+									if(chart.xAxis[0].categories[i] != filter.html()) {
+										temp.push(chart.xAxis[0].categories[i]);
+										temp1.push(chart.series[0].data[i]);
+										temp2.push(chart.series[1].data[i]);
+										temp3.push(chart.series[2].data[i]);
+										temp4.push(chart.series[3].data[i]);
+									}
+								}
+								columnes = temp;
+								espanyols = temp1;
+								estrangers = temp2;
+								mixtes = temp3;
+								total = temp4;
+								chart.xAxis[0].setCategories(columnes,true,true);
+								chart.series[0].setData(espanyols,true,true);
+								chart.series[1].setData(estrangers,true,true);
+							    chart.series[2].setData(mixtes,true,true);
+							    chart.series[3].setData(total,true,true);
+								filter.remove();
+							});*/
 						});
+						chart.xAxis[0].update({categories: columnes}, false);
+						while(chart.series.length > 0) chart.series[0].remove(false);
+						chart.addSeries({name: 'Espanyols', data: espanyols});
+						chart.addSeries({name: 'Estrangers', data: estrangers});
+						chart.addSeries({name: 'Mixtes', data: mixtes});
+						chart.addSeries({name: 'Total', data: total});
+						chart.redraw();
 					});
 				});
 			});

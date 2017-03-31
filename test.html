@@ -6,6 +6,8 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script src="https://code.highcharts.com/highcharts.js"></script>
 		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 	</head>
 	<body>
 		<select name="apis" id="apis">
@@ -13,13 +15,45 @@
 			<option value="http://api.heasheartfire.com;barri;string">Barrio</option>
 		</select>
 		<!-- <input id="any" type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>Inserta un año </input> -->
-		<input id="data" type="text">Inserta un barrio</input>
+		<select name="data" id="data" multiple="multiple">
+		</select>
+		<!-- <input id="data" type="text">Inserta un barrio</input> -->
 		<button id="button">boton</button>
 		<div id="filters"></div>
 		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 		<script type="text/javascript">
 			$(document).ready(function(){
+				var apis = $('#apis');
+				apis.select2();
+				var data = $('#data');
+				function options() {
+					var temp = apis.val().split(';');
+					data.empty();
+					$.getJSON("http://api.heasheartfire.com/api/barris?callback=?", function(result){
+						//alert(JSON.stringify(result));
+						console.log(temp);
+						if(temp[1] == 'districte') {
+							$.each(result, function(i, field){
+								var option = $(document.createElement('option'));
+								option.val(field.districte);
+								option.text(field.districte);
+								data.append(option);
+							});
+						}
+						else if(temp[1] == 'barri') {
+							$.each(result, function(i, field){
+								var option = $(document.createElement('option'));
+								option.val(field.barri);
+								option.text(field.barri);
+								data.append(option);
+							});	
+						}
+						data.select2();
+					});
+				}
+				options();
+				
 				var total = [], espanyols = [], estrangers = [], mixtes = [], columnes = [];
 				var chart = Highcharts.chart('container', {
 				    chart: {
@@ -59,7 +93,7 @@
 				    },
 				    series: [{name:'Espanyols',data:[0]},{name:'Estrangers',data:[0]},{name:'Mixtes',data:[0]},{name:'Total',data:[0]}]
 				});
-				
+				apis.change(options);
 				$("#button").click(function(event) {
 					event.preventDefault();
 					var resultado = $("#apis").val().split(";");
@@ -67,7 +101,6 @@
 					$.getJSON(resultado[0]+"/api/"+resultado[1]+"/"+$("#data").val()+'?callback=?', function(result){
 						//alert(JSON.stringify(result));
 						$.each(result, function(i, field){
-							//$("#info").append(field['total'] + " ");
 							total.push(parseInt(field.total));
 							espanyols.push(parseInt(field.espanyols));
 							estrangers.push(parseInt(field.estrangers));

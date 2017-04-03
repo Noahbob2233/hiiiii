@@ -30,26 +30,18 @@
 				function options() {
 					var temp = apis.val().split(';');
 					data.empty();
-					$.getJSON("http://api.heasheartfire.com/api/barris?callback=?", function(result){
+					$.getJSON("http://api.heasheartfire.com/api/"+temp[1]+"?callback=?", function(result){
 						//alert(JSON.stringify(result));
 						console.log(temp);
-						if(temp[1] == 'districte') {
-							$.each(result, function(i, field){
-								var option = $(document.createElement('option'));
-								option.val(field.districte);
-								option.text(field.districte);
-								data.append(option);
-							});
-						}
-						else if(temp[1] == 'barri') {
-							$.each(result, function(i, field){
-								var option = $(document.createElement('option'));
-								option.val(field.barri);
-								option.text(field.barri);
-								data.append(option);
-							});	
-						}
-						data.select2();
+						$.each(result, function(i, field){
+							var option = $(document.createElement('option'));
+							option.val(field[temp[1]]);
+							option.text(field[temp[1]]);
+							data.append(option);
+						});
+						data.select2({placeholder: 'Selecciona una opción', dropdownAutoWidth: 'true', width: 'auto'});
+						$('.select2-container').last().css('min-width', '260px');
+						$('.select2-search__field').last().css('min-width', '165px');
 					});
 				}
 				options();

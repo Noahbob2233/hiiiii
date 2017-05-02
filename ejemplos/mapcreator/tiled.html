@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 <script src="canvasengine-1.3.2.all.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+<script src="Tiled.js"></script>
+<script src="socket.io.min.js"></script>
 
 <script>
+    CE.connectServer('http://127.0.0.1', 8333);
     var canvas = CE.defines("canvas_id").
+    extend(Tiled).
     ready(function() {
         canvas.Scene.call("Scene_Map");
     });
@@ -21,14 +25,18 @@
         load: function(data) {
 
             var tiled = canvas.Tiled.New();
+            var tiled = canvas.Tiled.New(), 
+                stage = this.getStage(),
+                _canvas = this.getCanvas(),
+                map = this.createElement();
 
             tiled.ready(function() {
-             var tile_w = this.getTileWidth(),
-                 tile_h = this.getTileHeight(),
-                 layer_object = this.getLayerObject();
+                map.pack(this.getWidthPixel(), this.getHeightPixel());
             });
 
-            tiled.load(this, this.getStage(), data);
+            tiled.load(this, map, data);
+
+            stage.append(map);
 
         }
 
@@ -37,7 +45,7 @@
 </script>
 </head>
  <body>
-    <canvas id="canvas" width="675px" height="506px"></canvas>
+    <canvas id="canvas_id" width="675px" height="506px"></canvas>
  </body>
 </html>
 

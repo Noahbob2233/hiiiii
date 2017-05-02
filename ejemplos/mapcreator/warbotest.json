@@ -23,7 +23,7 @@
          "imageheight":32,
          "imagewidth":160,
          "margin":0,
-         "name":"spritesheet",
+         "name":"tileset",
          "spacing":0,
          "tilecount":5,
          "tileheight":32,

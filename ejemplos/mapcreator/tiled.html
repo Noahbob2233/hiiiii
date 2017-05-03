@@ -1,55 +1,84 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<script src="canvasengine-1.3.2.all.min.js"></script>
-<script src="Tiled.js"></script>
-<script src="socket.io.min.js"></script>
+	<meta charset="utf-8">
+	<script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+	<script src="canvasengine-1.3.2.all.min.js"></script>
+	<script src="Tiled.js"></script>
+	<script src="Input.js"></script>
+	<script src="socket.io.min.js"></script>
+	<script>
+	function getMousePos(canvas, evt) {
+	    var rect = canvas.getBoundingClientRect();
+	    return {
+	      x: evt.clientX - rect.left,
+	      y: evt.clientY - rect.top
+	    };
+	}
 
-<script>
-    CE.connectServer('http://127.0.0.1', 8333);
-    var canvas = CE.defines("canvas_id").
-    extend(Tiled).
-    ready(function() {
-        canvas.Scene.call("Scene_Map");
-    });
+	CE.connectServer('http://127.0.0.1', 8333);
+	var canvas = CE.defines("canvas_id").
+	extend(Spritesheet).
+	extend(Input).
+	extend(Tiled).
+	ready(function() {
+		canvas.Scene.call("Scene_Map");
+	});
 
-    canvas.Scene.New({
-        name: "Scene_Map",
-        events: ["load"],
-        materials: {
-            images: {
-                tileset: "spritesheet.png",
-                player: "hero.png"
-            }
-        },
-        ready: function(stage) {
-            this.element = this.createElement();
-            this.element.drawImage("player");
-            stage.append(this.element);
-        },
-        load: function(data) {
+	canvas.Scene.New({
+		name: "Scene_Map",
+		events: ["load"],
+		materials: {
+			images: {
+				tileset: "spritesheet.png",
+				player: "hero.png"
+			}
+		},
+		ready: function(stage) {
+			var player = this.createElement('player');
+			var spritesheet = canvas.Spritesheet.new("player", {
 
-            var tiled = canvas.Tiled.New(), 
-                stage = this.getStage(),
-                _canvas = this.getCanvas(),
-                map = this.createElement();
+				grid: [{
+					size: [4, 4],
+					tile: [32, 52],
+					set: ["play", "player_hover", "zoom_p", "zoom_m"]
+				}],
+				// btn_play: [433, 33, 215, 188]
 
-            tiled.ready(function() {
-                map.pack(this.getWidthPixel(), this.getHeightPixel());
-            });
+			});
+			spritesheet.draw(player, "play");
+			stage.append(player);
+			
+		},
+		load: function(data) {
 
-            tiled.load(this, map, data);
+			var tiled = canvas.Tiled.New(),
+				stage = this.getStage(),
+				_canvas = this.getCanvas(),
+				map = this.createElement();
 
-            stage.append(map);
-        }
+			tiled.ready(function() {
+				map.pack(this.getWidthPixel(), this.getHeightPixel());
+			});
 
-    });
+			tiled.load(this, map, data);
 
-</script>
+			stage.append(map);
+		},
+		render: function(stage) {
+			stage.refresh();
+		}
+
+	});
+	</script>
 </head>
- <body>
-    <canvas id="canvas_id" width="675px" height="506px"></canvas>
- </body>
-</html>
 
+<body>
+	<canvas id="canvas_id" width="675px" height="506px"></canvas>
+</body>
+
+</html>

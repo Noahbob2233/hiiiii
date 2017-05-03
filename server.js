@@ -2,7 +2,7 @@ const express = require('express');
 const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const app = express();
-var ZeldaTable = require('./ZeldaTable.js');
+var db = require('./DDBB/db.js');
 var session = require('express-session');
 // Set view engine
 app.set('view engine', 'html');
@@ -51,72 +51,7 @@ app.all('/armas-melee', function(req, res){
 	var damdef = req.body.damdef || "";
 	var durability = req.body.durability || "";
 
-	var query = {$and:[{"name": {$regex : ".*"+nombre+".*", "$options" : "i"}},{"damage":{$regex : ".*"+ damdef+".*"}},{"durability": {$regex : ".*"+ durability+".*"}}]};
-
-	var valores = {"name":nombre,"damdef":damdef,"durability":durability};
-	
-	ZeldaTable.Select();
-});
-app.all('/armas-range', function(req, res) {
-	sess = req.session;
-
-	var nombre = req.body.name || "";
-	var damdef = req.body.damdef || "";
-	var durability = req.body.durability || "";
-
-	var query = {$and:[{"name": {$regex : ".*"+nombre+".*", "$options" : "i"}},{"damage":{$regex : ".*"+ damdef+".*"}},{"durability": {$regex : ".*"+ durability+".*"}}]};
-
-	var valores = {"name":nombre,"damdef":damdef,"durability":durability};
-
-	ZeldaTable.Select('ArmasRange', query).then(function(items) {
-		ZeldaTable.Select('Comentarios', {}).then(function(comments) {
-			res.render('armasrange.html', {
-				items : items,
-				comments: comments,
-				valores: valores,
-				sess: sess 
-			});
-			}, function(err) {
-				res.render('index.html', { 
-					title : 'prueba'
-				});
-		});
-	}, function(err) {
-		res.render('index.html', {
-			title : 'prueba'
-		});
-	});
-});
-
-app.all('/escudos', function(req, res) {
-	sess = req.session;
-	
-	var nombre = req.body.name || "";
-	var damdef = req.body.damdef || "";
-	var durability = req.body.durability || "";
-
-	var query = {$and:[{"name": {$regex : ".*"+nombre+".*", "$options" : "i"}},{"defense":{$regex : ".*"+ damdef+".*"}},{"durability": {$regex : ".*"+ durability+".*"}}]};
-
-	var valores = {"name":nombre,"damdef":damdef,"durability":durability};
-
-	ZeldaTable.Select('Escudos', query).then(function(items) {
-		ZeldaTable.Select('Comentarios', {}).then(function(comments) {
-			res.render('escudos.html', {
-				items : items,
-				comments: comments,
-				valores: valores,
-				sess: sess 
-			});
-			}, function(err) {
-				res.render('index.html', { 
-					title : 'prueba'
-				});
-		});
-	}, function(err) {
-		res.render('index.html', {
-			title : 'prueba'
-		});
-	});
+	db.Select();
 });
 
 app.post('/insertcomment', function(req, res){
@@ -124,7 +59,7 @@ app.post('/insertcomment', function(req, res){
 	var msg = req.body.message || "Mensaje eliminado por moderación";
 	var query = {"user": sess.user, "img": sess.img, "date": new Date(Date.now()).toLocaleDateString(), "message": msg};
 	var page = req.body.url;
-	ZeldaTable.Insert('Comentarios', query).then(function() {
+	ZeldaTabl.Insert('Comentarios', query).then(function() {
 		res.redirect(page);
 	}, function(err) {
 		res.render('index.html', {
@@ -156,36 +91,29 @@ app.post('/login', function(req, res){
 });
 
 app.post('/signup', function(req, res){
-	var num = Math.floor(Math.random() * (5)) + 1;
 
 	var user = req.body.username || "";
 	var pass = req.body.password || "";
 
-	var query = {"user": user, "password": pass, "img": "/static/img/Usuarios/"+num+".png"};
-	var query2 = {"user": user};
+	var query_select = "SELECT name FROM users WHERE name=?";
+	var query_select_var = [user];
+	var query_insert = "INSERT INTO users VALUES (?,?)";
+	var query_insert_var = [user, pass];
+
 	sess = req.session;
 	var page = req.body.url;
-	ZeldaTable.Select('Usuarios', query2).then(function(items) {
-
-		if(typeof items[0] == 'undefined'){
-			ZeldaTable.Insert('Usuarios', query).then(function() {
-				res.redirect(page);
-			}, function(err) {
-				res.render('index.html', {
-					title : 'prueba'
-				});
+	db.Select(query_select, query_select_var).then(function(result){
+		if(typeof result[0] != 'undefined'){	console.log('server: '+result[0].name);}
+		else{ 
+			console.log('Puedes crear el usuario'); 
+			db.Insert(query_insert, query_insert_var).then(function(){
+				console.log('usuario añadido correctamente');
 			});
-			res.redirect(page);
-		}else{
-			res.redirect(page);
 		}
 
+	});//.catch((err) => setImmediate(() => { throw err; }));
 
-	}, function(err) {
-		res.render('index.html', {
-			title : 'prueba'
-		});
-	});
+	res.redirect(page);
 });
 
 app.post('/logout', function(req, res){

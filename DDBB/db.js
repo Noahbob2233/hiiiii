@@ -13,9 +13,9 @@ connection.connect();
 module.exports = {
   Select: function(query_str, query_var) {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       connection.query(query_str, query_var, function (error, results) {
-        if (error) throw reject(error);
+        if (error) console.log(error);
         resolve(results);
       });
     });
@@ -23,11 +23,11 @@ module.exports = {
   },
   Insert: function(query_str, query_var) {
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function(resolve) {
       connection.query(query_str, query_var, function (error) {
-        if (error) throw reject(error);
+        if (error) console.log(error);
         resolve();
       });
     });
   }
-}
+};

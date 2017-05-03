@@ -97,7 +97,7 @@ app.post('/signup', function(req, res){
 
 	var query_select = "SELECT name FROM users WHERE name=?";
 	var query_select_var = [user];
-	var query_insert = "INSERT INTO users VALUES (?,?)";
+	var query_insert = "INSERT INTO users (name, password) VALUES (?,?)";
 	var query_insert_var = [user, pass];
 
 	sess = req.session;
@@ -108,10 +108,11 @@ app.post('/signup', function(req, res){
 			console.log('Puedes crear el usuario'); 
 			db.Insert(query_insert, query_insert_var).then(function(){
 				console.log('usuario añadido correctamente');
+				//redirigir a inicio con un valor para saber que el registro se ha completado
 			});
 		}
 
-	});//.catch((err) => setImmediate(() => { throw err; }));
+	}).catch((err) => setImmediate(() => { console.log(err); }));
 
 	res.redirect(page);
 });

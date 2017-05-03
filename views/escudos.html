@@ -1,0 +1,21 @@
+{% extends "layouts/armas.master.html" %}
+{% set url = '/escudos' %}
+{% set heading = 'Escudos' %}
+{% block card %}
+	<div class="row">
+		<div class="col-12 col-sm-6 col-md-6 col-lg-12 col-xl-6">
+			<p class="card-text"><span>Defensa:</span><br>{{item.defense}}</p>
+		</div>
+		<div class="col-12 col-sm-6 col-md-6 col-lg-12 col-xl-6">
+			<p class="card-text"><span>Durabilidad:</span><br>{{item.durability}}</p>
+		</div>
+	</div>
+	<p class="card-text">
+		<span>Localización:</span>
+		<ul>
+			{% for loc in item.location %}
+				<li>{{loc}}</li>
+			{% endfor %}
+		</ul>
+	</p>
+{% endblock %}

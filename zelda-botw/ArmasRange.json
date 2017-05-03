@@ -1,0 +1,292 @@
+[	
+	{
+		"name"		: "Arco de madera",
+		"damage"	: "4",
+		"durability": "20",
+		"range"		: "20",
+		"location"  : [
+						"Llanura de Hyrule",
+						"Necluda occidental"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_madera.png"
+	},
+	{
+		"name"		: "Arco de viajero",
+		"damage"	: "5",
+		"durability": "22",
+		"range"		: "20",
+		"location"  : [
+						"Llanura de Hyrule",
+						"Necluda occidental"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_viajero.png"
+	},
+	{
+		"name"		: "Arco de soldado",
+		"damage"	: "14",
+		"durability": "36",
+		"range"		: "20",
+		"location"  : [
+						"Llanura de Hyrule",
+						"Pradera de Farone"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_soldado.png"
+	},
+	{
+		"name"		: "Arco de caballero",
+		"damage"	: "26",
+		"durability": "48",
+		"range"		: "20",
+		"location"  : [
+						"Desierto de Gerudo",
+						"Confines de Tabanta"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_caballero.png"
+	},
+	{
+		"name"		: "Arco real",
+		"damage"	: "38",
+		"durability": "60",
+		"range"		: "20",
+		"location"  : [
+						"Confines de Tabanta",
+						"Cordillera de Hebra"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_real.png"
+	},
+	{
+		"name"		: "Arco del bosque",
+		"damage"	: "15",
+		"durability": "35",
+		"range"		: "20",
+		"multishoot": "3",
+		"location"  : [
+						"Confines de Tabanta",
+						"Colina de Hyrule"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_del_bosque.png"
+	},
+	{
+		"name"		: "Arco zora",
+		"damage"	: "15",
+		"durability": "40",
+		"range"		: "20",
+		"location"  : [
+						"Manantial de Lanayru",
+						"Sierra de Akkala"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_zora.png"
+	},
+	{
+		"name"		: "Arco de golondrina",
+		"damage"	: "9",
+		"durability": "30",
+		"range"		: "40",
+		"location"  : [
+						"Confines de Tabanta",
+						"Cordillera de Hebra"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_golondrina.png"
+	},
+	{
+		"name"		: "Arco de halcón",
+		"damage"	: "20",
+		"durability": "50",
+		"range"		: "40",
+		"location"  : [
+						"Confines de Tabanta",
+						"Cordillera de Hebra"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_halcon.png"
+	},
+	{
+		"name"		: "Arco de águila",
+		"damage"	: "28",
+		"durability": "60",
+		"range"		: "40",
+		"multishoot": "3",
+		"special"	: "si se rompe Harth puede forjarlo de nuevo en el Poblado orni",
+		"location"  : [
+						"recompensa por superar la mazmorra bestia divina Vah Medoh"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_aguila.png"
+	},
+	{
+		"name"		: "Arco gerudo",
+		"damage"	: "14",
+		"durability": "60",
+		"range"		: "20",
+		"location"  : [
+						"Cordillera Gerudo",
+						"Desierto de Gerudo"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_gerudo.png"
+	},
+	{
+		"name"		: "Arco del vigilante",
+		"damage"	: "10",
+		"durability": "45",
+		"range"		: "40",
+		"location"  : [
+						"Necluda occidental",
+						"Necluda oriental"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_del_vigilante.png"
+	},
+	{
+		"name"		: "Arco ancestral",
+		"damage"	: "44",
+		"durability": "120",
+		"range"		: "40",
+		"location"  : [
+						"Laboratorio de Hatelia"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_ancestral.png"
+	},
+	{
+		"name"		: "Arco de la guardia",
+		"damage"	: "50",
+		"durability": "20",
+		"range"		: "30",
+		"location"  : [
+						"Castillo de Hyrule"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_la_guardia.png"
+	},
+	{
+		"name"		: "Arco del crepúsculo",
+		"damage"	: "30",
+		"durability": "100",
+		"range"		: "8000",
+		"location"  : [
+						"se desbloquea con el amiibo correspondiente"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_del_crepusculo.png"
+	},
+	{
+		"name"		: "Arco boko",
+		"damage"	: "4",
+		"durability": "16",
+		"range"		: "20",
+		"location"  : [
+						"Llanura de Hyrule",
+						"Necluda occidental"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_boko.png"
+	},
+	{
+		"name"		: "Arco boko punzante",
+		"damage"	: "12",
+		"durability": "20",
+		"range"		: "20",
+		"special"   : "disparo rápido",
+		"location"  : [
+						"Pradera de Farone",
+						"Necluda oriental"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_boko_punzante.png"
+	},
+	{
+		"name"		: "Arco boko de dragón",
+		"damage"	: "24",
+		"durability": "30",
+		"range"		: "20",
+		"special"	: "disparo rápido",
+		"location"  : [
+						"Llanura de Hyrule",
+						"Colinas de Hyrule"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_boko_de_dragon.png"
+	},
+	{
+		"name"		: "Arco lizal",
+		"damage"	: "14",
+		"durability": "25",
+		"range"		: "20",
+		"location"  : [
+						"Manantial de Lanayru",
+						"Pantano de Lanayru"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_lizal.png"
+	},
+	{
+		"name"		: "Arco lizal reforzado",
+		"damage"	: "25",
+		"durability": "35",
+		"range"		: "20",
+		"special"	: "disparo rápido",
+		"location"  : [
+						"Confines de Tabanta",
+						"Desierto de Gerudo"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_lizal_reforzado.png"
+	},
+	{
+		"name"		: "Arco lizal de acero",
+		"damage"	: "36",
+		"durability": "50",
+		"range"		: "20",
+		"special"	: "disparo rápido",
+		"location"  : [
+						"Cordillera  de Hebra",
+						"Sierra de Akkala"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_lizal_de_acero.png"
+	},
+	{
+		"name"		: "Arco de centaleón",
+		"damage"	: "10",
+		"durability": "30",
+		"range"		: "20",
+		"multishoot": "3",
+		"location"  : [
+						"se obtiene al derrotar centaleones"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_centaleon.png"
+	},
+	{
+		"name"		: "Arco bestial",
+		"damage"	: "20",
+		"durability": "35",
+		"range"		: "20",
+		"multishoot": "3",
+		"location"  : [
+						"se obtiene al derrotar centaleones"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_bestial.png"
+	},
+	{
+		"name"		: "Arco colosal",
+		"damage"	: "32",
+		"durability": "45",
+		"range"		: "20",
+		"multishoot": "3",
+		"special"	: "disparo rápido",
+		"location"  : [
+						"se obtiene al derrotar centaleones blancos y plateados"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_colosal.png"
+	},
+	{
+		"name"		: "Arco doble",
+		"damage"	: "14",
+		"durability": "18",
+		"range"		: "40",
+		"multishoot": "2",
+		"special"	: "disparo rápido",
+		"location"  : [
+						"se obtiene al derrotar a miembros del clan Yiga"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_doble.png"
+	},
+	{
+		"name"		: "Arco de luz",
+		"damage"	: "100",
+		"durability": "100",
+		"range"		: "500",
+		"location"  : [
+						"durante el combate contra el jefe final"
+						],
+		"img"		: "/static/img/ArmasRange/Arco_de_luz.png"
+	}
+]

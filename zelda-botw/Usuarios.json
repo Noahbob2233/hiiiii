@@ -1,0 +1,8 @@
+[	
+	{
+		"user"		: "admin",
+		"password"	: "admin1234",
+		"admin"		: "1",
+		"img"		:	"/static/img/Usuarios/admin.png"
+	}
+]

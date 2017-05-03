@@ -1,0 +1,26 @@
+{% extends "layouts/master.html" %}
+{% set url = '/' %}
+{% block content %}
+	<div id="header" class="container-fluid">
+		<img class="img-fluid" src="/static/img/header.jpg" alt="Header">
+	</div>
+	<div id="box" class="jumbotron">
+		<div id="index" class="container">
+			<h1>The Legend of Zelda</h1>
+			<h2>Breath of the wild</h2>
+			<div class="row">
+				<div class="col-md-4">
+					<img src="/static/img/objeto.png" alt="Objeto">
+				</div>
+				<div class="col-md-8">
+					<p>Nuestra página web está enfocada a mostrar información sobre varios objetos disponibles en BOTW, de modo que los usuarios puedan conocer la localización de varios de estos objetos que necesiten para superar ciertas adversidades o simplemente descubrir aquellos que todavía no conocen.</p>
+					<p>Sabemos que la cantidad de objetos que mostramos en cada página es demasiado grande como para mirar objeto por objeto y por ello hemos añadido la posibilidad de filtrar tanto por nombre, como por daño/defensa y por durabilidad.</p>
+					<p>De esta forma os será mucho más facil buscar los objetos que os interesan.</p>
+					<img class="pimg" src="/static/img/filtros.png" alt="Filtros">
+					<p>Por si no fuese suficiente, podréis dejar vuestros comentarios para preguntar cualquier duda que tengáis con simplemente abrir el panel correspondiente desde el botón que encontraréis en cada página, seguro que alguna otra persona os responderá sin problemas. Eso sí, necesitaréis registraros para poder comentar, aunque podréis ver los comentarios de todos modos sin iniciar sesión.</p>
+					<img class="original" src="/static/img/comentarios.png" alt="Comentarios">
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

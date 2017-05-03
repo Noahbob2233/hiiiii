@@ -19,12 +19,17 @@
         events: ["load"],
         materials: {
             images: {
-                tileset: "spritesheet.png"
+                tileset: "spritesheet.png",
+                player: "hero.png"
             }
+        },
+        ready: function(stage) {
+            this.element = this.createElement();
+            this.element.drawImage("player");
+            stage.append(this.element);
         },
         load: function(data) {
 
-            var tiled = canvas.Tiled.New();
             var tiled = canvas.Tiled.New(), 
                 stage = this.getStage(),
                 _canvas = this.getCanvas(),
@@ -37,7 +42,6 @@
             tiled.load(this, map, data);
 
             stage.append(map);
-
         }
 
     });

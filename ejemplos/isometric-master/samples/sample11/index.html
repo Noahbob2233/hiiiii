@@ -125,6 +125,7 @@ THE SOFTWARE.
 
         return {
           init: function(layers) {
+            console.log(layers);
             for (var i = 0; i < 0 + layers.length; i++) {
               mapLayers[i] = new TileField(context, CanvasControl().height, CanvasControl().width);
               mapLayers[i].setup(layers[i]);

@@ -1,9 +1,25 @@
+
+//NCESARIO PARA PRODUCCION
 const express = require('express');
 const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const app = express();
+
+//BASE D DATOS
 var db = require('./DDBB/db.js');
+
+//SESIONES
 var session = require('express-session');
+
+//ENCRIPTACION SHA256
+var sha256 = require('js-sha256');
+
+//SOCKETIO
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+io.on('connection', function(){ console.log("hola"); });
+server.listen(3000);
+
 // Set view engine
 app.set('view engine', 'html');
 var env = nunjucks.configure('views', {
@@ -34,66 +50,48 @@ app.listen(3000, function() {
 	console.log('http://127.0.0.1:3000');
 });
 
-app.get('/', function(req, res) {
-	sess = req.session;
-	res.render('index.html', {
-			title : 'prueba',
-				sess: sess 
-		});
-});
-
 var sess;
 
-app.all('/armas-melee', function(req, res){
-	sess = req.session;
+//INICIO
+// app.get('/', function(req, res) {
+// 	sess = req.session;
+// 	res.render('index.html', {
+// 			sess: sess 
+// 		});
+// 	delete sess.signup;
+// });
+//FIN INICIO
 
-	var nombre = req.body.name || "";
-	var damdef = req.body.damdef || "";
-	var durability = req.body.durability || "";
-
-	db.Select();
-});
-
-app.post('/insertcomment', function(req, res){
-	sess = req.session;
-	var msg = req.body.message || "Mensaje eliminado por moderación";
-	var query = {"user": sess.user, "img": sess.img, "date": new Date(Date.now()).toLocaleDateString(), "message": msg};
-	var page = req.body.url;
-	ZeldaTabl.Insert('Comentarios', query).then(function() {
-		res.redirect(page);
-	}, function(err) {
-		res.render('index.html', {
-			title : 'prueba'
-		});
-	});
-});
-
+//USUARIOS
+//LOGIN
 app.post('/login', function(req, res){
 	var user = req.body.username || "";
-	var pass = req.body.password || "";
+	var pass = sha256(req.body.password) || "";
 
-	var query = {"user": user, "password": pass};
+	var query_select = "SELECT name FROM users WHERE name=? AND password=?";
+	var query_select_var = [user,pass];
+
 	var page = req.body.url;
 	sess = req.session;
-	ZeldaTable.Select('Usuarios', query).then(function(items) {
-		if(typeof items[0] == 'undefined'){
+	
+	db.Select(query_select, query_select_var).then(function(result){
+		if(typeof result[0] != 'undefined'){
+			sess.user = user;
 			res.redirect(page);
-		}else{
-			sess.user = items[0].user;
-			sess.img = items[0].img;
+		}else{ 
+			sess.signup = "El Usuario no existe";
 			res.redirect(page);
 		}
-	}, function(err) {
-		res.render('index.html', {
-			title : 'prueba'
-		});
-	});
-});
 
+	}).catch((err) => setImmediate(() => { console.log(err); }));
+
+});
+//FIN LOGIN
+//SIGN UP
 app.post('/signup', function(req, res){
 
 	var user = req.body.username || "";
-	var pass = req.body.password || "";
+	var pass = sha256(req.body.password) || "";
 
 	var query_select = "SELECT name FROM users WHERE name=?";
 	var query_select_var = [user];
@@ -103,24 +101,31 @@ app.post('/signup', function(req, res){
 	sess = req.session;
 	var page = req.body.url;
 	db.Select(query_select, query_select_var).then(function(result){
-		if(typeof result[0] != 'undefined'){	console.log('server: '+result[0].name);}
-		else{ 
-			console.log('Puedes crear el usuario'); 
+		if(typeof result[0] != 'undefined'){
+			sess.signup = "Ya existe un Usuario con ese nombre.";
+			res.redirect(page);
+		}else{ 
 			db.Insert(query_insert, query_insert_var).then(function(){
-				console.log('usuario añadido correctamente');
-				//redirigir a inicio con un valor para saber que el registro se ha completado
+				sess.signup = "Usuario creado correctamente. Bienvenido!";
+				sess.user=user;
+				res.redirect(page);
 			});
 		}
 
 	}).catch((err) => setImmediate(() => { console.log(err); }));
-
-	res.redirect(page);
 });
-
+//FIN SIGN UP
+//LOGOUT
 app.post('/logout', function(req, res){
 	sess = req.session;
 	delete sess.user;
-	delete sess.img;
 	var page = req.body.url;
 	res.redirect(page);
 });
+//FIN LOGOUT
+//FIN USUARIOS
+
+//SOCKETIO
+
+
+//FIN SOCKETIO

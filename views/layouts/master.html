@@ -25,16 +25,16 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item {{ 'active' if url=='/'}}">
-						<a class="nav-link" href="/">Portada</a>
+						<a class="nav-link" href="#">Portada</a>
 					</li>
-					<li class="nav-item {{ 'active' if url=='/armas-melee'}}">
-						<a class="nav-link" href="/armas-melee">Armas melee</a>
+					<li class="nav-item {{ 'active' if url=='/chat'}}">
+						<a class="nav-link" href="/chat">Chat</a>
 					</li>
 					<li class="nav-item {{ 'active' if url=='/armas-range'}}">
-						<a class="nav-link" href="/armas-range">Armas range</a>
+						<a class="nav-link" href="#">Armas range</a>
 					</li>
 					<li class="nav-item {{ 'active' if url=='/escudos'}}">
-						<a class="nav-link" href="/escudos">Escudos</a>
+						<a class="nav-link" href="#">Escudos</a>
 					</li>
 				</ul>
 				<ul class="navbar-nav navbar-right">
@@ -77,6 +77,16 @@
 				</ul>
 			</div>
 		</nav>
+
+		{% if sess.signup %}
+		<div class="card">
+		  <div class="card-block">
+		    <h4 style="color:black;" class="card-title">Información</h4>
+		    <p style="color:black;" class="card-text">{{sess.signup}}</p>
+		  </div>
+		</div>
+		{% endif %}
+
 		{% block content %}{% endblock %}
 	</div>
 	<script>
@@ -103,6 +113,10 @@
 				$(this).toggleClass('nav-item active');
 			});
 		});
+	</script>
+	<script src="../static/js/socket.io.js"></script>
+	<script>
+	  var socket = io();
 	</script>
 </body>
 

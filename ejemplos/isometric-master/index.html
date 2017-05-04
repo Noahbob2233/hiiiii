@@ -42,7 +42,7 @@
 
       function launch() {
 
-        jsonLoader(['test3.json']).then(function(jsonResponse) {
+        jsonLoader(['test2.json']).then(function(jsonResponse) {
 
           var images = [
             {
@@ -69,12 +69,7 @@
                 tileWidth: tileWidth,
                 tileHeight: tileHeight,
                 width: jsonResponse[0].layers[i].width,
-                height: jsonResponse[0].layers[i].height,
-                heightMap: {
-                  map: jsonResponse[0].layers[i].num,
-                  offset: 0,
-                  heightTile: "img/tileset.png"
-                }
+                height: jsonResponse[0].layers[i].height
               };
             }
             tileEngine.init(layout);
@@ -87,7 +82,7 @@
 
         var mapLayers = [];
 
-        var context = CanvasControl.create("canvas", tileWidth*14, tileHeight*14, {
+        var context = CanvasControl.create("canavas", tileWidth*14, tileHeight*14, {
           display: "block",
           marginLeft: "auto",
           marginRight: "auto"
@@ -106,7 +101,6 @@
 
         return {
           init: function(layers) {
-            console.log(layers);
             for (var i = 0; i < layers.length; i++) {
               mapLayers[i] = new TileField(context, CanvasControl().height, CanvasControl().width);
               mapLayers[i].setup(layers[i]);
@@ -116,7 +110,7 @@
               mapLayers[i].flip("horizontal");
               mapLayers[i].rotate("left");
 
-              mapLayers[i].align("h-center", CanvasControl().width, xrange);
+              mapLayers[i].align("h-center", CanvasControl().width, xrange, 0);
               mapLayers[i].align("v-center", CanvasControl().height, yrange, 0);
             }
             draw();

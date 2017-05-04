@@ -34,24 +34,31 @@
 		events: ["load"],
 		materials: {
 			images: {
-				tileset: "spritesheet.png",
+				tileset: "tileset.png",
 				player: "hero.png"
 			}
 		},
 		ready: function(stage) {
 			var player = this.createElement('player');
+            var _canvas = this.getCanvas();
 			var spritesheet = canvas.Spritesheet.new("player", {
 
 				grid: [{
 					size: [4, 4],
 					tile: [32, 52],
-					set: ["play", "player_hover", "zoom_p", "zoom_m"]
+					set: ["down", "down1", "down2", "down3"]
 				}],
-				// btn_play: [433, 33, 215, 188]
+				btn_play: [433, 33, 215, 188]
 
 			});
-			spritesheet.draw(player, "play");
+			spritesheet.draw(player, "down");
 			stage.append(player);
+
+            stage.on('click', function(e){
+                var pos = _canvas.getMousePosition(e);
+                console.log(pos);
+            });
+            
 			
 		},
 		load: function(data) {
@@ -60,7 +67,7 @@
 				stage = this.getStage(),
 				_canvas = this.getCanvas(),
 				map = this.createElement();
-
+            
 			tiled.ready(function() {
 				map.pack(this.getWidthPixel(), this.getHeightPixel());
 			});

@@ -10,7 +10,7 @@ CE.Model.init("Main", {
         tiled.ready(function(map) {
             socket.emit("Scene_Map.load", map);
         });
-        tiled.load("warbotest.json");
+        tiled.load("test2.json");
 
     }
 });

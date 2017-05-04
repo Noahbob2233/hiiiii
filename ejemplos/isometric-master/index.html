@@ -9,12 +9,12 @@
         position: absolute !important;
       }
     </style>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     
     <script data-main="config" src="requirejs/require.js"></script>
 
     <script type="text/javascript">
-
+    var tileWidth = 64;
+    var tileHeight = 32;
     require([
       'jsiso/canvas/Control',
       'jsiso/canvas/Input',
@@ -42,7 +42,7 @@
 
       function launch() {
 
-        jsonLoader(['test2.json']).then(function(jsonResponse) {
+        jsonLoader(['test3.json']).then(function(jsonResponse) {
 
           var images = [
             {
@@ -60,15 +60,24 @@
           imgLoader(images).then(function(imgResponse) {
 
             var tileEngine = new main(0, 0, jsonResponse[0].height, jsonResponse[0].width);
-            tileEngine.init([{
-              layout: jsonResponse[0].layers[0].data,
-              graphics: imgResponse[0].files,
-              graphicsDictionary: imgResponse[0].dictionary,
-              tileWidth: 128,
-              tileHeight: 64,
-              width: jsonResponse[0].layers[0].width,
-              height: jsonResponse[0].layers[0].height
-            }]);
+            var layout = [];
+            for(var i=0; i<jsonResponse[0].layers.length; i++) {
+              layout[i] = {
+                layout: jsonResponse[0].layers[i].data,
+                graphics: imgResponse[0].files,
+                graphicsDictionary: imgResponse[0].dictionary,
+                tileWidth: tileWidth,
+                tileHeight: tileHeight,
+                width: jsonResponse[0].layers[i].width,
+                height: jsonResponse[0].layers[i].height,
+                heightMap: {
+                  map: jsonResponse[0].layers[i].num,
+                  offset: 0,
+                  heightTile: "img/tileset.png"
+                }
+              };
+            }
+            tileEngine.init(layout);
           });
         });
       }
@@ -78,7 +87,7 @@
 
         var mapLayers = [];
 
-        var context = CanvasControl.create("canavas", 1400, 700, {
+        var context = CanvasControl.create("canvas", tileWidth*14, tileHeight*14, {
           display: "block",
           marginLeft: "auto",
           marginRight: "auto"
@@ -92,25 +101,27 @@
                 layer.draw(i,j);
               });
             }
-          }
+          }        
         }
 
         return {
           init: function(layers) {
-            for (var i = 0; i < 0 + layers.length; i++) {
+            console.log(layers);
+            for (var i = 0; i < layers.length; i++) {
               mapLayers[i] = new TileField(context, CanvasControl().height, CanvasControl().width);
               mapLayers[i].setup(layers[i]);
+
 
               // -- Flip and rotate to match the Tiled draw method --
               mapLayers[i].flip("horizontal");
               mapLayers[i].rotate("left");
 
-              mapLayers[i].align("h-center", CanvasControl().width, xrange, 0);
+              mapLayers[i].align("h-center", CanvasControl().width, xrange);
               mapLayers[i].align("v-center", CanvasControl().height, yrange, 0);
-            };
+            }
             draw();
           }
-        }  
+        };
 
       }
 
@@ -119,6 +130,5 @@
     </script>
   </head>
   <body>
-    <a href="https://twitter.com/Beakable" class="twitter-follow-button" data-show-count="false">Follow @Beakable</a>
   </body>
 </html>

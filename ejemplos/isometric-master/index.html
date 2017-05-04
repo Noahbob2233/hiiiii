@@ -100,7 +100,7 @@
             for (var i = 0; i < 0 + layers.length; i++) {
               mapLayers[i] = new TileField(context, CanvasControl().height, CanvasControl().width);
               mapLayers[i].setup(layers[i]);
-
+              console.log(layers);
               // -- Flip and rotate to match the Tiled draw method --
               mapLayers[i].flip("horizontal");
               mapLayers[i].rotate("left");

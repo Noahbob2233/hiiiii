@@ -32,13 +32,6 @@
     <script data-main="config.js" src="requirejs/require.js"></script>
 
     <script type="text/javascript">
-    function getMousePos(canvas, evt) {
-      var rect = canvas.getBoundingClientRect();
-      return {
-        x: Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width),
-        y: Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height)
-      };
-    };
     
     require([
       'jsiso/canvas/Control',
@@ -290,8 +283,8 @@
             for (var i = startY, n = startY + rangeY; i < n; i++) {
               for (var j = startX, h = startX + rangeX; j < h; j++) {
                 mapLayers.map(function(layer) {
-                  layer.setLight(player.xPos, player.yPos);
-                  if (i === player.xPos  && j === player.yPos && layer.getTitle() === "Object Layer") {
+                  //layer.setLight(player.xPos, player.yPos);
+                  if (i === player.xPos  && j === player.yPos /*&& layer.getTitle() === "Object Layer"*/) {
                     layer.draw(i, j, player.image);
                   }
                   else {

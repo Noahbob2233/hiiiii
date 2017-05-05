@@ -32,13 +32,6 @@
     <script data-main="config.js" src="requirejs/require.js"></script>
 
     <script type="text/javascript">
-    function getMousePos(canvas, evt) {
-      var rect = canvas.getBoundingClientRect();
-      return {
-        x: Math.round((evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width),
-        y: Math.round((evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height)
-      };
-    };
     
     require([
       'jsiso/canvas/Control',
@@ -107,7 +100,7 @@
                 },
                 tileHeight: 50,
                 tileWidth: 100
-              }/*,
+              },
               {
                 title: "Object Layer",
                 layout: jsonResponse[0].objects,
@@ -118,11 +111,11 @@
                   objectApplied: imgResponse[2].files["main.png"],
                   apply: true
                 },
-                shadowDistance: {
+                /*shadowDistance: {
                   color: false,
                   distance: 4,
                   darkness: 1
-                },
+                },*/
                 particleMap: jsonResponse[0].particles,
                 lightMap: [[5, 5, 4, 1], [20, 20, 4, 1]],
                 heightMap: {
@@ -132,7 +125,7 @@
                 },
                 tileHeight: 50,
                 tileWidth: 100
-              }*/
+              }
             ]);
           });
         });
@@ -203,11 +196,11 @@
             tile_coordinates =  mapLayers[0].applyMouseFocus(coords.x, coords.y); // Get the current mouse location from X & Y Coords
             console.log(tile_coordinates);
         });
-        input.mouse_move(function(coords) {
+        /*input.mouse_move(function(coords) {
           mapLayers.map(function(layer) {
             tile_coordinates = layer.applyMouseFocus(coords.x, coords.y); // Apply mouse rollover via mouse location X & Y
           });
-        });
+        });*/
         input.keyboard(function(pressed) {
           switch(pressed) {
             case 38:
@@ -275,7 +268,7 @@
         
         function draw() {
           context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-          //calculatePaths ++;
+          calculatePaths ++;
            if(calculatePaths === 100) {
               enemy.map(function(e) {
                 pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), false).then(function (data) { 
@@ -290,15 +283,17 @@
             for (var i = startY, n = startY + rangeY; i < n; i++) {
               for (var j = startX, h = startX + rangeX; j < h; j++) {
                 mapLayers.map(function(layer) {
-                  layer.setLight(player.xPos, player.yPos);
-                  if (i === player.xPos  && j === player.yPos && layer.getTitle() === "Object Layer") {
+                  //layer.setLight(player.xPos, player.yPos);
+                  if (i === player.xPos  && j === player.yPos && layer.getTitle() != "Object Layer") {
+                    layer.draw(i,j);
                     layer.draw(i, j, player.image);
                   }
                   else {
                     layer.draw(i,j);
                   }
                   enemy.map(function(e) {
-                    if (i === e.xPos  && j === e.yPos  && layer.getTitle() === "Object Layer") {
+                    if (i === e.xPos  && j === e.yPos  && layer.getTitle() != "Object Layer") {
+                      layer.draw(i,j);
                       layer.draw(i, j, e.image);
                     }
                   });          
@@ -306,7 +301,7 @@
              }
            }
           // rain.Draw(CanvasControl().width / 4, 0);
-          // requestAnimFrame(draw);
+          requestAnimFrame(draw);
         }
 
         return {

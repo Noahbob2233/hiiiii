@@ -100,7 +100,7 @@
                 },
                 tileHeight: 50,
                 tileWidth: 100
-              }/*,
+              },
               {
                 title: "Object Layer",
                 layout: jsonResponse[0].objects,
@@ -125,7 +125,7 @@
                 },
                 tileHeight: 50,
                 tileWidth: 100
-              }*/
+              }
             ]);
           });
         });
@@ -268,7 +268,7 @@
         
         function draw() {
           context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-          //calculatePaths ++;
+          calculatePaths ++;
            if(calculatePaths === 100) {
               enemy.map(function(e) {
                 pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), false).then(function (data) { 
@@ -284,7 +284,8 @@
               for (var j = startX, h = startX + rangeX; j < h; j++) {
                 mapLayers.map(function(layer) {
                   //layer.setLight(player.xPos, player.yPos);
-                  if (i === player.xPos  && j === player.yPos /*&& layer.getTitle() === "Object Layer"*/) {
+                  if (i === player.xPos  && j === player.yPos && layer.getTitle() != "Object Layer") {
+                    layer.draw(i,j);
                     layer.draw(i, j, player.image);
                   }
                   else {
@@ -299,7 +300,7 @@
              }
            }
           // rain.Draw(CanvasControl().width / 4, 0);
-          // requestAnimFrame(draw);
+          requestAnimFrame(draw);
         }
 
         return {

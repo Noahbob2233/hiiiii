@@ -18,7 +18,8 @@
     "../img/ground/sand.png",
     "../img/ground/swamp.png",
     "../img/ground/water-purple.png",
-    "../img/ground/water.png"
+    "../img/ground/water.png",
+    "../img/ground/height.png"
   ],
   "objectImages": [
     "../img/objects/$1-wall-0001.png",

@@ -521,7 +521,7 @@ function(EffectLoader, Emitter, utils) {
       if (mouseUsed && applyInteractions) {
         if (i === focusTilePosX && j === focusTilePosY) {
           // Apply mouse over tile coloring
-          _drawHorizontalColorOverlay(xpos, ypos, ('(255, 255, 120, 0.7)'), k - 1, resizedTileHeight);
+          _drawHorizontalColorOverlay(xpos, ypos, ('(255, 255, 120, 0.7)'), k, resizedTileHeight);
         }
       }
       if (particleTiles) {

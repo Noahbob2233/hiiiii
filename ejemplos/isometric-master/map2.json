@@ -50,8 +50,35 @@
  "tileheight":64,
  "tilesets":[
         {
+         "columns":0,
          "firstgid":1,
-         "source":"tileset.json"
+         "grid":
+            {
+             "height":1,
+             "orientation":"orthogonal",
+             "width":1
+            },
+         "margin":0,
+         "name":"tileset",
+         "spacing":0,
+         "tilecount":3,
+         "tileheight":128,
+         "tiles":
+            {
+             "0":
+                {
+                 "image":"img\/1.png"
+                },
+             "1":
+                {
+                 "image":"img\/height.png"
+                },
+             "2":
+                {
+                 "image":"img\/plant1.png"
+                }
+            },
+         "tilewidth":128
         }],
  "tilewidth":128,
  "type":"map",

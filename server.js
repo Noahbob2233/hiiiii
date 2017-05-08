@@ -130,6 +130,7 @@ app.post('/logout', function(req, res){
 
 //SOCKETIO
 app.all('/chat', function(req,res){
+	sess = req.session;
 	res.render('chat.html', {
 			sess: sess 
 		});

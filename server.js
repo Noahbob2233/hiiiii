@@ -136,6 +136,13 @@ app.all('/chat', function(req,res){
 		});
 });
 
+app.all('/game', function(req,res){
+  sess = req.session;
+  res.render('game.html', {
+      sess: sess 
+    });
+});
+
 // Chatroom
 var numUsers = 0;
 

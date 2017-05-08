@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-{% set url = '/chat' %}
+{% set url = '/game' %}
 <head>
 	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
@@ -116,21 +116,18 @@
 								j = 0;
 							}
 						}
-						// console.log(finalMap);
-						// console.log(finalHeight);
-
-						var tileEngine = new main(0, 0, 20, 20, imgResponse[1]);
+						var tileEngine = new main(0, 0, 15, 15, imgResponse[1]);
 						tileEngine.init([{
 							title: "Ground Layer",
 							layout: finalMap,
 							graphics: imgResponse[0].files,
 							graphicsDictionary: imgResponse[0].dictionary,
 							applyInteractions: true,
-							/*shadowDistance: {
+							shadowDistance: {
 								color: '6,5,50',
 								distance: 4,
 								darkness: 2
-							},*/
+							},
 							shadow: {
 								offset: 50,
 								verticalColor: '(5, 5, 30, 0.4)',
@@ -153,16 +150,16 @@
 							graphics: imgResponse[0].files,
 							graphicsDictionary: imgResponse[0].dictionary,
 							zeroIsBlank: true,
-							//applyInteractions: true,
+							applyInteractions: false,
 							alphaWhenFocusBehind: {
 								objectApplied: imgResponse[1].files["main.png"],
 								apply: true
 							},
-							/*shadowDistance: {
+							shadowDistance: {
 								color: false,
 								distance: 4,
 								darkness: 2
-							},*/
+							},
 							//particleMap: jsonResponse[0].particles,
 							/*lightMap: [
 								[5, 5, 4, 1],
@@ -232,55 +229,55 @@
 
 
 				var input = new CanvasInput(document, CanvasControl());
-				input.mouse_action(function(coords) {
-					clearInterval(move);
-					var move;
+				/*input.mouse_action(function(coords) {
 					tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y); // Get the current mouse location from X & Y Coords
-					console.log('X: '+tile_coordinates.x+' - '+player.xPos);
-					console.log('Y: '+tile_coordinates.y+' - '+player.yPos);
-					pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[1].getLayout(), false).then(function(data) {
+					// console.log('X: '+tile_coordinates.x+' - '+player.xPos);
+					// console.log('Y: '+tile_coordinates.y+' - '+player.yPos);
+					pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[1].getLayout(), true).then(function(data) {
 						var i = 0;
-						move = setInterval(function() {
-							if (i == data.length - 1 || (Number(mapLayers[0].getHeightMapTile(data[i + 1].x, data[i + 1].y)) - Number(mapLayers[0].getHeightMapTile(data[i].x, data[i].y)) >= 2)) {
-								clearInterval(move);
-							}
+						var move = setInterval(function() {
 							if (data.length > 0 && data[i] !== undefined) {
 								player.xPos = data[i].x;
 								player.yPos = data[i].y;
+								if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+									mapLayers.map(function(layer) {
+										layer.move("down");
+									});
+									startX--;
+								} else if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
+									mapLayers.map(function(layer) {
+										layer.move("left");
+									});
+									startY++;
+								} else if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
+									mapLayers.map(function(layer) {
+										layer.move("right");
+									});
+									startX++;
+								} else if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+									mapLayers.map(function(layer) {
+										layer.move("up");
+									});
+									startY--;
+								}
+								i++;
+								if (i == data.length) {
+									clearInterval(move);
+									move = undefined;
+								}
 							}
-							if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
-								mapLayers.map(function(layer) {
-									layer.move("down");
-								});
-								startX--;
-							} else if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
-								mapLayers.map(function(layer) {
-									layer.move("left");
-								});
-								startY++;
-							} else if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
-								mapLayers.map(function(layer) {
-									layer.move("right");
-								});
-								startX++;
-							} else if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
-								mapLayers.map(function(layer) {
-									layer.move("up");
-								});
-								startY--;
-							}
-							i++;
 						}, 100);
 
 					});
 					//mapLayers[0].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1); // Increase heightmap tile 
 					//mapLayers[0].setTile(tile_coordinates.x, tile_coordinates.y, 1); // Force the chaning of tile graphic
 					//console.log(tile_coordinates);
-				});
+				});*/
 				input.mouse_move(function(coords) {
-					mapLayers.map(function(layer) {
+					tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y);
+					/*mapLayers.map(function(layer) {
 						tile_coordinates = layer.applyMouseFocus(coords.x, coords.y); // Apply mouse rollover via mouse location X & Y
-					});
+					});*/
 				});
 				input.keyboard(function(key, pressed) {
 					if (pressed) {
@@ -289,7 +286,7 @@
 								if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
 									player.yPos --;
 									mapLayers[1].applyFocus(player.xPos, player.yPos);
-									if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+									if (/*startX > 0 && */player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
 										mapLayers.map(function(layer) {
 											layer.move("down");
 										});
@@ -301,7 +298,7 @@
 								if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
 									player.xPos++;
 									mapLayers[1].applyFocus(player.xPos, player.yPos);
-									if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
+									if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/) {
 										mapLayers.map(function(layer) {
 											layer.move("left");
 										});
@@ -313,7 +310,7 @@
 								if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
 									player.yPos++;
 									mapLayers[1].applyFocus(player.xPos, player.yPos);
-									if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
+									if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/) {
 										mapLayers.map(function(layer) {
 											layer.move("right");
 										});
@@ -325,7 +322,7 @@
 								if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
 									player.xPos--;
 									mapLayers[1].applyFocus(player.xPos, player.yPos);
-									if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+									if (/*startY > 0 && */player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
 										mapLayers.map(function(layer) {
 											layer.move("up");
 										});

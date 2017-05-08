@@ -437,7 +437,7 @@ function(EffectLoader, Emitter, utils) {
                         ctx.drawImage(stackGraphic, 0, 0, stackGraphic.width, stackGraphic.height, xpos, ypos + ((k - 1) * ((tileHeight - heightOffset - resizedTileHeight) * curZoom)), (tileWidth * curZoom), (stackGraphic.height / (stackGraphic.width / tileWidth) * curZoom));
                       }
                       else if (graphicValue != - 1) {
-                        _drawHorizontalColorOverlay(xpos, ypos, graphicValue, k - 1, resizedTileHeight);
+                        _drawHorizontalColorOverlay(xpos, ypos, graphicValue, k, resizedTileHeight);
                       }
 
                     }

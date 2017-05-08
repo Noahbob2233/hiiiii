@@ -71,16 +71,31 @@ app.post('/login', function(req, res){
 	var user = req.body.username || "";
 	var pass = sha256(req.body.password) || "";
 
-	var query_select = "SELECT name FROM users WHERE name=? AND password=?";
+	var query_select = "SELECT name, id FROM users WHERE name=? AND password=?";
 	var query_select_var = [user,pass];
 
 	var page = req.body.url;
 	sess = req.session;
 	
+	//LOGUEAMOS
 	db.Select(query_select, query_select_var).then(function(result){
+		//SI SE ENCUENTRA EL USUARIO:
 		if(typeof result[0] != 'undefined'){
+		//MIRAMOS SUS PJS CREADOS
+		var query = "SELECT name FROM users_chars WHERE user_id=?";
+		var query_var = [result[0].id];
+		db.Select(query, query_var).then(function(result){
+			var size = Object.size(result);
 			sess.user = user;
+			if(size>0){
+				sess.characters = result;
+				sess.characters_max = size;
+			}else{
+				sess.characters_max = 0;
+			}
 			res.redirect(page);
+		});
+		//SI NO
 		}else{ 
 			sess.signup = "El Usuario no existe";
 			res.redirect(page);
@@ -122,6 +137,8 @@ app.post('/signup', function(req, res){
 app.post('/logout', function(req, res){
 	sess = req.session;
 	delete sess.user;
+	delete sess.characters;
+	delete sess.characters_max;
 	var page = req.body.url;
 	res.redirect(page);
 });
@@ -204,3 +221,34 @@ io.on('connection', function (socket) {
   });
 });
 //FIN SOCKETIO
+
+//PANTALLA DEL CHARACTER
+app.all('/character', function(req,res){
+	sess = req.session;
+	var query = "SELECT * FROM users_chars WHERE name=?";
+	var query_var = [req.query.character];
+	db.Select(query, query_var).then(function(result){
+		sess.character_name = result[0].name;
+		sess.character_lvl = result[0].lvl;
+		sess.character_hp = result[0].hp;
+		sess.character_attack = result[0].attack;
+		sess.character_defense = result[0].defense;
+		sess.character_speed = result[0].speed;
+		sess.character_map = result[0].map;
+		res.render('character.html', {
+			sess: sess 
+		});
+	});
+});
+//FIN DE LA PANTALLA DEL CHARACTER
+
+
+
+
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};

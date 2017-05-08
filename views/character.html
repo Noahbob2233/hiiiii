@@ -1,0 +1,14 @@
+{% extends "layouts/master.html" %}
+{% set url = '/character' %}
+{% block content %}
+<div class="container">
+    <ul>
+      <li>Nombre: {{sess.character_name}}</li>
+      <li>Nivel: {{sess.character_lvl}}</li>
+      <li>Vida: {{sess.character_hp}}</li>
+      <li>Ataque: {{sess.character_attack}}</li>
+      <li>Defensa: {{sess.character_defense}}</li>
+      <li>Velocidad: {{sess.character_speed}}</li>
+    </ul>
+</div>
+{% endblock %}

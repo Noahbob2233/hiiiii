@@ -90,17 +90,17 @@
 								if (jsonResponse[0].layers[z].data[i] !== 0) {
 									if (tempMap[j] === undefined) {
 										tempMap.push(jsonResponse[0].layers[z].data[i]-1);
-										tempHeight.push(z+1);
+										tempHeight.push(z);
 									}
 									else {
 										tempMap[j] = jsonResponse[0].layers[z].data[i]-1;
-										tempHeight[j] = z+1;
+										tempHeight[j] = z;
 									}
 								}
 							}
 							if (tempMap[j] === undefined) {
 								tempMap.push(jsonResponse[0].layers[0].data[i]-1);
-								tempHeight.push(1);
+								tempHeight.push(0);
 							}
 							tempObjects.push(jsonResponse[0].layers[jsonResponse[0].layers.length-1].data[i]);
 							j++;
@@ -230,7 +230,13 @@
 
 				var input = new CanvasInput(document, CanvasControl());
 				input.mouse_action(function(coords) {
-					tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y); // Get the current mouse location from X & Y Coords
+					tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y);
+					if(coords.x )
+					var height = mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y);
+					tile_coordinates.x = tile_coordinates.x + height - 1;
+					tile_coordinates.y = tile_coordinates.y + height - 1;
+					mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
+					console.log(tile_coordinates.x);
 					// console.log('X: '+tile_coordinates.x+' - '+player.xPos);
 					// console.log('Y: '+tile_coordinates.y+' - '+player.yPos);
 					/*pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
@@ -410,7 +416,7 @@
       <div class="chatArea">
         <ul class="messages"></ul>
       </div>
-      <input class="inputMessage" placeholder="Type here..."/>
+      <input class="inputMessage" placeholder="Escribe aquí..."/>
     </li>
     <input class="usernameInput" value="{{sess.user}}" type="hidden" maxlength="14" disabled="disabled" />
     <!-- <li class="login page">

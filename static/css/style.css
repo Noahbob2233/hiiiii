@@ -31,14 +31,22 @@ body {
 }
 #gamechat .chatArea {
   width: 100%;
+  height: 200px;
   background-color: rgba(0, 0, 0, 0.4);
   padding: 10px;
+}
+#gamechat .messages {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 180px;
 }
 #gamechat .messages .log {
   color: purple;
 }
 #gamechat .messages .message .messageBody {
   margin-left: 10px;
+  word-wrap: break-word;
+  text-align: justify;
 }
 #gamechat .pages,
 #gamechat .messages {

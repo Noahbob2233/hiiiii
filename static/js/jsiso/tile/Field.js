@@ -174,7 +174,7 @@ function(EffectLoader, Emitter, utils) {
           tileOffset = (resizedTileHeight - tileHeight) * curZoom;
         }
         if (_horizontalTileCache[graphicValue] && _horizontalTileCache[graphicValue][curZoom]) {
-          ctx.drawImage(_horizontalTileCache[graphicValue][curZoom], 0, 0 , _horizontalTileCache[graphicValue][curZoom].width, _horizontalTileCache[graphicValue][curZoom].height,  xpos, ypos + ((stack - 1) * tileOffset), (tileWidth * curZoom), (tileHeight * curZoom));
+          ctx.drawImage(_horizontalTileCache[graphicValue][curZoom], 0, 0 , _horizontalTileCache[graphicValue][curZoom].width, _horizontalTileCache[graphicValue][curZoom].height,  xpos, ypos + ((stack-1) * tileOffset), (tileWidth * curZoom), (tileHeight * curZoom));
         }
         else {
           if (!_horizontalTileCache[graphicValue]) {
@@ -193,7 +193,7 @@ function(EffectLoader, Emitter, utils) {
           ctxCache.lineTo(0 + (tileHeight * curZoom), 0 + (tileHeight * curZoom));
           ctxCache.fill();
           _horizontalTileCache[graphicValue][curZoom] = holderCache;
-          ctx.drawImage(holderCache, 0, 0, holderCache.width, holderCache.height, xpos, ypos + ((stack - 1) * tileOffset), (tileWidth * curZoom), (tileHeight * curZoom));
+          ctx.drawImage(holderCache, 0, 0, holderCache.width, holderCache.height, xpos, ypos + ((stack-1) * tileOffset), (tileWidth * curZoom), (tileHeight * curZoom));
         }
       }
 
@@ -362,7 +362,7 @@ function(EffectLoader, Emitter, utils) {
               }
               else if (graphicValue != - 1) {
                 // tile is an RGBA value
-                _drawHorizontalColorOverlay(xpos, ypos, graphicValue, k - 1, resizedTileHeight);
+                _drawHorizontalColorOverlay(xpos, ypos, graphicValue, k, resizedTileHeight);
               }
 
               ctx.restore();

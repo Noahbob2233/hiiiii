@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const app = express();
 
 //BASE D DATOS
-var db = require('./DDBB/db.js');
+var db = require('./static/js/db.js');
 
 //SESIONES
 var session = require('express-session');
@@ -126,6 +126,7 @@ app.post('/signup', function(req, res){
 			db.Insert(query_insert, query_insert_var).then(function(){
 				sess.signup = "Usuario creado correctamente. Bienvenido!";
 				sess.user=user;
+				sess.characters_max = 0;
 				res.redirect(page);
 			});
 		}
@@ -242,7 +243,47 @@ app.all('/character', function(req,res){
 });
 //FIN DE LA PANTALLA DEL CHARACTER
 
+//PANTALLA DE CREACION DE PJ
+app.all('/newchar', function(req,res){
+	sess = req.session;
+	var query = ""
+				+ "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed "
+				+ "FROM chars c "
+				+ "LEFT JOIN type_chars tc ON c.type_id=tc.id "
+				+ "WHERE tc.name='sample'";
+				
+	var query_var = [];
+	db.Select(query, query_var).then(function(result){
 
+		res.render('newcharacter.html', {
+			result: result,
+			sess: sess 
+		});
+	});
+});
+//FIN DE LA PANTALLA DEL CHARACTER
+
+
+//URLS PARA PEDIR DATOS A LA BBDD
+
+//LISTADO DE CHARS DE EJEMPLO PARA LA CREACION
+
+app.post('/loadsamplechars', function(req,res){
+	sess = req.session;
+
+	var query = "SELECT * FROM chars WHERE id=?";
+	var query_var = [req.query.search];
+
+	//DA UNDEFINED MIRAR
+	console.log("Entro a la url, query: "+req.query.parameters);
+
+	res.send("respuesta");
+
+	db.Select(query, query_var).then(function(result){
+		console.log("Resultado query: "+result[0].name);
+		res.send(result);
+	});
+});
 
 
 Object.size = function(obj) {

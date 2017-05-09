@@ -17,6 +17,15 @@ INSERT INTO maps (name) VALUES ('sample1.json');
 INSERT INTO maps (name) VALUES ('sample2.json');
 INSERT INTO maps (name) VALUES ('sample3.json');
 
+-- CREAMOS TABLA CON LOS TIPO DE CHARS QUE HABRA
+DROP TABLE IF EXISTS type_chars;
+
+CREATE TABLE type_chars(
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name varchar(100)
+);
+
+INSERT INTO type_chars (name) VALUES ('sample');
 
 -- CREAMOS LOS PJ BASE
 DROP TABLE IF EXISTS chars;
@@ -27,12 +36,17 @@ CREATE TABLE chars(
 	hp INT,
 	attack INT,
 	defense INT,
-	speed INT
+	speed INT,
+	type_id INT,
+	FOREIGN KEY (type_id)
+        REFERENCES type_chars(id)
+        ON DELETE CASCADE
+
 );
 
-INSERT INTO chars (name,hp,attack,defense,speed) VALUES ('Guerrero',70,8,5,5);
-INSERT INTO chars (name,hp,attack,defense,speed) VALUES ('Caballero',90,5,8,3);
-INSERT INTO chars (name,hp,attack,defense,speed) VALUES ('Asesino',40,9,3,9);
+INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Guerrero',70,8,5,5,1);
+INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Caballero',90,5,8,3,1);
+INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Asesino',40,9,3,9,1);
 
 
 -- TABLA DE USUARIOS

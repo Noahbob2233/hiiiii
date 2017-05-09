@@ -1,0 +1,26 @@
+{% extends "layouts/master.html" %}
+{% set url = '/newcharacter' %}
+{% block content %}
+<div class="container">
+    <form action="/loadsamplechars" method="POST">
+    	<select name="samplechars" id="samplechars">
+    		{% for char in result %}
+    		<option value="{{char.id}}">{{char.name}}</option>
+    		{% endfor %}
+    	</select>
+    </form>
+    <ul id="charstats"></ul>
+</div>
+
+<script>
+
+	$("#samplechars").change(function(){
+		var parameters = {search: $(this).val()};
+		$.post( '/loadsamplechars', parameters, function(data) {
+			console.log("data: "+data);
+			// $('#charstats').html(data);
+		});
+	});
+	
+</script>
+{% endblock %}

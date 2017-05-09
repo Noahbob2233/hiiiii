@@ -9,15 +9,17 @@
 	<link rel="stylesheet" href="/static/css/style.css">
 	<link rel="stylesheet" href="/static/css/waves.min.css">
 	<link rel="stylesheet" href="/static/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/static/css/chat.css">
+	<!-- <link rel="stylesheet" href="/static/css/chat.css"> -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 	<script src="/static/js/bootstrap.min.js"></script>
 	<script src="/static/js/waves.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	{% block head %}{% endblock %}
 </head>
 
 <body>
-	<div id="wrap" class="container">
+	<div id="wrap" class="container-fluid">
 		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -26,12 +28,12 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item {{ 'active' if url=='/'}}">
-						<a class="nav-link" href="#">Portada</a>
+						<a class="nav-link" href="/">Portada</a>
 					</li>
 					{% if sess.user %}
-					<li class="nav-item {{ 'active' if url=='/chat'}}">
+					<!-- <li class="nav-item {{ 'active' if url=='/chat'}}">
 						<a class="nav-link" href="/chat">Chat</a>
-					</li>
+					</li> -->
 					<li class="nav-item {{ 'active' if url=='/game'}}">
 						<a class="nav-link" href="/game">Juego</a>
 					</li>

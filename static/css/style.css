@@ -22,11 +22,30 @@ body {
   font-family: 'Roboto';
   background-attachment: fixed;
 }
-.container {
-  width: 90%;
+#gamechat {
+  position: fixed;
+  bottom: 0;
+  width: 40%;
+  left: 20px;
+  color: #fff;
+}
+#gamechat .chatArea {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+}
+#gamechat .messages .log {
+  color: purple;
+}
+#gamechat .messages .message .messageBody {
+  margin-left: 10px;
+}
+#gamechat .pages,
+#gamechat .messages {
+  list-style-type: none;
+  padding: 0px;
 }
 #wrap {
-  margin: 20px auto;
   padding: 0px;
   box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.26);
 }

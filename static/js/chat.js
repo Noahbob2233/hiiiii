@@ -41,15 +41,16 @@ $(function() {
 
     // If the username is valid
     if (username) {
-      $loginPage.fadeOut();
+      //$loginPage.fadeOut();
       $chatPage.show();
-      $loginPage.off('click');
+      //$loginPage.off('click');
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
       socket.emit('add user', username);
     }
   }
+  setUsername();
 
   // Sends a chat message
   function sendMessage () {
@@ -201,8 +202,6 @@ $(function() {
         sendMessage();
         socket.emit('stop typing');
         typing = false;
-      } else {
-        setUsername();
       }
     }
   });

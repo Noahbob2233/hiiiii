@@ -1,6 +1,6 @@
-var tileWidth = 70;
+var tileWidth = 120;
 var tileHeight = tileWidth / 2;
-
+var bucle = 0; //Esto no me mola global
 require([
         'jsiso/canvas/Control',
         'jsiso/canvas/Input',
@@ -147,7 +147,7 @@ require([
         function main(x, y, xrange, yrange, playerImages) {
 
             var player = {
-                image: playerImages.files["main.png"],
+                image: [playerImages.files["160.png"],playerImages.files["main.png"]],
                 xPos: 7,
                 yPos: 7
             };
@@ -202,7 +202,6 @@ require([
                 tile_coordinates.x = tile_coordinates.x + height - 1;
                 tile_coordinates.y = tile_coordinates.y + height - 1;
                 mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
-                console.log(tile_coordinates.x);
                 // console.log('X: '+tile_coordinates.x+' - '+player.xPos);
                 // console.log('Y: '+tile_coordinates.y+' - '+player.yPos);
                 /*pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
@@ -339,7 +338,21 @@ require([
                         mapLayers.map(function(layer) {
                             layer.setLight(player.xPos, player.yPos);
                             if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
-                                layer.draw(i, j, player.image);
+                                //TO DO: Quitar la prueba esta cuando vaya todo bien
+                                //if ( j %2==0){
+                                  layer.draw(i, j, player.image[bucle]);
+                                  delete player.image;
+                                  player.image = [playerImages.files["160.png"],playerImages.files["main.png"]];
+                                  if (bucle == 0) {
+                                    bucle ++;
+                                  } else {
+                                    bucle--;
+                                  }
+                                //}else{
+                                  //player.wtf = playerImages.files["main.png"],
+                                  //layer.draw(i, j, player.wtf);
+                                  //delete player.wtf;
+                                //}
                             } else {
                                 layer.draw(i, j);
                             }

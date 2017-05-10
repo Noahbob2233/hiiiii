@@ -60,6 +60,10 @@
     "static/img/players/enemy1.png",
     "static/img/players/enemy2.png",
     "static/img/players/enemy3.png",
-    "static/img/players/main.png"
+    "static/img/players/main.png",
+    "static/img/characters/players/isometric_heroine/standing/160.png",
+    "static/img/characters/players/isometric_heroine/standing/161.png",
+    "static/img/characters/players/isometric_heroine/standing/162.png",
+    "static/img/characters/players/isometric_heroine/standing/163.png"
   ]
 }

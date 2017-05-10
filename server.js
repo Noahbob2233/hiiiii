@@ -59,7 +59,7 @@ var sess;
 app.get('/', function(req, res) {
 	sess = req.session;
 	res.render('index.html', {
-			sess: sess 
+			sess: sess
 		});
 	delete sess.signup;
 });
@@ -76,7 +76,7 @@ app.post('/login', function(req, res){
 
 	var page = req.body.url;
 	sess = req.session;
-	
+
 	//LOGUEAMOS
 	db.Select(query_select, query_select_var).then(function(result){
 		//SI SE ENCUENTRA EL USUARIO:
@@ -96,7 +96,7 @@ app.post('/login', function(req, res){
 			res.redirect(page);
 		});
 		//SI NO
-		}else{ 
+		}else{
 			sess.signup = "El Usuario no existe";
 			res.redirect(page);
 		}
@@ -122,7 +122,7 @@ app.post('/signup', function(req, res){
 		if(typeof result[0] != 'undefined'){
 			sess.signup = "Ya existe un Usuario con ese nombre.";
 			res.redirect(page);
-		}else{ 
+		}else{
 			db.Insert(query_insert, query_insert_var).then(function(){
 				sess.signup = "Usuario creado correctamente. Bienvenido!";
 				sess.user=user;
@@ -150,14 +150,14 @@ app.post('/logout', function(req, res){
 app.all('/chat', function(req,res){
 	sess = req.session;
 	res.render('chat.html', {
-			sess: sess 
+			sess: sess
 		});
 });
 
 app.all('/game', function(req,res){
   sess = req.session;
   res.render('game.html', {
-      sess: sess 
+      sess: sess
     });
 });
 
@@ -237,7 +237,7 @@ app.all('/character', function(req,res){
 		sess.character_speed = result[0].speed;
 		sess.character_map = result[0].map;
 		res.render('character.html', {
-			sess: sess 
+			sess: sess
 		});
 	});
 });
@@ -251,13 +251,13 @@ app.all('/newchar', function(req,res){
 				+ "FROM chars c "
 				+ "LEFT JOIN type_chars tc ON c.type_id=tc.id "
 				+ "WHERE tc.name='sample'";
-				
+
 	var query_var = [];
 	db.Select(query, query_var).then(function(result){
 
 		res.render('newcharacter.html', {
 			result: result,
-			sess: sess 
+			sess: sess
 		});
 	});
 });

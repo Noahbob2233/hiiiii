@@ -2,23 +2,45 @@
 {% set url = '/newcharacter' %}
 {% block content %}
 <div class="container">
-    <form action="/loadsamplechars" method="POST">
-    	<select name="samplechars" id="samplechars">
-    		{% for char in result %}
-    		<option value="{{char.id}}">{{char.name}}</option>
-    		{% endfor %}
-    	</select>
-    </form>
+	<select name="samplechars" id="samplechars">
+		{% for char in result %}
+		<option value="{{char.id}}">{{char.name}}</option>
+		{% endfor %}
+	</select>
     <ul id="charstats"></ul>
+    <input type="text" id="name">
+    <button id="guardar">Elegir PJ</button>
 </div>
 
 <script>
+	window.onload = alCargar;
+
+	function alCargar(){
+        var parameters = {search: $('#samplechars').val()};
+		$.get( '/loadsamplechars', parameters, function(data) {
+			$('#charstats').empty();
+			$('#charstats').append("<li id='hp' value='"+data.hp+"'>Vida: "+data.hp+"</li>");
+			$('#charstats').append("<li id='attack' value='"+data.attack+"'>Ataque: "+data.attack+"</li>");
+			$('#charstats').append("<li id='defense' value='"+data.defense+"'>Defensa: "+data.defense+"</li>");
+			$('#charstats').append("<li id='speed' value='"+data.speed+"'>Velocidad: "+data.speed+"</li>");
+		});
+    }
 
 	$("#samplechars").change(function(){
 		var parameters = {search: $(this).val()};
-		$.post( '/loadsamplechars', parameters, function(data) {
-			console.log("data: "+data);
-			// $('#charstats').html(data);
+		$.get( '/loadsamplechars', parameters, function(data) {
+			$('#charstats').empty();
+			$('#charstats').append("<li id='hp' value='"+data.hp+"'>Vida: "+data.hp+"</li>");
+			$('#charstats').append("<li id='attack' value='"+data.attack+"'>Ataque: "+data.attack+"</li>");
+			$('#charstats').append("<li id='defense' value='"+data.defense+"'>Defensa: "+data.defense+"</li>");
+			$('#charstats').append("<li id='speed' value='"+data.speed+"'>Velocidad: "+data.speed+"</li>");
+		});
+	});
+
+	$("#guardar").click(function(){
+		var parameters = {name: $("#name").val(), hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value')};
+		$.get( '/saveselectedchar', parameters, function(data) {
+
 		});
 	});
 	

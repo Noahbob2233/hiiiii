@@ -3,12 +3,23 @@
 {% block content %}
 <div class="container">
     <ul>
-      <li>Nombre: {{sess.character_name}}</li>
-      <li>Nivel: {{sess.character_lvl}}</li>
-      <li>Vida: {{sess.character_hp}}</li>
-      <li>Ataque: {{sess.character_attack}}</li>
-      <li>Defensa: {{sess.character_defense}}</li>
-      <li>Velocidad: {{sess.character_speed}}</li>
+      <li id="name" value="{{sess.character_name}}">Nombre: {{sess.character_name}}</li>
+      <li id="lvl">Nivel: {{sess.character_lvl}}</li>
+      <li id="hp">Vida: {{sess.character_hp}}</li>
+      <li id="attack">Ataque: {{sess.character_attack}}</li>
+      <li id="defense">Defensa: {{sess.character_defense}}</li>
+      <li id="speed">Velocidad: {{sess.character_speed}}</li>
     </ul>
+    <button class="btn btn-danger" id="borrar">BORRAR PJ</button>
+
 </div>
+<script>
+	$('#borrar').click(function(){
+		var parameters = {name: $('#name').attr('value')};
+		console.log("params: "+JSON.stringify(parameters));
+		$.get( '/deleteselectedchar', parameters, function(data) {
+
+		});
+	});
+</script>
 {% endblock %}

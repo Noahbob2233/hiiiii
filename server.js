@@ -81,6 +81,7 @@ app.post('/login', function(req, res){
 	db.Select(query_select, query_select_var).then(function(result){
 		//SI SE ENCUENTRA EL USUARIO:
 		if(typeof result[0] != 'undefined'){
+		sess.userid = result[0].id;
 		//MIRAMOS SUS PJS CREADOS
 		var query = "SELECT name FROM users_chars WHERE user_id=?";
 		var query_var = [result[0].id];
@@ -124,8 +125,7 @@ app.post('/signup', function(req, res){
 			res.redirect(page);
 		}else{
 			db.Insert(query_insert, query_insert_var).then(function(){
-				sess.signup = "Usuario creado correctamente. Bienvenido!";
-				sess.user=user;
+				sess.signup = "Usuario creado correctamente. Ya puedes loguearte!";
 				sess.characters_max = 0;
 				res.redirect(page);
 			});
@@ -140,8 +140,10 @@ app.post('/logout', function(req, res){
 	delete sess.user;
 	delete sess.characters;
 	delete sess.characters_max;
-	var page = req.body.url;
-	res.redirect(page);
+	delete sess.userid;
+	res.render('index.html', {
+			sess: sess
+		});
 });
 //FIN LOGOUT
 //FIN USUARIOS
@@ -254,7 +256,6 @@ app.all('/newchar', function(req,res){
 
 	var query_var = [];
 	db.Select(query, query_var).then(function(result){
-
 		res.render('newcharacter.html', {
 			result: result,
 			sess: sess
@@ -268,23 +269,76 @@ app.all('/newchar', function(req,res){
 
 //LISTADO DE CHARS DE EJEMPLO PARA LA CREACION
 
-app.post('/loadsamplechars', function(req,res){
+app.get('/loadsamplechars', function(req,res){
 	sess = req.session;
 
 	var query = "SELECT * FROM chars WHERE id=?";
 	var query_var = [req.query.search];
 
-	//DA UNDEFINED MIRAR
-	console.log("Entro a la url, query: "+req.query.parameters);
-
-	res.send("respuesta");
-
 	db.Select(query, query_var).then(function(result){
-		console.log("Resultado query: "+result[0].name);
-		res.send(result);
+		res.send(result[0]);
 	});
 });
 
+//GUARDAMOS EL CHAR SELECCIONADO EN LA BASE DE DATOS PARA EL USUARIO
+
+app.get('/saveselectedchar', function(req,res){
+	sess = req.session;
+
+	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id) VALUES (?,1,?,?,?,?,?)";
+	var query_var = [req.query.name,req.query.hp,req.query.attack,req.query.defense,req.query.speed,sess.userid];
+
+	db.Select(query, query_var).then(function(result){
+		var query = "SELECT name FROM users_chars WHERE user_id=?";
+		var query_var = [sess.userid];
+		db.Select(query, query_var).then(function(result){
+			var size = Object.size(result);
+			sess.characters = result;
+			sess.characters_max = size;
+			sess.character_name = result[size-1].name;
+			sess.character_lvl = result[size-1].lvl;
+			sess.character_hp = result[size-1].hp;
+			sess.character_attack = result[size-1].attack;
+			sess.character_defense = result[size-1].defense;
+			sess.character_speed = result[size-1].speed;
+			sess.character_map = result[size-1].map;
+			console.log("RENDER QE NO VA");
+			res.render('character.html', {
+				sess: sess
+			});
+		});
+	});
+});
+
+// ELIMINAMOS EL PJ SELECCIONADO
+
+app.get('/deleteselectedchar', function(req,res){
+	sess = req.session;
+
+	var query = "DELETE FROM users_chars WHERE user_id=? AND name=?";
+	var query_var = [sess.userid,req.query.name];
+
+	db.Select(query, query_var).then(function(result){
+		var query = "SELECT name FROM users_chars WHERE user_id=?";
+		var query_var = [sess.userid];
+		db.Select(query, query_var).then(function(result){
+			var size = Object.size(result);
+			sess.characters = result;
+			sess.characters_max = size;
+			sess.character_name = result[size-1].name;
+			sess.character_lvl = result[size-1].lvl;
+			sess.character_hp = result[size-1].hp;
+			sess.character_attack = result[size-1].attack;
+			sess.character_defense = result[size-1].defense;
+			sess.character_speed = result[size-1].speed;
+			sess.character_map = result[size-1].map;
+			console.log("RENDER QE NO VA");
+			res.render('character.html', {
+				sess: sess
+			});
+		});
+	});
+});
 
 Object.size = function(obj) {
     var size = 0, key;

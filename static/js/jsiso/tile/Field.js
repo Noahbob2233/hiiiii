@@ -61,7 +61,7 @@ function(EffectLoader, Emitter, utils) {
     var focusTilePosX = 0;
     var focusTilePosY = 0;
 
-    var alphaWhenFocusBehind =  {}; // Used for applying alpha to objects infront of focus 
+    var alphaWhenFocusBehind =  {}; // Used for applying alpha to objects infront of focus
 
     var tilesHide = null;
     var hideSettings = null;
@@ -112,7 +112,7 @@ function(EffectLoader, Emitter, utils) {
       if(settings.particleEffects) {
         particleEffects = settings.particleEffects;
       }
-      
+
       if (settings.width) {
         var row = [];
         var col = 0;
@@ -132,7 +132,7 @@ function(EffectLoader, Emitter, utils) {
           }
         }
       }
-      
+
       alphaWhenFocusBehind = settings.alphaWhenFocusBehind;
     }
 
@@ -317,7 +317,7 @@ function(EffectLoader, Emitter, utils) {
             }
           }
         }
-        
+
         resizedTileHeight = 0;
         if (stackGraphic) {
           resizedTileHeight =  stackGraphic.height / (stackGraphic.width / tileWidth);
@@ -370,16 +370,16 @@ function(EffectLoader, Emitter, utils) {
           }
         }
         else {
-          
+
           if (heightMapOnTop) {
 
-            // If tile is to be placed on top of heightmap 
+            // If tile is to be placed on top of heightmap
 
             if (!distanceLightingSettings || ( distanceLightingSettings && distanceLighting < distanceLightingSettings.darkness)) {
               if (tileImageOverwite) {
 
                 // Draw overwriting image on top of height map
-                  
+
                 ctx.drawImage(tileImageOverwite, 0, 0, tileImageOverwite.width, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
               }
               else {

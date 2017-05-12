@@ -28,6 +28,7 @@ body {
   width: 40%;
   left: 20px;
   color: #fff;
+  pointer-events: auto;
 }
 #gamechat .chatArea {
   width: 100%;
@@ -52,6 +53,12 @@ body {
 #gamechat .messages {
   list-style-type: none;
   padding: 0px;
+}
+#gamechat.no-active {
+  pointer-events: none !important;
+}
+#gamechat.no-active input {
+  display: none;
 }
 #wrap {
   padding: 0px;

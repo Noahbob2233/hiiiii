@@ -20,7 +20,7 @@ var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
 
 server.listen(port, function () {
-  console.log('Server listening at port %d', port);
+  console.log('http://localhost:'+port);
 });
 
 // Set view engine
@@ -187,7 +187,8 @@ io.on('connection', function (socket) {
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
-      numUsers: numUsers
+      numUsers: numUsers,
+      username: socket.username
     });
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {

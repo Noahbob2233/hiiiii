@@ -13,6 +13,7 @@ body {
 	width: 40%;
 	left: 20px;
 	color: #fff;
+	pointer-events: auto;
 
 	.chatArea {
 		width: 100%;
@@ -41,6 +42,14 @@ body {
 	.pages, .messages {
 		list-style-type: none;
 		padding: 0px;
+	}
+
+	&.no-active {
+		pointer-events: none !important;
+
+		input {
+			display: none;
+		}
 	}
 }
 

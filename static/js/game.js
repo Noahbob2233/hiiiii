@@ -1,6 +1,7 @@
-var tileWidth = 120;
+var tileWidth = 100;
 var tileHeight = tileWidth / 2;
 var bucle = 0; //Esto no me mola global
+var socket = io();
 require([
         'jsiso/canvas/Control',
         'jsiso/canvas/Input',
@@ -80,7 +81,7 @@ require([
                             j = 0;
                         }
                     }
-                    var tileEngine = new main(0, 0, 15, 15, imgResponse[1]);
+                    var tileEngine = new main(0, 0, 40, 40, imgResponse[1]);
                     tileEngine.init([{
                         zIndex: 0,
                         title: "Ground Layer",
@@ -146,10 +147,83 @@ require([
 
         function main(x, y, xrange, yrange, playerImages) {
 
-            var player = {
-                image: [playerImages.files["160.png"],playerImages.files["main.png"]],
-                xPos: 7,
-                yPos: 7
+            var newPlayer = function(spec){
+                id = spec.id;
+                image = playerImages.files["main.png"];
+                xPos = 20;
+                yPos = 20;
+
+                input.keyboard(function(key, pressed) {
+                    if (pressed) {
+                        switch (key) {
+                            case 38:
+                                if (Number(mapLayers[1].getTile([this.xPos], [this.yPos - 1])) === 0) {
+                                    this.yPos--;
+                                    mapLayers[1].applyFocus(this.xPos, this.yPos);
+                                    if ( /*startX > 0 && */ this.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+                                        mapLayers.map(function(layer) {
+                                            layer.move("down");
+                                        });
+                                        startX--;
+                                    }
+                                    requestAnimFrame(draw);
+                                }
+                                break;
+                            case 39:
+                                if (Number(mapLayers[1].getTile([this.xPos + 1], [this.yPos])) === 0) {
+                                    this.xPos++;
+                                    mapLayers[1].applyFocus(this.xPos, this.yPos);
+                                    if (startY + rangeY < mapLayers[0].getLayout().length /*&& this.xPos >= 0 + 1 + rangeX / 2*/ ) {
+                                        mapLayers.map(function(layer) {
+                                            layer.move("left");
+                                        });
+                                        startY++;
+                                    }
+                                    requestAnimFrame(draw);
+                                }
+                                break;
+                            case 40:
+                                if (Number(mapLayers[1].getTile([this.xPos], [this.yPos + 1])) === 0) {
+                                    this.yPos++;
+                                    mapLayers[1].applyFocus(this.xPos, this.yPos);
+                                    if (startX + rangeX < mapLayers[0].getLayout().length /*&& this.yPos >= 0 + 1 + rangeY / 2*/ ) {
+                                        mapLayers.map(function(layer) {
+                                            layer.move("right");
+                                        });
+                                        startX++;
+                                    }
+                                    requestAnimFrame(draw);
+                                }
+                                break;
+                            case 37:
+                                if (Number(mapLayers[1].getTile([this.xPos - 1], [this.yPos])) === 0) {
+                                    this.xPos--;
+                                    mapLayers[1].applyFocus(this.xPos, this.yPos);
+                                    if ( /*startY > 0 && */ this.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+                                        mapLayers.map(function(layer) {
+                                            layer.move("up");
+                                        });
+                                        startY--;
+                                    }
+                                    requestAnimFrame(draw);
+                                }
+                                break;
+                            case 49:
+                                mapLayers.map(function(layer) {
+                                    layer.toggleGraphicsHide(true);
+                                    layer.toggleHeightShadow(true);
+                                });
+                                break;
+                            case 50:
+                                mapLayers.map(function(layer) {
+                                    layer.toggleGraphicsHide(false);
+                                    layer.toggleHeightShadow(false);
+                                });
+                                break;
+                        }
+                    }
+                });
+                return this;
             };
             var enemy = [{
                 id: 0,
@@ -245,6 +319,7 @@ require([
                 //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
                 mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
                 //console.log(tile_coordinates);
+                requestAnimFrame(draw);
             });
             /*input.mouse_move(function(coords) {
             	//tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y);
@@ -252,76 +327,86 @@ require([
             		tile_coordinates = layer.applyMouseFocus(coords.x, coords.y); // Apply mouse rollover via mouse location X & Y
             	});
             });*/
-            input.keyboard(function(key, pressed) {
-                if (pressed) {
-                    switch (key) {
-                        case 38:
-                            if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
-                                player.yPos--;
-                                mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("down");
-                                    });
-                                    startX--;
-                                }
-                            }
-                            break;
-                        case 39:
-                            if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
-                                player.xPos++;
-                                mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("left");
-                                    });
-                                    startY++;
-                                }
-                            }
-                            break;
-                        case 40:
-                            if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
-                                player.yPos++;
-                                mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("right");
-                                    });
-                                    startX++;
-                                }
-                            }
-                            break;
-                        case 37:
-                            if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
-                                player.xPos--;
-                                mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("up");
-                                    });
-                                    startY--;
-                                }
-                            }
-                            break;
-                        case 49:
-                            mapLayers.map(function(layer) {
-                                layer.toggleGraphicsHide(true);
-                                layer.toggleHeightShadow(true);
-                            });
-                            break;
-                        case 50:
-                            mapLayers.map(function(layer) {
-                                layer.toggleGraphicsHide(false);
-                                layer.toggleHeightShadow(false);
-                            });
-                            break;
-                    }
-                }
+            // input.keyboard(function(key, pressed) {
+            //     if (pressed) {
+            //         switch (key) {
+            //             case 38:
+            //                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
+            //                     player.yPos--;
+            //                     mapLayers[1].applyFocus(player.xPos, player.yPos);
+            //                     if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+            //                         mapLayers.map(function(layer) {
+            //                             layer.move("down");
+            //                         });
+            //                         startX--;
+            //                     }
+            //                     requestAnimFrame(draw);
+            //                 }
+            //                 break;
+            //             case 39:
+            //                 if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
+            //                     player.xPos++;
+            //                     mapLayers[1].applyFocus(player.xPos, player.yPos);
+            //                     if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
+            //                         mapLayers.map(function(layer) {
+            //                             layer.move("left");
+            //                         });
+            //                         startY++;
+            //                     }
+            //                     requestAnimFrame(draw);
+            //                 }
+            //                 break;
+            //             case 40:
+            //                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
+            //                     player.yPos++;
+            //                     mapLayers[1].applyFocus(player.xPos, player.yPos);
+            //                     if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
+            //                         mapLayers.map(function(layer) {
+            //                             layer.move("right");
+            //                         });
+            //                         startX++;
+            //                     }
+            //                     requestAnimFrame(draw);
+            //                 }
+            //                 break;
+            //             case 37:
+            //                 if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
+            //                     player.xPos--;
+            //                     mapLayers[1].applyFocus(player.xPos, player.yPos);
+            //                     if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+            //                         mapLayers.map(function(layer) {
+            //                             layer.move("up");
+            //                         });
+            //                         startY--;
+            //                     }
+            //                     requestAnimFrame(draw);
+            //                 }
+            //                 break;
+            //             case 49:
+            //                 mapLayers.map(function(layer) {
+            //                     layer.toggleGraphicsHide(true);
+            //                     layer.toggleHeightShadow(true);
+            //                 });
+            //                 break;
+            //             case 50:
+            //                 mapLayers.map(function(layer) {
+            //                     layer.toggleGraphicsHide(false);
+            //                     layer.toggleHeightShadow(false);
+            //                 });
+            //                 break;
+            //         }
+            //     }
+            // });
+            var players = [];
+            socket.emit('connection');
+            socket.on('login', function(data){
+                var player = newPlayer({id: data.username});
+                players.push(player);
+                requestAnimFrame(draw);
             });
-
             function draw() {
                 context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                calculatePaths++;
+                /*calculatePaths++;
                 if (calculatePaths === 100) {
                     enemy.map(function(e) {
                         pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), true, true).then(function(data) {
@@ -332,41 +417,30 @@ require([
                         });
                     });
                     calculatePaths = 0;
-                }
+                }*/
                 for (var i = startY, n = startY + rangeY; i < n; i++) {
                     for (var j = startX, h = startX + rangeX; j < h; j++) {
                         mapLayers.map(function(layer) {
-                            layer.setLight(player.xPos, player.yPos);
-                            if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
-                                //TO DO: Quitar la prueba esta cuando vaya todo bien
-                                //if ( j %2==0){
-                                  layer.draw(i, j, player.image[bucle]);
-                                  delete player.image;
-                                  player.image = [playerImages.files["160.png"],playerImages.files["main.png"]];
-                                  if (bucle == 0) {
-                                    bucle ++;
-                                  } else {
-                                    bucle--;
-                                  }
-                                //}else{
-                                  //player.wtf = playerImages.files["main.png"],
-                                  //layer.draw(i, j, player.wtf);
-                                  //delete player.wtf;
-                                //}
-                            } else {
-                                layer.draw(i, j);
-                            }
-                            enemy.map(function(e) {
-                                if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
-                                    layer.draw(i, j, e.image);
-                                }
+                            players.map(function(player){
+                                console.log(player);
+                                layer.setLight(player.xPos, player.yPos);
+                                    if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
+                                          layer.draw(i, j, player.image);
+                                    } else {
+                                        layer.draw(i, j);
+                                    }
+                                    /*enemy.map(function(e) {
+                                        if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
+                                            layer.draw(i, j, e.image);
+                                        }
+                                    });*/
+                                });
                             });
-                        });
                     }
                 }
                 // rain.Draw(CanvasControl().width / 4, 0);
-                requestAnimFrame(draw);
             }
+            requestAnimFrame(draw);
 
             return {
                 init: function(layers) {

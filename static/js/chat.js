@@ -25,6 +25,12 @@ $(function() {
 
   var socket = io();
 
+  window.addEventListener('keydown', function(e){
+    if(e.keyCode == 13) {
+      $('#gamechat').toggleClass('no-active');
+    }
+  });
+
   function addParticipantsMessage (data) {
     var message = '';
     if (data.numUsers === 1) {

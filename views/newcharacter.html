@@ -40,7 +40,28 @@
 	$("#guardar").click(function(){
 		var parameters = {name: $("#name").val(), hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value')};
 		$.post( '/saveselectedchar', parameters, function(){
-			window.location.href = 'http://localhost:3000/character';
+			$.extend(
+				{
+				    redirectPost: function(location, args)
+				    {
+				        var form = $('<form></form>');
+				        form.attr("method", "post");
+				        form.attr("action", location);
+
+				        $.each( args, function( key, value ) {
+				            var field = $('<input></input>');
+
+				            field.attr("type", "hidden");
+				            field.attr("name", key);
+				            field.attr("value", value);
+
+				            form.append(field);
+				        });
+				        $(form).appendTo('body').submit();
+				    }
+				});
+			var redirect = 'http://localhost:3000/character';
+			$.redirectPost(redirect, {charname: $("#name").val()});
 		});
 	});
 	

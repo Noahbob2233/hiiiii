@@ -56,7 +56,7 @@ env.addGlobal('url', '');
 var sess;
 
 //INICIO
-app.get('/', function(req, res) {
+app.all('/', function(req, res) {
 	sess = req.session;
 	res.render('index.html', {
 			sess: sess
@@ -68,6 +68,8 @@ app.get('/', function(req, res) {
 //USUARIOS
 //LOGIN
 app.post('/login', function(req, res){
+	sess = req.session;
+
 	var user = req.body.username || "";
 	var pass = sha256(req.body.password) || "";
 
@@ -75,7 +77,6 @@ app.post('/login', function(req, res){
 	var query_select_var = [user,pass];
 
 	var page = req.body.url;
-	sess = req.session;
 
 	//LOGUEAMOS
 	db.Select(query_select, query_select_var).then(function(result){
@@ -92,6 +93,7 @@ app.post('/login', function(req, res){
 				sess.characters = result;
 				sess.characters_max = size;
 			}else{
+				sess.characters = [];
 				sess.characters_max = 0;
 			}
 			res.redirect(page);
@@ -149,18 +151,15 @@ app.post('/logout', function(req, res){
 //FIN USUARIOS
 
 //SOCKETIO
-app.all('/chat', function(req,res){
-	sess = req.session;
-	res.render('chat.html', {
-			sess: sess
-		});
-});
-
 app.all('/game', function(req,res){
   sess = req.session;
-  res.render('game.html', {
+  if(sess.user){
+  	res.render('game.html', {
       sess: sess
     });
+  }else{
+   res.redirect('/');
+  }
 });
 
 // Chatroom
@@ -229,9 +228,9 @@ io.on('connection', function (socket) {
 //PANTALLA DEL CHARACTER
 app.all('/character', function(req,res){
 	sess = req.session;
+	if(sess.user && req.body.charname){
 	var query = "SELECT * FROM users_chars WHERE name=?";
-	var query_var = [req.body.name];
-	console.log("respuesta: "+req.body.name);
+	var query_var = [req.body.charname];
 	db.Select(query, query_var).then(function(result){
 		sess.character_name = result[0].name;
 		sess.character_lvl = result[0].lvl;
@@ -243,11 +242,14 @@ app.all('/character', function(req,res){
 			sess: sess
 		});
 	});
+	}else{
+		res.redirect('/');
+	}
 });
 //FIN DE LA PANTALLA DEL CHARACTER
 
 //PANTALLA DE CREACION DE PJ
-app.all('/newchar', function(req,res){
+app.post('/newchar', function(req,res){
 	sess = req.session;
 	var query = ""
 				+ "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed "
@@ -314,7 +316,7 @@ app.post('/deleteselectedchar', function(req,res){
 	db.Select(query, query_var).then(function(){
 		removeByAttr(sess.characters, 'name', req.body.name);
 		sess.characters_max -= 1;
-		res.render('character.html', {
+		res.render('index.html', {
 			sess: sess
 		});
 	});

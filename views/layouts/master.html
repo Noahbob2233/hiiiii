@@ -11,8 +11,8 @@
 	<link rel="stylesheet" href="/static/css/font-awesome.min.css">
 	<!-- <link rel="stylesheet" href="/static/css/chat.css"> -->
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script> -->
-	<script src="/static/js/jquery.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<!-- <script src="/static/js/jquery.js"></script> -->
 	<script src="/static/js/bootstrap.min.js"></script>
 	<script src="/static/js/waves.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
@@ -46,14 +46,12 @@
 							<a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown" id="navLogout">{{sess.user}}</a>
 							<div class="dropdown-menu">
 								{% if sess.characters %}
-									<form action="/character" method="post">
-										<ul>
-											{% for char in sess.characters %}
-												<li><input type="hidden" value="{{char.name}}"></li>
-										        <li><button type="submit">{{char.name}}</button></li>
-										    {% endfor %}
-									    </ul>
-								    </form>
+										{% for char in sess.characters %}
+										<form action="/character" method="post">
+											<input type="hidden" name='charname' value="{{char.name}}">
+									        <button type="submit">{{char.name}}</button>
+								        </form>
+									    {% endfor %}
 							    {% endif %}
 							    {% if sess.characters_max < 3 %}
 							    	<a href="/newchar">Crear un PJ nuevo</a>

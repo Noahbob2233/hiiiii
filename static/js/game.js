@@ -73,7 +73,7 @@ require([
                         }
                         tempObjects.push(jsonResponse[0].layers[jsonResponse[0].layers.length - 1].data[i]);
                         j++;
-                        if ((i + 1) % 50 === 0 && i !== 0) {
+                        if ((i + 1) % jsonResponse[0].width === 0 && i !== 0) {
                             finalMap.push(tempMap);
                             finalHeight.push(tempHeight);
                             objectMap.push(tempObjects);
@@ -259,6 +259,7 @@ require([
                 if (pressed) {
                     switch (key) {
                         case 38:
+                        bucle = 0;
                             if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
                                 player.yPos--;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -276,6 +277,7 @@ require([
                             requestAnimFrame(draw);
                             break;
                         case 39:
+                        bucle = 1;
                             if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
                                 player.xPos++;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -293,6 +295,7 @@ require([
                             requestAnimFrame(draw);
                             break;
                         case 40:
+                        bucle = 2;
                             if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
                                 player.yPos++;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -310,6 +313,7 @@ require([
                             requestAnimFrame(draw);
                             break;
                         case 37:
+                        bucle = 3;
                             if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
                                 player.xPos--;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -383,11 +387,11 @@ require([
                                   layer.draw(a, b, player.image[bucle]);
                                   //context.clearRect(CanvasControl().width/2, CanvasControl().height/2, 20, 20);
                                   player.image = [playerImages.files["160.png"],playerImages.files["161.png"],playerImages.files["162.png"],playerImages.files["163.png"]];
-                                  if (bucle != player.image.length-1) {
+                                  /*if (bucle != player.image.length-1) {
                                     bucle ++;
                                   } else {
                                     bucle = 0;
-                                  }
+                                  }*/
                                 //}, fpsRatio, a, b);
                               }
                                 //}else{

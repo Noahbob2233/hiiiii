@@ -229,7 +229,8 @@ io.on('connection', function (socket) {
 app.all('/character', function(req,res){
 	sess = req.session;
 	var query = "SELECT * FROM users_chars WHERE name=?";
-	var query_var = [req.query.character];
+	var query_var = [req.body.name];
+	console.log("respuesta: "+req.body.name);
 	db.Select(query, query_var).then(function(result){
 		sess.character_name = result[0].name;
 		sess.character_lvl = result[0].lvl;
@@ -237,7 +238,6 @@ app.all('/character', function(req,res){
 		sess.character_attack = result[0].attack;
 		sess.character_defense = result[0].defense;
 		sess.character_speed = result[0].speed;
-		sess.character_map = result[0].map;
 		res.render('character.html', {
 			sess: sess
 		});
@@ -269,11 +269,11 @@ app.all('/newchar', function(req,res){
 
 //LISTADO DE CHARS DE EJEMPLO PARA LA CREACION
 
-app.get('/loadsamplechars', function(req,res){
+app.post('/loadsamplechars', function(req,res){
 	sess = req.session;
 
 	var query = "SELECT * FROM chars WHERE id=?";
-	var query_var = [req.query.search];
+	var query_var = [req.body.search];
 
 	db.Select(query, query_var).then(function(result){
 		res.send(result[0]);
@@ -282,60 +282,39 @@ app.get('/loadsamplechars', function(req,res){
 
 //GUARDAMOS EL CHAR SELECCIONADO EN LA BASE DE DATOS PARA EL USUARIO
 
-app.get('/saveselectedchar', function(req,res){
+app.post('/saveselectedchar', function(req,res){
 	sess = req.session;
 
 	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id) VALUES (?,1,?,?,?,?,?)";
-	var query_var = [req.query.name,req.query.hp,req.query.attack,req.query.defense,req.query.speed,sess.userid];
-
-	db.Select(query, query_var).then(function(result){
-		var query = "SELECT name FROM users_chars WHERE user_id=?";
-		var query_var = [sess.userid];
-		db.Select(query, query_var).then(function(result){
-			var size = Object.size(result);
-			sess.characters = result;
-			sess.characters_max = size;
-			sess.character_name = result[size-1].name;
-			sess.character_lvl = result[size-1].lvl;
-			sess.character_hp = result[size-1].hp;
-			sess.character_attack = result[size-1].attack;
-			sess.character_defense = result[size-1].defense;
-			sess.character_speed = result[size-1].speed;
-			sess.character_map = result[size-1].map;
-			console.log("RENDER QE NO VA");
-			res.render('character.html', {
-				sess: sess
-			});
+	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid];
+	db.Select(query, query_var).then(function(){
+		sess.characters.push({name: req.body.name});
+		sess.characters_max += 1;
+		sess.character_name = req.body.name;
+		sess.character_lvl = 1;
+		sess.character_hp = req.body.hp;
+		sess.character_attack = req.body.attack;
+		sess.character_defense = req.body.defense;
+		sess.character_speed = req.body.speed;
+		res.render('character.html', {
+			sess: sess
 		});
 	});
 });
 
 // ELIMINAMOS EL PJ SELECCIONADO
 
-app.get('/deleteselectedchar', function(req,res){
+app.post('/deleteselectedchar', function(req,res){
 	sess = req.session;
 
 	var query = "DELETE FROM users_chars WHERE user_id=? AND name=?";
-	var query_var = [sess.userid,req.query.name];
+	var query_var = [sess.userid,req.body.name];
 
-	db.Select(query, query_var).then(function(result){
-		var query = "SELECT name FROM users_chars WHERE user_id=?";
-		var query_var = [sess.userid];
-		db.Select(query, query_var).then(function(result){
-			var size = Object.size(result);
-			sess.characters = result;
-			sess.characters_max = size;
-			sess.character_name = result[size-1].name;
-			sess.character_lvl = result[size-1].lvl;
-			sess.character_hp = result[size-1].hp;
-			sess.character_attack = result[size-1].attack;
-			sess.character_defense = result[size-1].defense;
-			sess.character_speed = result[size-1].speed;
-			sess.character_map = result[size-1].map;
-			console.log("RENDER QE NO VA");
-			res.render('character.html', {
-				sess: sess
-			});
+	db.Select(query, query_var).then(function(){
+		removeByAttr(sess.characters, 'name', req.body.name);
+		sess.characters_max -= 1;
+		res.render('character.html', {
+			sess: sess
 		});
 	});
 });
@@ -346,4 +325,18 @@ Object.size = function(obj) {
         if (obj.hasOwnProperty(key)) size++;
     }
     return size;
+};
+
+var removeByAttr = function(arr, attr, value){
+    var i = arr.length;
+    while(i--){
+       if( arr[i] 
+           && arr[i].hasOwnProperty(attr) 
+           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+
+           arr.splice(i,1);
+
+       }
+    }
+    return arr;
 };

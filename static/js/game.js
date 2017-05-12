@@ -73,7 +73,7 @@ require([
                         }
                         tempObjects.push(jsonResponse[0].layers[jsonResponse[0].layers.length - 1].data[i]);
                         j++;
-                        if ((i + 1) % 50 === 0 && i !== 0) {
+                        if ((i + 1) % jsonResponse[0].width === 0 && i !== 0) {
                             finalMap.push(tempMap);
                             finalHeight.push(tempHeight);
                             objectMap.push(tempObjects);

@@ -350,7 +350,7 @@ $(document).ready(function() {
             function draw() {
                 context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
                 calculatePaths++;
-                if (calculatePaths === 100) {
+                if (calculatePaths === 3) {
                     enemy.map(function(e) {
                         pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), true, true).then(function(data) {
                             if (data.length > 0 && data[1] !== undefined) {

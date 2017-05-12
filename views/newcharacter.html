@@ -17,7 +17,7 @@
 
 	function alCargar(){
         var parameters = {search: $('#samplechars').val()};
-		$.get( '/loadsamplechars', parameters, function(data) {
+		$.post( '/loadsamplechars', parameters, function(data) {
 			$('#charstats').empty();
 			$('#charstats').append("<li id='hp' value='"+data.hp+"'>Vida: "+data.hp+"</li>");
 			$('#charstats').append("<li id='attack' value='"+data.attack+"'>Ataque: "+data.attack+"</li>");
@@ -28,7 +28,7 @@
 
 	$("#samplechars").change(function(){
 		var parameters = {search: $(this).val()};
-		$.get( '/loadsamplechars', parameters, function(data) {
+		$.post( '/loadsamplechars', parameters, function(data) {
 			$('#charstats').empty();
 			$('#charstats').append("<li id='hp' value='"+data.hp+"'>Vida: "+data.hp+"</li>");
 			$('#charstats').append("<li id='attack' value='"+data.attack+"'>Ataque: "+data.attack+"</li>");
@@ -39,8 +39,8 @@
 
 	$("#guardar").click(function(){
 		var parameters = {name: $("#name").val(), hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value')};
-		$.get( '/saveselectedchar', parameters, function(data) {
-
+		$.post( '/saveselectedchar', parameters, function(){
+			window.location.href = 'http://localhost:3000/character';
 		});
 	});
 	

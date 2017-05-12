@@ -249,6 +249,7 @@ $(document).ready(function() {
                 //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
                 mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
                 //console.log(tile_coordinates);
+                requestAnimFrame(draw);
             });
             /*input.mouse_move(function(coords) {
                 //tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y);

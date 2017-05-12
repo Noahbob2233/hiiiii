@@ -250,8 +250,9 @@ app.all('/character', function(req,res){
 //FIN DE LA PANTALLA DEL CHARACTER
 
 //PANTALLA DE CREACION DE PJ
-app.post('/newchar', function(req,res){
+app.all('/newchar', function(req,res){
 	sess = req.session;
+	if(sess.user && sess.characters_max<3){
 	var query = ""
 				+ "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed "
 				+ "FROM chars c "
@@ -265,6 +266,9 @@ app.post('/newchar', function(req,res){
 			sess: sess
 		});
 	});
+}else{
+	res.redirect('/');
+}
 });
 //FIN DE LA PANTALLA DEL CHARACTER
 

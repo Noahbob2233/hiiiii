@@ -4,18 +4,30 @@ CREATE DATABASE warbo;
 
 USE warbo;
 
+DROP TABLE IF EXISTS type_maps;
+
+CREATE TABLE type_maps (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	name varchar(50)
+);
+
+INSERT INTO type_maps (name) VALUES ('sample');
+
 -- CREAMOS LOS MAPAS
 DROP TABLE IF EXISTS maps;
 
 CREATE TABLE maps (
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	created TIMESTAMP DEFAULT NOW(),
-	name varchar(50)
+	name varchar(50),
+	type_id INT,
+	FOREIGN KEY (type_id)
+        REFERENCES type_maps(id)
+        ON DELETE CASCADE
 );
 
-INSERT INTO maps (name) VALUES ('sample1.json');
-INSERT INTO maps (name) VALUES ('sample2.json');
-INSERT INTO maps (name) VALUES ('sample3.json');
+INSERT INTO maps (name, type_id) VALUES ('testmap1.json',1);
+INSERT INTO maps (name, type_id) VALUES ('testmap2.json',1);
 
 -- CREAMOS TABLA CON LOS TIPO DE CHARS QUE HABRA
 DROP TABLE IF EXISTS type_chars;

@@ -237,8 +237,7 @@ function(EffectLoader, Emitter, utils) {
       }
     }
 
-    function _draw(i, j, tileImageOverwite) {
-
+    function _draw(i, j, tileImageOverwite, widthSprite, direction) {
       var xpos, ypos;
       i = Math.round(i);
       j = Math.round(j);
@@ -319,7 +318,9 @@ function(EffectLoader, Emitter, utils) {
         }
 
         resizedTileHeight = 0;
-        if (stackGraphic) {
+        if (widthSprite) {
+          resizedTileHeight = widthSprite;
+        } else if (stackGraphic) {
           resizedTileHeight =  stackGraphic.height / (stackGraphic.width / tileWidth);
         }
         if (!isometric) {
@@ -339,7 +340,6 @@ function(EffectLoader, Emitter, utils) {
             if (tileImageOverwite) {
 
               // Draw the overwriting image insetad of tile
-
               ctx.drawImage(tileImageOverwite, 0, 0, stackGraphic.width, stackGraphic.height, xpos, (ypos + ((tileHeight - resizedTileHeight) * curZoom)), (tileWidth * curZoom), (resizedTileHeight * curZoom));
             }
             else {
@@ -380,7 +380,13 @@ function(EffectLoader, Emitter, utils) {
 
                 // Draw overwriting image on top of height map
 
-                ctx.drawImage(tileImageOverwite, 0, 0, tileImageOverwite.width, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
+                if (widthSprite) {
+                  console.log(widthSprite*direction);
+                  console.log(direction);
+                  ctx.drawImage(tileImageOverwite, (widthSprite*direction), 0, widthSprite, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
+                } else {
+                  ctx.drawImage(tileImageOverwite, 0, 0, tileImageOverwite.width, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
+                }
               }
               else {
 
@@ -396,6 +402,7 @@ function(EffectLoader, Emitter, utils) {
                       }
                     }
                   }
+
                   ctx.drawImage(stackGraphic, 0, 0, stackGraphic.width, stackGraphic.height, xpos, ypos + ((stack - 1) * (tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
                   ctx.restore();
                 }
@@ -415,7 +422,6 @@ function(EffectLoader, Emitter, utils) {
                 if (tileImageOverwite) {
 
                   // If there is an overwrite image
-
                   ctx.drawImage(tileImageOverwite, 0, 0, tileImageOverwite.width, tileImageOverwite.height, xpos, ypos + (k * ((tileHeight - heightOffset - resizedTileHeight) * curZoom)), (tileWidth * curZoom), (resizedTileHeight * curZoom));
                 }
                 else{
@@ -432,7 +438,6 @@ function(EffectLoader, Emitter, utils) {
 
                       if (Number(graphicValue) >= 0) {
                         // reset stackGraphic
-
                         stackGraphic = tileImages[tileImagesDictionary[graphicValue]];
                         ctx.drawImage(stackGraphic, 0, 0, stackGraphic.width, stackGraphic.height, xpos, ypos + ((k - 1) * ((tileHeight - heightOffset - resizedTileHeight) * curZoom)), (tileWidth * curZoom), (stackGraphic.height / (stackGraphic.width / tileWidth) * curZoom));
                       }
@@ -780,8 +785,8 @@ function(EffectLoader, Emitter, utils) {
         return _setup(settings);
       },
 
-      draw: function(tileX, tileY, tileImageOverwite) {
-        return _draw(tileX, tileY, tileImageOverwite);
+      draw: function(tileX, tileY, tileImageOverwite, widthSprite, direction) {
+        return _draw(tileX, tileY, tileImageOverwite, widthSprite, direction);
       },
 
       stackTiles: function(settings) {

@@ -147,10 +147,13 @@ $(document).ready(function() {
         function main(x, y, xrange, yrange, playerImages) {
 
             var player = {
+                //image: [playerImages.files["160.png"],playerImages.files["161.png"],playerImages.files["162.png"],playerImages.files["163.png"]],
+                image: playerImages.files["spritesheet.png"],
                 direction: 1,
-                image: [playerImages.files["160.png"],playerImages.files["161.png"],playerImages.files["162.png"],playerImages.files["163.png"]],
                 xPos: 7,
-                yPos: 7
+                yPos: 7,
+                width: 128,
+                height: 128
             };
             var enemy = [{
                 id: 0,
@@ -160,18 +163,18 @@ $(document).ready(function() {
             }, {
                 id: 1,
                 image: playerImages.files["enemy1.png"],
-                xPos: 0,
-                yPos: 0
+                xPos: 10,
+                yPos: 10
             }, {
                 id: 2,
                 image: playerImages.files["enemy1.png"],
-                xPos: 0,
-                yPos: 0
+                xPos: 5,
+                yPos: 5
             }, {
                 id: 3,
                 image: playerImages.files["enemy1.png"],
-                xPos: 0,
-                yPos: 0
+                xPos: 3,
+                yPos: 4
             }];
 
 
@@ -203,8 +206,6 @@ $(document).ready(function() {
                 tile_coordinates.x = tile_coordinates.x + height - 1;
                 tile_coordinates.y = tile_coordinates.y + height - 1;
                 mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
-                // console.log('X: '+tile_coordinates.x+' - '+player.xPos);
-                // console.log('Y: '+tile_coordinates.y+' - '+player.yPos);
                 /*pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
                     var i = 0;
                     var move = setInterval(function() {
@@ -242,10 +243,8 @@ $(document).ready(function() {
 
                 });*/
                 //mapLayers[0].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1); // Increase heightmap tile
-                //console.log(mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y));
                 //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
                 mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
-                //console.log(tile_coordinates);
                 requestAnimFrame(draw);
             });
             /*input.mouse_move(function(coords) {
@@ -348,7 +347,7 @@ $(document).ready(function() {
                         mapLayers.map(function(layer) {
                             layer.setLight(player.xPos, player.yPos);
                             if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
-                                layer.draw(i, j, player.image[player.direction]);
+                                layer.draw(i, j, player.image, player.width, player.direction);
                             } else {
                                 layer.draw(i, j);
                             }

@@ -381,8 +381,6 @@ function(EffectLoader, Emitter, utils) {
                 // Draw overwriting image on top of height map
 
                 if (widthSprite) {
-                  console.log(widthSprite*direction);
-                  console.log(direction);
                   ctx.drawImage(tileImageOverwite, (widthSprite*direction), 0, widthSprite, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
                 } else {
                   ctx.drawImage(tileImageOverwite, 0, 0, tileImageOverwite.width, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));

@@ -147,34 +147,47 @@ $(document).ready(function() {
         function main(x, y, xrange, yrange, playerImages) {
 
             var player = {
-                //image: [playerImages.files["160.png"],playerImages.files["161.png"],playerImages.files["162.png"],playerImages.files["163.png"]],
-                image: playerImages.files["spritesheet.png"],
-                direction: 1,
+                image: playerImages.files["armor.png"],
+                weapon: playerImages.files["greatstaff.png"],
+                head: playerImages.files["womenhead.png"],
                 xPos: 7,
                 yPos: 7,
+                direction: 1,
                 width: 128,
                 height: 128
             };
             var enemy = [{
                 id: 0,
-                image: playerImages.files["enemy1.png"],
+                image: playerImages.files["antlion.png"],
                 xPos: 0,
-                yPos: 0
+                yPos: 0,
+                direction: 1,
+                width: 128,
+                height: 128
             }, {
                 id: 1,
-                image: playerImages.files["enemy1.png"],
+                image: playerImages.files["antlion.png"],
                 xPos: 10,
-                yPos: 10
+                yPos: 10,
+                direction: 1,
+                width: 128,
+                height: 128
             }, {
                 id: 2,
-                image: playerImages.files["enemy1.png"],
+                image: playerImages.files["antlion.png"],
                 xPos: 5,
-                yPos: 5
+                yPos: 5,
+                direction: 1,
+                width: 128,
+                height: 128
             }, {
                 id: 3,
-                image: playerImages.files["enemy1.png"],
+                image: playerImages.files["antlion.png"],
                 xPos: 3,
-                yPos: 4
+                yPos: 4,
+                direction: 1,
+                width: 128,
+                height: 128
             }];
 
 
@@ -348,12 +361,14 @@ $(document).ready(function() {
                             layer.setLight(player.xPos, player.yPos);
                             if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
                                 layer.draw(i, j, player.image, player.width, player.direction);
+                                layer.draw(i, j, player.head, player.width, player.direction);
+                                layer.draw(i, j, player.weapon, player.width, player.direction);
                             } else {
                                 layer.draw(i, j);
                             }
                             enemy.map(function(e) {
                                 if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
-                                    layer.draw(i, j, e.image);
+                                    layer.draw(i, j, e.image, e.width, e.direction);
                                 }
                             });
                         });

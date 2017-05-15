@@ -1,10 +1,6 @@
 $(document).ready(function() {
     var tileWidth = 120;
     var tileHeight = tileWidth / 2;
-    var bucle = 0; //Esto no me mola global
-    var loop;
-    var fps = 30;
-    var fpsRatio = 1000 / fps;
     require([
         'jsiso/canvas/Control',
         'jsiso/canvas/Input',
@@ -151,7 +147,8 @@ $(document).ready(function() {
         function main(x, y, xrange, yrange, playerImages) {
 
             var player = {
-                image: [playerImages.files["160.png"],playerImages.files["main.png"]],
+                direction: 1,
+                image: [playerImages.files["160.png"],playerImages.files["161.png"],playerImages.files["162.png"],playerImages.files["163.png"]],
                 xPos: 7,
                 yPos: 7
             };
@@ -261,7 +258,7 @@ $(document).ready(function() {
                 if (pressed) {
                     switch (key) {
                         case 38:
-                        bucle = 0;
+                            player.direction = 0;
                             if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
                                 player.yPos--;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -272,14 +269,10 @@ $(document).ready(function() {
                                     startX--;
                                 }
                             }
-                            if( player.anim ){
-                                clearInterval(player.anim);
-                                player.anim = undefined;
-                            }
                             requestAnimFrame(draw);
                             break;
                         case 39:
-                        bucle = 1;
+                            player.direction = 1;
                             if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
                                 player.xPos++;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -290,14 +283,10 @@ $(document).ready(function() {
                                     startY++;
                                 }
                             }
-                            if( player.anim ){
-                                clearInterval(player.anim);
-                                player.anim = undefined;
-                            }
                             requestAnimFrame(draw);
                             break;
                         case 40:
-                        bucle = 2;
+                            player.direction = 2;
                             if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
                                 player.yPos++;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -308,14 +297,10 @@ $(document).ready(function() {
                                     startX++;
                                 }
                             }
-                            if( player.anim ){
-                                clearInterval(player.anim);
-                                player.anim = undefined;
-                            }
                             requestAnimFrame(draw);
                             break;
                         case 37:
-                        bucle = 3;
+                            player.direction = 3;
                             if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
                                 player.xPos--;
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -325,10 +310,6 @@ $(document).ready(function() {
                                     });
                                     startY--;
                                 }
-                            }
-                            if( player.anim ){
-                                clearInterval(player.anim);
-                                player.anim = undefined;
                             }
                             requestAnimFrame(draw);
                             break;
@@ -367,40 +348,7 @@ $(document).ready(function() {
                         mapLayers.map(function(layer) {
                             layer.setLight(player.xPos, player.yPos);
                             if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
-                                //TO DO: Quitar la prueba esta cuando vaya todo bien
-                                //if ( j %2==0){
-                                  /*layer.draw(i, j, player.image[bucle]);
-                                  delete player.image;
-                                  player.image = [playerImages.files["160.png"],playerImages.files["main.png"]];
-                                  if (bucle == 0) {
-                                    bucle ++;
-                                  } else {
-                                    bucle--;
-                                  }*/
-                              if (!player.anim) {
-                                /*console.log("var i: "+i);
-                                console.log("var j = startX: "+startX);
-                                console.log("var j = startX: "+startX);
-                                console.log("var h = startX+rangeX: "+rangeX);
-                                console.log("var j < h; j: "+j+" h: "+h);*/
-                                var a = i;
-                                var b = j;
-                                //player.anim = setInterval(function() {
-                                  layer.draw(a, b, player.image[bucle]);
-                                  //context.clearRect(CanvasControl().width/2, CanvasControl().height/2, 20, 20);
-                                  player.image = [playerImages.files["160.png"],playerImages.files["161.png"],playerImages.files["162.png"],playerImages.files["163.png"]];
-                                  /*if (bucle != player.image.length-1) {
-                                    bucle ++;
-                                  } else {
-                                    bucle = 0;
-                                  }*/
-                                //}, fpsRatio, a, b);
-                              }
-                                //}else{
-                                  //player.wtf = playerImages.files["main.png"],
-                                  //layer.draw(i, j, player.wtf);
-                                  //delete player.wtf;
-                                //}
+                                layer.draw(i, j, player.image[player.direction]);
                             } else {
                                 layer.draw(i, j);
                             }
@@ -412,7 +360,7 @@ $(document).ready(function() {
                         });
                     }
                 }
-                // rain.Draw(CanvasControl().width / 4, 0);
+                //rain.Draw(CanvasControl().width / 4, 0);
                 //requestAnimFrame(draw);
             }
 
@@ -718,4 +666,3 @@ $(document).ready(function() {
     log('attempt to reconnect has failed');
   });
 });
-

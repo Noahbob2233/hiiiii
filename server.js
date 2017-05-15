@@ -76,7 +76,8 @@ app.all('/', function(req, res) {
 				sess: sess
 			});
 		});
-	//fin inicio automatico descomentar, las 4 ultimas lineas y eliminar sesion automatica
+	//fin inicio automatico descomentar
+	
 	// res.render('index.html', {
 	// 		sess: sess
 	// 	});
@@ -203,6 +204,8 @@ io.on('connection', function (socket) {
 
     // we store the username in the socket session for this client
     socket.username = username;
+    socket.xPos = 7;
+    socket.yPos = 7;
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
@@ -228,6 +231,13 @@ io.on('connection', function (socket) {
     socket.broadcast.emit('stop typing', {
       username: socket.username
     });
+  });
+
+  socket.on('move', function(x,y){
+  	socket.xPos = x;
+  	socket.yPos = y;
+  	console.log('Someone is moving...'+socket.username);
+  	console.log('Actual position at X:'+socket.xPos+', Y:'+socket.yPos);
   });
 
   // when the user disconnects.. perform this

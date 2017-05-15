@@ -261,6 +261,7 @@ $(document).ready(function() {
                             player.direction = 0;
                             if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
                                 player.yPos--;
+                                socket.emit('move', player.xPos, player.yPos);
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
                                 if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
                                     mapLayers.map(function(layer) {
@@ -275,6 +276,7 @@ $(document).ready(function() {
                             player.direction = 1;
                             if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
                                 player.xPos++;
+                                socket.emit('move', player.xPos, player.yPos);
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
                                 if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
                                     mapLayers.map(function(layer) {
@@ -289,6 +291,7 @@ $(document).ready(function() {
                             player.direction = 2;
                             if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
                                 player.yPos++;
+                                socket.emit('move', player.xPos, player.yPos);
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
                                 if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
                                     mapLayers.map(function(layer) {
@@ -303,6 +306,7 @@ $(document).ready(function() {
                             player.direction = 3;
                             if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
                                 player.xPos--;
+                                socket.emit('move', player.xPos, player.yPos);
                                 mapLayers[1].applyFocus(player.xPos, player.yPos);
                                 if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
                                     mapLayers.map(function(layer) {
@@ -328,12 +332,13 @@ $(document).ready(function() {
                     }
                 }
             });
-
+            
             function draw() {
                 context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
                 calculatePaths++;
                 if (calculatePaths === 3) {
                     enemy.map(function(e) {
+                        //con el array de pj comprobar la pos del mas cercano al enemiho
                         pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), true, true).then(function(data) {
                             if (data.length > 0 && data[1] !== undefined) {
                                 e.xPos = data[1].x;
@@ -346,12 +351,14 @@ $(document).ready(function() {
                 for (var i = startY, n = startY + rangeY; i < n; i++) {
                     for (var j = startX, h = startX + rangeX; j < h; j++) {
                         mapLayers.map(function(layer) {
+                            //empieza loop por usuario conectado
                             layer.setLight(player.xPos, player.yPos);
                             if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
                                 layer.draw(i, j, player.image[player.direction]);
                             } else {
                                 layer.draw(i, j);
                             }
+                            //acaba loop
                             enemy.map(function(e) {
                                 if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
                                     layer.draw(i, j, e.image);
@@ -381,7 +388,9 @@ $(document).ready(function() {
         }
         launch();
     });
-    var FADE_TIME = 150; // ms
+
+  // CHAT
+  var FADE_TIME = 150; // ms
   var TYPING_TIMER_LENGTH = 400; // ms
   var COLORS = [
     '#e21400', '#91580f', '#f8a700', '#f78b00',
@@ -632,6 +641,8 @@ $(document).ready(function() {
   socket.on('user joined', function (data) {
     log(data.username + ' joined');
     addParticipantsMessage(data);
+    //AQUI SE DIBUJARA EL NUEVO PJ
+    
   });
 
   // Whenever the server emits 'user left', log it in the chat body
@@ -644,6 +655,11 @@ $(document).ready(function() {
   // Whenever the server emits 'typing', show the typing message
   socket.on('typing', function (data) {
     addChatTyping(data);
+  });
+
+  // Cuando se mueve alguien...
+  socket.on('user moved', function(){
+        draw();        
   });
 
   // Whenever the server emits 'stop typing', kill the typing message
@@ -665,4 +681,5 @@ $(document).ready(function() {
   socket.on('reconnect_error', function () {
     log('attempt to reconnect has failed');
   });
+
 });

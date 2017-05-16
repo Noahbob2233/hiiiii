@@ -49,10 +49,6 @@ app.use(bodyParser.json());
 // Global variables
 env.addGlobal('url', '');
 
-// app.listen(3000, function() {
-// 	console.log('http://127.0.0.1:3000');
-// });
-
 var sess;
 
 //INICIO
@@ -184,6 +180,7 @@ app.all('/game', function(req,res){
 
 // Chatroom
 var numUsers = 0;
+var playersonline = [];
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -199,14 +196,25 @@ io.on('connection', function (socket) {
   });
 
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (username) {
+  socket.on('add user', function (data) {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
-    socket.username = username;
-    socket.xPos = 7;
-    socket.yPos = 7;
+    socket.username = data.username;
     ++numUsers;
+
+    playersonline.push({
+    	name: data.name,
+        image: data.image,
+        weapon: data.weapon,
+        head: data.head,
+        xPos: data.xPos,
+        yPos: data.yPos,
+        direction: data.direction,
+        width: data.width,
+        height: data.height
+    });
+
     addedUser = true;
     socket.emit('login', {
       numUsers: numUsers,
@@ -215,7 +223,8 @@ io.on('connection', function (socket) {
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
-      numUsers: numUsers
+      numUsers: numUsers,
+      playersonline: playersonline
     });
   });
 
@@ -233,16 +242,14 @@ io.on('connection', function (socket) {
     });
   });
 
-  socket.on('move', function(x,y){
-  	socket.xPos = x;
-  	socket.yPos = y;
-  	console.log('Someone is moving...'+socket.username);
-  	console.log('Actual position at X:'+socket.xPos+', Y:'+socket.yPos);
-  	socket.broadcast.emit('someone moved', {
-  		username: socket.username,
-  		x: x,
-  		y: y
-  	});
+  socket.on('move', function(data){
+  	for (var i = playersonline.length - 1; i >= 0; i--) {
+  		if(playersonline[i].name === data.player.name){
+  			playersonline[i].xPos = data.player.xPos;
+  			playersonline[i].yPos = data.player.yPos;
+  		}
+  	}
+  	socket.broadcast.emit('someone moved', {playersonline: playersonline});
   });
 
   // when the user disconnects.. perform this

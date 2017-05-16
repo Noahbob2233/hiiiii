@@ -20,6 +20,7 @@ $(document).ready(function() {
 
     // Prompt for setting a username
     var username;
+    var playersonline = [];
     var connected = false;
     var typing = false;
     var lastTypingTime;
@@ -172,7 +173,7 @@ $(document).ready(function() {
             function main(x, y, xrange, yrange, playerImages) {
 
                 var player = {
-                    name: username,
+                    name: $('#navLogout').text(),
                     image: playerImages.files["armor.png"],
                     weapon: playerImages.files["greatstaff.png"],
                     head: playerImages.files["womenhead.png"],
@@ -216,7 +217,7 @@ $(document).ready(function() {
                     height: 128
                 }];
 
-                var playersonline = [];
+                // var playersonline = [];
                 var mapLayers = [];
                 var tile_coordinates = {};
                 var startY = y;
@@ -299,7 +300,7 @@ $(document).ready(function() {
                                 player.direction = 0;
                                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
                                     player.yPos--;
-                                    socket.emit('move', player.xPos, player.yPos);
+                                    socket.emit('move', {player: player});
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
                                         mapLayers.map(function(layer) {
@@ -314,7 +315,7 @@ $(document).ready(function() {
                                 player.direction = 1;
                                 if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
                                     player.xPos++;
-                                    socket.emit('move', player.xPos, player.yPos);
+                                    socket.emit('move', {player: player});
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
                                         mapLayers.map(function(layer) {
@@ -329,7 +330,7 @@ $(document).ready(function() {
                                 player.direction = 2;
                                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
                                     player.yPos++;
-                                    socket.emit('move', player.xPos, player.yPos);
+                                    socket.emit('move', {player: player});
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
                                         mapLayers.map(function(layer) {
@@ -344,7 +345,7 @@ $(document).ready(function() {
                                 player.direction = 3;
                                 if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
                                     player.xPos--;
-                                    socket.emit('move', player.xPos, player.yPos);
+                                    socket.emit('move', {player: player});
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
                                         mapLayers.map(function(layer) {
@@ -397,11 +398,11 @@ $(document).ready(function() {
                                 } else {
                                     layer.draw(i, j);
                                 }
-                                enemy.map(function(e) {
-                                    if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
-                                        layer.draw(i, j, e.image, e.width, e.direction);
-                                    }
-                                });
+                                // enemy.map(function(e) {
+                                //     if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
+                                //         layer.draw(i, j, e.image, e.width, e.direction);
+                                //     }
+                                // });
                                 playersonline.map(function(e) {
                                     if(player.name != e.name){
                                         if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
@@ -446,8 +447,18 @@ $(document).ready(function() {
                         //$loginPage.off('click');
                         $currentInput = $inputMessage.focus();
 
-                        // Tell the server your username
-                        socket.emit('add user', username);
+                        // Tell the server who you are
+                        socket.emit('add user', {
+                            name: username,
+                            image: playerImages.files["armor.png"].src,
+                            weapon: playerImages.files["greatstaff.png"].src,
+                            head: playerImages.files["womenhead.png"].src,
+                            xPos: 7,
+                            yPos: 7,
+                            direction: 1,
+                            width: 128,
+                            height: 128
+                        });
                     }
                 }
                 setUsername();
@@ -645,17 +656,12 @@ $(document).ready(function() {
                     log(data.username + ' joined');
                     addParticipantsMessage(data);
                     //AQUI SE DIBUJARA EL NUEVO PJ
-                    playersonline.push({
-                        name: data.username,
-                        image: playerImages.files["armor.png"],
-                        weapon: playerImages.files["greatstaff.png"],
-                        head: playerImages.files["womenhead.png"],
-                        xPos: 7,
-                        yPos: 7,
-                        direction: 1,
-                        width: 128,
-                        height: 128
-                    });
+                    for (var i = data.playersonline.length - 1; i >= 0; i--) {
+                        data.playersonline[i].image = playerImages.files["armor.png"];
+                        data.playersonline[i].weapon = playerImages.files["greatstaff.png"];
+                        data.playersonline[i].head = playerImages.files["womenhead.png"];
+                    }
+                    playersonline = data.playersonline;
 
                     draw();
                 });
@@ -674,15 +680,12 @@ $(document).ready(function() {
 
                 // Cuando se mueve alguien...
                 socket.on('someone moved', function(data) {
-                    playersonline.map(function(e) {
-                        if (data.username === e.name) {
-                            console.log("Quien se mueve: "+data.username);
-                            console.log("Quien se deberia mover: "+e.name);
-                            console.log("he entrado");
-                            e.xPos = data.x;
-                            e.yPos = data.y;
-                        }
-                    });
+                    for (var i = data.playersonline.length - 1; i >= 0; i--) {
+                        data.playersonline[i].image = playerImages.files["armor.png"];
+                        data.playersonline[i].weapon = playerImages.files["greatstaff.png"];
+                        data.playersonline[i].head = playerImages.files["womenhead.png"];
+                    }
+                    playersonline = data.playersonline;
                     draw();
                 });
 

@@ -216,6 +216,7 @@ $(document).ready(function() {
                     height: 128
                 }];
 
+                var playersonline = [];
                 var mapLayers = [];
                 var tile_coordinates = {};
                 var startY = y;
@@ -396,12 +397,12 @@ $(document).ready(function() {
                                 } else {
                                     layer.draw(i, j);
                                 }
-                                // enemy.map(function(e) {
-                                //     if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
-                                //         layer.draw(i, j, e.image, e.width, e.direction);
-                                //     }
-                                // });
-                                socket.playersonline.map(function(e) {
+                                enemy.map(function(e) {
+                                    if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
+                                        layer.draw(i, j, e.image, e.width, e.direction);
+                                    }
+                                });
+                                playersonline.map(function(e) {
                                     if(player.name != e.name){
                                         if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
                                             layer.draw(i, j, e.image, e.width, e.direction);
@@ -644,7 +645,7 @@ $(document).ready(function() {
                     log(data.username + ' joined');
                     addParticipantsMessage(data);
                     //AQUI SE DIBUJARA EL NUEVO PJ
-                    socket.playersonline.push({
+                    playersonline.push({
                         name: data.username,
                         image: playerImages.files["armor.png"],
                         weapon: playerImages.files["greatstaff.png"],

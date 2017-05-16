@@ -238,6 +238,7 @@ io.on('connection', function (socket) {
   	socket.yPos = y;
   	console.log('Someone is moving...'+socket.username);
   	console.log('Actual position at X:'+socket.xPos+', Y:'+socket.yPos);
+  	socket.broadcast.emit('someone moved');
   });
 
   // when the user disconnects.. perform this
@@ -351,7 +352,9 @@ app.post('/deleteselectedchar', function(req,res){
 		removeByAttr(sess.characters, 'name', req.body.name);
 		sess.characters_max -= 1;
 		res.render('index.html', {
+			sess: sess		res.render('index.html', {
 			sess: sess
+
 		});
 	});
 });

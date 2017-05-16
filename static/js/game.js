@@ -190,6 +190,7 @@ $(document).ready(function() {
                 height: 128
             }];
 
+            var playersonline = [];
 
             var mapLayers = [];
             var tile_coordinates = {};
@@ -363,7 +364,6 @@ $(document).ready(function() {
                 for (var i = startY, n = startY + rangeY; i < n; i++) {
                     for (var j = startX, h = startX + rangeX; j < h; j++) {
                         mapLayers.map(function(layer) {
-                            //empieza loop por usuario conectado
                             layer.setLight(player.xPos, player.yPos);
                             if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
                                 layer.draw(i, j, player.image, player.width, player.direction);
@@ -372,12 +372,18 @@ $(document).ready(function() {
                             } else {
                                 layer.draw(i, j);
                             }
-                            //acaba loop
                             enemy.map(function(e) {
                                 if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
                                     layer.draw(i, j, e.image, e.width, e.direction);
                                 }
                             });
+                            for (var k = playersonline.length - 1; k >= 0; k--) {
+                                playersonline[k].map(function(e) {
+                                    if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
+                                        layer.draw(i, j, e.image, e.width, e.direction);
+                                    }
+                                });
+                            }
                         });
                     }
                 }
@@ -656,6 +662,11 @@ $(document).ready(function() {
     log(data.username + ' joined');
     addParticipantsMessage(data);
     //AQUI SE DIBUJARA EL NUEVO PJ
+    
+  });
+
+  socket.on('someone moved', function () {
+    //redibujo el mapa con los pj nuevos
     
   });
 

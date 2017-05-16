@@ -377,7 +377,6 @@ function(EffectLoader, Emitter, utils) {
 
             if (!distanceLightingSettings || ( distanceLightingSettings && distanceLighting < distanceLightingSettings.darkness)) {
               if (tileImageOverwite) {
-
                 // Draw overwriting image on top of height map
 
                 if (widthSprite) {
@@ -478,21 +477,22 @@ function(EffectLoader, Emitter, utils) {
 
           nextStack = Math.round(Number(heightMap[i][j - 1]));
           currStack = Math.round(Number(heightMap[i][j]));
-
           if (currStack < nextStack) {
+            /*i++;
+            j -= 0.5;*/
             shadowXpos = (i - j) * (tileHeight * curZoom) + drawX;
             shadowYpos = (i + j) * (tileWidth / 4 * curZoom) + drawY;
 
             // Apply Horizontal shadow created from stacked tiles
             if (shadowSettings.horizontalColor) {
               if (!distanceLightingSettings  || (distanceLighting < distanceLightingSettings.darkness)) {
-                _drawHorizontalColorOverlay(shadowXpos, shadowYpos, (typeof shadowSettings.horizontalColor === 'string' ? shadowSettings.horizontalColor : shadowSettings.horizontalColor[i][j]), currStack, resizedTileHeight);
+                //_drawHorizontalColorOverlay(shadowXpos, shadowYpos, (typeof shadowSettings.horizontalColor === 'string' ? shadowSettings.horizontalColor : shadowSettings.horizontalColor[i][j]), currStack, resizedTileHeight);
               }
             }
             // Apply Vertical shadow created from stacked tiles
             if (shadowSettings.verticalColor) {
               if (!distanceLightingSettings  || (distanceLighting < distanceLightingSettings.darkness)) {
-                _drawVeritcalColorOverlay(shadowXpos, shadowYpos, (typeof shadowSettings.verticalColor === 'string' ? shadowSettings.verticalColor : shadowSettings.verticalColor[i][j]), currStack, nextStack, resizedTileHeight, shadowSettings);
+                //_drawVeritcalColorOverlay(shadowXpos, shadowYpos, (typeof shadowSettings.verticalColor === 'string' ? shadowSettings.verticalColor : shadowSettings.verticalColor[i][j]), currStack, nextStack, resizedTileHeight, shadowSettings);
               }
             }
           }

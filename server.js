@@ -236,8 +236,8 @@ io.on('connection', function (socket) {
   socket.on('move', function(x,y){
   	socket.xPos = x;
   	socket.yPos = y;
-  	console.log('Someone is moving...'+socket.username);
-  	console.log('Actual position at X:'+socket.xPos+', Y:'+socket.yPos);
+  	/*console.log('Someone is moving...'+socket.username);
+  	console.log('Actual position at X:'+socket.xPos+', Y:'+socket.yPos);*/
   	socket.broadcast.emit('someone moved', {
   		username: socket.username,
   		x: x,

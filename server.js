@@ -77,7 +77,7 @@ app.all('/', function(req, res) {
 			});
 		});
 	//fin inicio automatico descomentar
-	
+
 	// res.render('index.html', {
 	// 		sess: sess
 	// 	});
@@ -357,7 +357,6 @@ app.post('/deleteselectedchar', function(req,res){
 		sess.characters_max -= 1;
 		res.render('index.html', {
 			sess: sess
-
 		});
 	});
 });
@@ -373,9 +372,9 @@ Object.size = function(obj) {
 var removeByAttr = function(arr, attr, value){
     var i = arr.length;
     while(i--){
-       if( arr[i] 
-           && arr[i].hasOwnProperty(attr) 
-           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+       if( arr[i]
+           && arr[i].hasOwnProperty(attr)
+           && (arguments.length > 2 && arr[i][attr] === value ) ){
 
            arr.splice(i,1);
 

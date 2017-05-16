@@ -64,6 +64,7 @@
     "static/img/characters/players/isometric_heroine/spritesheets/armor.png",
     "static/img/characters/players/isometric_heroine/spritesheets/greatstaff.png",
     "static/img/characters/players/isometric_heroine/spritesheets/womenhead.png",
-    "static/img/characters/enemies/antlion/antlion.png"
+    "static/img/characters/enemies/antlion/antlion.png",
+    "static/img/characters/enemies/wyverns/wyvern.png"
   ]
 }

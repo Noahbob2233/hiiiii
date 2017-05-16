@@ -59,29 +59,29 @@ var sess;
 app.all('/', function(req, res) {
 	sess = req.session;
 	//sesion automatica para pruebas
-	sess.userid = 1;
-	sess.user = 'admin';
-	var query = "SELECT name FROM users_chars WHERE user_id=?";
-		var query_var = [sess.userid];
-		db.Select(query, query_var).then(function(result){
-			var size = Object.size(result);
-			if(size>0){
-				sess.characters = result;
-				sess.characters_max = size;
-			}else{
-				sess.characters = [];
-				sess.characters_max = 0;
-			}
-			res.render('index.html', {
-				sess: sess
-			});
-		});
+	// sess.userid = 1;
+	// sess.user = 'admin';
+	// var query = "SELECT name FROM users_chars WHERE user_id=?";
+	// 	var query_var = [sess.userid];
+	// 	db.Select(query, query_var).then(function(result){
+	// 		var size = Object.size(result);
+	// 		if(size>0){
+	// 			sess.characters = result;
+	// 			sess.characters_max = size;
+	// 		}else{
+	// 			sess.characters = [];
+	// 			sess.characters_max = 0;
+	// 		}
+	// 		res.render('index.html', {
+	// 			sess: sess
+	// 		});
+	// 	});
 	//fin inicio automatico descomentar
 
-	// res.render('index.html', {
-	// 		sess: sess
-	// 	});
-	// delete sess.signup;
+	res.render('index.html', {
+			sess: sess
+		});
+	delete sess.signup;
 });
 //FIN INICIO
 

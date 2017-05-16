@@ -192,7 +192,7 @@ $(document).ready(function() {
                     height: 128
                 }, {
                     id: 1,
-                    image: playerImages.files["antlion.png"],
+                    image: playerImages.files["wyvern.png"],
                     xPos: 10,
                     yPos: 10,
                     direction: 1,
@@ -208,7 +208,7 @@ $(document).ready(function() {
                     height: 128
                 }, {
                     id: 3,
-                    image: playerImages.files["antlion.png"],
+                    image: playerImages.files["wyvern.png"],
                     xPos: 3,
                     yPos: 4,
                     direction: 1,

@@ -172,6 +172,7 @@ $(document).ready(function() {
             function main(x, y, xrange, yrange, playerImages) {
 
                 var player = {
+                    name: username,
                     image: playerImages.files["armor.png"],
                     weapon: playerImages.files["greatstaff.png"],
                     head: playerImages.files["womenhead.png"],
@@ -215,6 +216,7 @@ $(document).ready(function() {
                     height: 128
                 }];
 
+                var playersonline = [];
 
                 var mapLayers = [];
                 var tile_coordinates = {};
@@ -388,7 +390,6 @@ $(document).ready(function() {
                     for (var i = startY, n = startY + rangeY; i < n; i++) {
                         for (var j = startX, h = startX + rangeX; j < h; j++) {
                             mapLayers.map(function(layer) {
-                                //empieza loop por usuario conectado
                                 layer.setLight(player.xPos, player.yPos);
                                 if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
                                     layer.draw(i, j, player.image, player.width, player.direction);
@@ -397,8 +398,12 @@ $(document).ready(function() {
                                 } else {
                                     layer.draw(i, j);
                                 }
-                                //acaba loop
                                 enemy.map(function(e) {
+                                    if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
+                                        layer.draw(i, j, e.image, e.width, e.direction);
+                                    }
+                                });
+                                playersonline.map(function(e) {
                                     if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
                                         layer.draw(i, j, e.image, e.width, e.direction);
                                     }
@@ -636,6 +641,19 @@ $(document).ready(function() {
                     log(data.username + ' joined');
                     addParticipantsMessage(data);
                     //AQUI SE DIBUJARA EL NUEVO PJ
+                    playersonline.push({
+                        name: data.username,
+                        image: playerImages.files["armor.png"],
+                        weapon: playerImages.files["greatstaff.png"],
+                        head: playerImages.files["womenhead.png"],
+                        xPos: 7,
+                        yPos: 7,
+                        direction: 1,
+                        width: 128,
+                        height: 128
+                    });
+
+                    draw();
 
                 });
 
@@ -652,7 +670,15 @@ $(document).ready(function() {
                 });
 
                 // Cuando se mueve alguien...
-                socket.on('user moved', function() {
+                socket.on('someone moved', function(data) {
+                    playersonline.map(function(e) {
+                        // if (data.username === e.username) {
+                            
+                        console.log("he entrado");
+                            e.xPos = data.x;
+                            e.yPos = data.y;
+                        // }
+                    });
                     draw();
                 });
 

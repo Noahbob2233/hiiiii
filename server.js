@@ -352,9 +352,7 @@ app.post('/deleteselectedchar', function(req,res){
 		removeByAttr(sess.characters, 'name', req.body.name);
 		sess.characters_max -= 1;
 		res.render('index.html', {
-			sess: sess		res.render('index.html', {
 			sess: sess
-
 		});
 	});
 });

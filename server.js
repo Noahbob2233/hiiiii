@@ -77,7 +77,7 @@ app.all('/', function(req, res) {
 			});
 		});
 	//fin inicio automatico descomentar
-	
+
 	// res.render('index.html', {
 	// 		sess: sess
 	// 	});
@@ -238,7 +238,11 @@ io.on('connection', function (socket) {
   	socket.yPos = y;
   	console.log('Someone is moving...'+socket.username);
   	console.log('Actual position at X:'+socket.xPos+', Y:'+socket.yPos);
-  	socket.broadcast.emit('someone moved');
+  	socket.broadcast.emit('someone moved', {
+  		username: socket.username,
+  		x: x,
+  		y: y
+  	});
   });
 
   // when the user disconnects.. perform this
@@ -368,9 +372,9 @@ Object.size = function(obj) {
 var removeByAttr = function(arr, attr, value){
     var i = arr.length;
     while(i--){
-       if( arr[i] 
-           && arr[i].hasOwnProperty(attr) 
-           && (arguments.length > 2 && arr[i][attr] === value ) ){ 
+       if( arr[i]
+           && arr[i].hasOwnProperty(attr)
+           && (arguments.length > 2 && arr[i][attr] === value ) ){
 
            arr.splice(i,1);
 

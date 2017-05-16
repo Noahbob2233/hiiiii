@@ -172,6 +172,7 @@ $(document).ready(function() {
             function main(x, y, xrange, yrange, playerImages) {
 
                 var player = {
+                    name: username,
                     image: playerImages.files["armor.png"],
                     weapon: playerImages.files["greatstaff.png"],
                     head: playerImages.files["womenhead.png"],
@@ -214,8 +215,6 @@ $(document).ready(function() {
                     width: 128,
                     height: 128
                 }];
-
-                var playersonline = [];
 
                 var mapLayers = [];
                 var tile_coordinates = {};
@@ -402,11 +401,13 @@ $(document).ready(function() {
                                 //         layer.draw(i, j, e.image, e.width, e.direction);
                                 //     }
                                 // });
-                                playersonline.map(function(e) {
-                                    if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
-                                        layer.draw(i, j, e.image, e.width, e.direction);
-                                        layer.draw(i, j, e.head, e.width, e.direction);
-                                        layer.draw(i, j, e.weapon, e.width, e.direction);
+                                socket.playersonline.map(function(e) {
+                                    if(player.name != e.name){
+                                        if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
+                                            layer.draw(i, j, e.image, e.width, e.direction);
+                                            layer.draw(i, j, e.head, e.width, e.direction);
+                                            layer.draw(i, j, e.weapon, e.width, e.direction);
+                                        }
                                     }
                                 });
 
@@ -643,7 +644,7 @@ $(document).ready(function() {
                     log(data.username + ' joined');
                     addParticipantsMessage(data);
                     //AQUI SE DIBUJARA EL NUEVO PJ
-                    playersonline.push({
+                    socket.playersonline.push({
                         name: data.username,
                         image: playerImages.files["armor.png"],
                         weapon: playerImages.files["greatstaff.png"],

@@ -2,7 +2,7 @@
 
 
 body {
-	background-image: url("/static/img/background.jpeg");
+	background-image: url("/static/img/background.jpg");
 	background-size: cover;
 	font-family: 'Roboto';
 	background-attachment: fixed;
@@ -112,10 +112,10 @@ body {
 
 #header {
 	padding: 0px;
-	background-color: @lightGreen;
+	background-color: @darkGreenBlue;
 	text-align: center;
 	h1 {
-		color: @darkGreen;
+		color: @darkGrey;
 		text-align: center;
 		.heading;
 	}
@@ -133,7 +133,7 @@ body {
 		}
 		label {
 			.heading;
-			color: @darkGreen;
+			color: @darkGrey;
 		}
 	}
 }
@@ -144,7 +144,7 @@ body {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	transition: width 1s;
-	background-color: @darkGreen !important;
+	background-color: @darkGrey !important;
 	border: 0px !important;
 	.navbar-brand {
 		padding: 5px !important;
@@ -154,14 +154,14 @@ body {
 	}
 	.nav-item, .navbar-brand {
 		&.active {
-			background-color: @lightGreen;
+			background-color: @darkGreenBlue;
 			.nav-link {
 				color: black !important;
 			}
 		}
 	}
 	.nav-link, .navbar-brand {
-		color: @lightGreen !important;
+		color: @darkGreenBlue !important;
 		.heading;
 		&:hover, &:focus {
 			color: white !important;
@@ -176,7 +176,7 @@ body {
 		border: none;
 		border-radius: unset;
 		margin: 0px;
-		background-color: @lightGreen;
+		background-color: @darkGreenBlue;
 		.box-shadow;
 		input {
 			margin-bottom: 20px;
@@ -185,7 +185,7 @@ body {
 }
 
 #box {
-	background-color: #2e7122 !important;
+	background-color: @darkGrey !important;
 	border-radius: 0px !important;
 	margin: 0px;
 
@@ -196,13 +196,13 @@ body {
 
 .card {
 	background-color: white;
-	color: @darkGreen;
-	border: 1px solid @lightGreen;
+	color: @darkGrey;
 	margin-top: 0px;
 	font-size: 14px;
 	height: 100%;
 	box-shadow: 0px 0px 20px 6px rgba(0,0,0,0.26);
-	img {
+	border-radius: 0px;
+	/*img {
 		width: 60px;
 		margin: 0 auto;
 		display: block;
@@ -215,59 +215,9 @@ body {
 	}
 	ul {
 		padding-left: 0px;
-	}
+	}*/
 }
 
-
-.widget-area {
-	background-color: #fff;
-	.border-radius;
-	.box-shadow;
-	float: left;
-	margin-top: 30px;
-	position: relative;
-	width: 100%;
-}
-.status-upload {
-	background: none repeat scroll 0 0 #9fc3aa;
-	.border-radius;
-	float: left;
-	width: 100%;
-
-	form {
-		float: left;
-		width: 100%;
-
-		textarea {
-			background: none repeat scroll 0 0 #fff;
-			border: medium none;
-			.border-radius;
-			color: #777777;
-			float: left;
-			height: 142px;
-			padding: 20px;
-			width: 100%;
-			resize:vertical;
-			outline:none;
-			border: 1px solid #9fc3aa;
-		}
-
-		button {
-			border: medium none;
-			.border-radius;
-			color: #fff;
-			float: right;
-			margin-right: 9px;
-			margin-top: 9px;
-			margin-bottom: 9px;
-
-			i {
-				margin-right: 7px;
-			}
-		}
-	}
-
-}
 
 .dropdown > a > span.green:before {
 	border-left-color: #2dcb73;

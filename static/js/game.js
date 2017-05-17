@@ -12,6 +12,14 @@ $(document).ready(function() {
     // Initialize variables
     var $window = $(window);
     var $usernameInput = $('.usernameInput'); // Input for username
+    var $imageInput = $('.imageInput');
+    var $weaponInput = $('.weaponInput');
+    var $headInput = $('.headInput');
+    var $xPosInput = $('.xPosInput');
+    var $yPosInput = $('.yPosInput');
+    var $directionInput = $('.directionInput');
+    var $widthInput = $('.widthInput');
+    var $heightInput = $('.heightInput');
     var $messages = $('.messages'); // Messages area
     var $inputMessage = $('.inputMessage'); // Input message input box
 
@@ -106,6 +114,10 @@ $(document).ready(function() {
                                 j = 0;
                             }
                         }
+                        // var newx = parseInt($xPosInput.val().trim());
+                        // var newy = parseInt($yPosInput.val().trim());
+                        // var newxrange = 15;
+                        // var newyrange = 15;
                         var tileEngine = new main(0, 0, 15, 15, imgResponse[1]);
                         tileEngine.init([{
                             zIndex: 0,
@@ -172,17 +184,20 @@ $(document).ready(function() {
 
             function main(x, y, xrange, yrange, playerImages) {
 
+            	console.log(x,y,xrange,yrange);
+
                 var player = {
-                    name: $('#navLogout').text(),
-                    image: playerImages.files["armor.png"],
-                    weapon: playerImages.files["greatstaff.png"],
-                    head: playerImages.files["womenhead.png"],
-                    xPos: 7,
-                    yPos: 7,
-                    direction: 1,
-                    width: 128,
-                    height: 128
+                    name: cleanInput($usernameInput.val().trim()),
+                    image: playerImages.files[cleanInput($imageInput.val().trim())],
+                    weapon: playerImages.files[cleanInput($weaponInput.val().trim())],
+                    head: playerImages.files[cleanInput($headInput.val().trim())],
+                    xPos: parseInt(cleanInput($xPosInput.val().trim())),
+                    yPos: parseInt(cleanInput($yPosInput.val().trim())),
+                    direction: parseInt(cleanInput($directionInput.val().trim())),
+                    width: parseInt(cleanInput($widthInput.val().trim())),
+                    height: parseInt(cleanInput($heightInput.val().trim()))
                 };
+
                 var enemy = [{
                     id: 0,
                     image: playerImages.files["antlion.png"],
@@ -448,17 +463,18 @@ $(document).ready(function() {
                         $currentInput = $inputMessage.focus();
 
                         // Tell the server who you are
-                        socket.emit('add user', {
-                            name: username,
-                            image: playerImages.files["armor.png"].src,
-                            weapon: playerImages.files["greatstaff.png"].src,
-                            head: playerImages.files["womenhead.png"].src,
-                            xPos: 7,
-                            yPos: 7,
-                            direction: 1,
-                            width: 128,
-                            height: 128
-                        });
+						socket.emit('add user', {
+	                            name: username,
+	                            image: cleanInput($imageInput.val().trim()),
+	                            weapon: cleanInput($weaponInput.val().trim()),
+	                            head: cleanInput($headInput.val().trim()),
+	                            xPos: parseInt(cleanInput($xPosInput.val().trim())),
+	                            yPos: parseInt(cleanInput($yPosInput.val().trim())),
+	                            direction: parseInt(cleanInput($directionInput.val().trim())),
+	                            width: parseInt(cleanInput($widthInput.val().trim())),
+	                            height: parseInt(cleanInput($heightInput.val().trim()))
+	                        });
+
                     }
                 }
                 setUsername();
@@ -657,9 +673,9 @@ $(document).ready(function() {
                     addParticipantsMessage(data);
                     //AQUI SE DIBUJARA EL NUEVO PJ
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
-                        data.playersonline[i].image = playerImages.files["armor.png"];
-                        data.playersonline[i].weapon = playerImages.files["greatstaff.png"];
-                        data.playersonline[i].head = playerImages.files["womenhead.png"];
+                        data.playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        data.playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
                     }
                     playersonline = data.playersonline;
 
@@ -681,9 +697,9 @@ $(document).ready(function() {
                 // Cuando se mueve alguien...
                 socket.on('someone moved', function(data) {
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
-                        data.playersonline[i].image = playerImages.files["armor.png"];
-                        data.playersonline[i].weapon = playerImages.files["greatstaff.png"];
-                        data.playersonline[i].head = playerImages.files["womenhead.png"];
+                        data.playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        data.playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
                     }
                     playersonline = data.playersonline;
                     draw();

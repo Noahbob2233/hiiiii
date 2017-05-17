@@ -75,7 +75,6 @@ CREATE TABLE users (
 );
 
 INSERT INTO users (name,password,admin) VALUES ('admin', SHA2('admin', 256), true);
-INSERT INTO users (name,password) VALUES ('test', SHA2('test', 256));
 
 
 -- TABLA D PJS POR USUARIO
@@ -91,6 +90,14 @@ CREATE TABLE users_chars (
 	attack INT,
 	defense INT,
 	speed INT,
+	image varchar(50),
+	weapon varchar(50),
+	head varchar(50),
+	xPos INT,
+	yPos INT,
+	direction INT,
+	width INT,
+	height INT,
 	user_id INT,
 	FOREIGN KEY (user_id)
         REFERENCES users(id)
@@ -99,8 +106,8 @@ CREATE TABLE users_chars (
 
 );
 
-INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id) VALUES ("Admin",100,1000,100,100,100,1);
-INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id) VALUES ("Admin2",200,2000,200,200,200,1);
+INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height) VALUES ("admin",100,1000,100,100,100,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128);
+INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height) VALUES ("Admin2",200,2000,200,200,200,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128);
 
 DROP TABLE IF EXISTS inventories;
 

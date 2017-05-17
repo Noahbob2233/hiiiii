@@ -44,7 +44,15 @@
       </div>
       <input class="inputMessage" placeholder="Escribe aquí..."/>
     </li>
-    <input class="usernameInput" value="{{sess.user}}" type="hidden" maxlength="14" disabled="disabled" />
+    <input class="usernameInput" value="{{sess.character_name}}" type="hidden" disabled="disabled" />
+    <input class="imageInput" value="{{sess.character_image}}" type="hidden" disabled="disabled" />
+    <input class="weaponInput" value="{{sess.character_weapon}}" type="hidden" disabled="disabled" />
+    <input class="headInput" value="{{sess.character_head}}" type="hidden" disabled="disabled" />
+    <input class="xPosInput" value="{{sess.character_xPos}}" type="hidden" disabled="disabled" />
+    <input class="yPosInput" value="{{sess.character_yPos}}" type="hidden" disabled="disabled" />
+    <input class="directionInput" value="{{sess.character_direction}}" type="hidden" disabled="disabled" />
+    <input class="widthInput" value="{{sess.character_width}}" type="hidden" disabled="disabled" />
+    <input class="heightInput" value="{{sess.character_height}}" type="hidden" disabled="disabled" />
     <!-- <li class="login page">
       <div class="form">
         <h3 class="title">Press Enter to join</h3>

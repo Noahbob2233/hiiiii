@@ -155,12 +155,19 @@ app.post('/signup', function(req, res){
 //LOGOUT
 app.post('/logout', function(req, res){
 	sess = req.session;
-	delete sess.user;
-	delete sess.characters;
-	delete sess.characters_max;
-	delete sess.userid;
-	res.render('index.html', {
-			sess: sess
+
+	//guardamos los datos del pj
+        var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
+		var query_var = [xPosMia, yPosMia, sess.character_name];
+		console.log("valores de la query: "+query_var);
+		db.Select(query, query_var).then(function(){
+			delete sess.user;
+			delete sess.characters;
+			delete sess.characters_max;
+			delete sess.userid;
+			res.render('index.html', {
+					sess: sess
+				});
 		});
 });
 //FIN LOGOUT
@@ -168,19 +175,40 @@ app.post('/logout', function(req, res){
 
 //SOCKETIO
 app.all('/game', function(req,res){
-  sess = req.session;
-  if(sess.user){
-  	res.render('game.html', {
-      sess: sess
-    });
-  }else{
-   res.redirect('/');
-  }
+	sess = req.session;
+
+	if(sess.user){
+		if (sess.character_name) {
+			var query = "SELECT * FROM users_chars WHERE name=? LIMIT 1";
+			var query_var = [sess.character_name];
+			db.Select(query, query_var).then(function(result){
+			        sess.character_image=		 result[0].image;
+			        sess.character_weapon=		 result[0].weapon;
+			        sess.character_head=		 result[0].head;
+			        sess.character_xPos=		 result[0].xPos;
+			       	sess.character_yPos=		 result[0].yPos;
+			        sess.character_direction=	 result[0].direction;
+			        sess.character_width=		 result[0].width;
+			        sess.character_height=		 result[0].height;
+			        res.render('game.html', {
+					  	sess: sess
+					});
+			});
+		}else{
+			res.redirect('/');
+		}
+	}else{
+		res.redirect('/');
+	}
+
+
 });
 
 // Chatroom
 var numUsers = 0;
 var playersonline = [];
+var xPosMia;
+var yPosMia;
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -200,7 +228,7 @@ io.on('connection', function (socket) {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
-    socket.username = data.username;
+    socket.username = data.name;
     ++numUsers;
 
     playersonline.push({
@@ -214,6 +242,8 @@ io.on('connection', function (socket) {
         width: data.width,
         height: data.height
     });
+
+    // console.log(JSON.stringify(playersonline));
 
     addedUser = true;
     socket.emit('login', {
@@ -247,6 +277,12 @@ io.on('connection', function (socket) {
   		if(playersonline[i].name === data.player.name){
   			playersonline[i].xPos = data.player.xPos;
   			playersonline[i].yPos = data.player.yPos;
+  			playersonline[i].direction = data.player.direction;
+  			if (data.player.name === sess.character_name) {
+  				xPosMia = data.player.xPos;
+	  			yPosMia = data.player.yPos;
+	  			console.log("quien se ha movido y donde esta: "+data.player.name+"x: "+data.player.xPos+"y: "+data.player.yPos);
+  			}
   		}
   	}
   	socket.broadcast.emit('someone moved', {playersonline: playersonline});
@@ -257,11 +293,20 @@ io.on('connection', function (socket) {
     if (addedUser) {
       --numUsers;
 
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers
-      });
+      removeByAttr(playersonline, 'name', sess.character_name);
+
+        //guardamos los datos del pj
+        var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
+		var query_var = [xPosMia, yPosMia, sess.character_name];
+		
+		db.Select(query, query_var).then(function(){
+			// echo globally that this client has left
+		      socket.broadcast.emit('user left', {
+		        username: socket.username,
+		        numUsers: numUsers
+		      });
+		});
+
     }
   });
 });
@@ -334,7 +379,7 @@ app.post('/loadsamplechars', function(req,res){
 app.post('/saveselectedchar', function(req,res){
 	sess = req.session;
 
-	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id) VALUES (?,1,?,?,?,?,?)";
+	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height) VALUES (?,1,?,?,?,?,?,'armor.png','greatstaff.png','womenhead.png',7,7,1,128,128)";
 	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid];
 	db.Select(query, query_var).then(function(){
 		sess.characters.push({name: req.body.name});

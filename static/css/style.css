@@ -17,7 +17,7 @@
   border-radius: 4px;
 }
 body {
-  background-image: url("/static/img/background.jpeg");
+  background-image: url("/static/img/background.jpg");
   background-size: cover;
   font-family: 'Roboto';
   background-attachment: fixed;
@@ -109,11 +109,11 @@ body {
 }
 #header {
   padding: 0px;
-  background-color: #c2d849;
+  background-color: #39c6c0;
   text-align: center;
 }
 #header h1 {
-  color: #2e7122;
+  color: #232323;
   text-align: center;
   text-transform: uppercase;
   font-weight: bold;
@@ -133,7 +133,7 @@ body {
 #header .filter label {
   text-transform: uppercase;
   font-weight: bold;
-  color: #2e7122;
+  color: #232323;
 }
 .navbar {
   margin-bottom: 0px !important;
@@ -141,7 +141,7 @@ body {
   padding-top: 0px;
   padding-bottom: 0px;
   transition: width 1s;
-  background-color: #2e7122 !important;
+  background-color: #232323 !important;
   border: 0px !important;
 }
 .navbar .navbar-brand {
@@ -152,7 +152,7 @@ body {
 }
 .navbar .nav-item.active,
 .navbar .navbar-brand.active {
-  background-color: #c2d849;
+  background-color: #39c6c0;
 }
 .navbar .nav-item.active .nav-link,
 .navbar .navbar-brand.active .nav-link {
@@ -160,7 +160,7 @@ body {
 }
 .navbar .nav-link,
 .navbar .navbar-brand {
-  color: #c2d849 !important;
+  color: #39c6c0 !important;
   text-transform: uppercase;
   font-weight: bold;
 }
@@ -179,7 +179,7 @@ body {
   border: none;
   border-radius: unset;
   margin: 0px;
-  background-color: #c2d849;
+  background-color: #39c6c0;
   -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
   -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
   -ms-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
@@ -190,7 +190,7 @@ body {
   margin-bottom: 20px;
 }
 #box {
-  background-color: #2e7122 !important;
+  background-color: #232323 !important;
   border-radius: 0px !important;
   margin: 0px;
 }
@@ -200,93 +200,26 @@ body {
 }
 .card {
   background-color: white;
-  color: #2e7122;
-  border: 1px solid #c2d849;
+  color: #232323;
   margin-top: 0px;
   font-size: 14px;
   height: 100%;
   box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.26);
-}
-.card img {
-  width: 60px;
-  margin: 0 auto;
-  display: block;
-}
-.card .row,
-.card p {
-  margin-bottom: 5px;
-}
-.card .card-text span,
-.card .card-title {
-  text-transform: uppercase;
-  font-weight: bold;
-}
-.card ul {
-  padding-left: 0px;
-}
-.widget-area {
-  background-color: #fff;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-  -ms-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-  -o-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-  float: left;
-  margin-top: 30px;
-  position: relative;
-  width: 100%;
-}
-.status-upload {
-  background: none repeat scroll 0 0 #9fc3aa;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  float: left;
-  width: 100%;
-}
-.status-upload form {
-  float: left;
-  width: 100%;
-}
-.status-upload form textarea {
-  background: none repeat scroll 0 0 #fff;
-  border: medium none;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  color: #777777;
-  float: left;
-  height: 142px;
-  padding: 20px;
-  width: 100%;
-  resize: vertical;
-  outline: none;
-  border: 1px solid #9fc3aa;
-}
-.status-upload form button {
-  border: medium none;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
-  -o-border-radius: 4px;
-  border-radius: 4px;
-  color: #fff;
-  float: right;
-  margin-right: 9px;
-  margin-top: 9px;
-  margin-bottom: 9px;
-}
-.status-upload form button i {
-  margin-right: 7px;
+  border-radius: 0px;
+  /*img {
+		width: 60px;
+		margin: 0 auto;
+		display: block;
+	}
+	.row, p {
+		margin-bottom: 5px;
+	}
+	.card-text span, .card-title {
+		.heading;
+	}
+	ul {
+		padding-left: 0px;
+	}*/
 }
 .dropdown > a > span.green:before {
   border-left-color: #2dcb73;

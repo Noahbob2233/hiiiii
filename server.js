@@ -243,6 +243,9 @@ io.on('connection', function (socket) {
         height: data.height
     });
 
+    xPosMia = data.xPos;
+    yPosMia = data.yPos;
+
     // console.log(JSON.stringify(playersonline));
 
     addedUser = true;

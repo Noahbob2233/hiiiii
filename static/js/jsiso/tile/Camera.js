@@ -118,10 +118,6 @@ define([], function() {
         screenWidth = round(domWidth / (tileWidth * curZoom));
       }
 
-
-
-      //console.log(screenWidth, scaledMapWidth, screenHeight, scaledMapHeight)
-
       rangeX = cameraRangeX || rangeX;
       rangeY = cameraRangeY || rangeY;
       startX = round(posX - screenWidth / 2);

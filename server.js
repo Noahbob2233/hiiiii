@@ -159,7 +159,6 @@ app.post('/logout', function(req, res){
 	//guardamos los datos del pj
         var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
 		var query_var = [xPosMia, yPosMia, sess.character_name];
-		console.log("valores de la query: "+query_var);
 		db.Select(query, query_var).then(function(){
 			delete sess.user;
 			delete sess.characters;
@@ -284,7 +283,6 @@ io.on('connection', function (socket) {
   			if (data.player.name === sess.character_name) {
   				xPosMia = data.player.xPos;
 	  			yPosMia = data.player.yPos;
-	  			console.log("quien se ha movido y donde esta: "+data.player.name+"x: "+data.player.xPos+"y: "+data.player.yPos);
   			}
   		}
   	}

@@ -184,8 +184,6 @@ $(document).ready(function() {
 
             function main(x, y, xrange, yrange, playerImages) {
 
-            	console.log(x,y,xrange,yrange);
-
                 var player = {
                     name: cleanInput($usernameInput.val().trim()),
                     image: playerImages.files[cleanInput($imageInput.val().trim())],

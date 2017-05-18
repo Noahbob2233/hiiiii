@@ -19,6 +19,10 @@ $(document).ready(function() {
     var $yPosInput = $('.yPosInput');
     var $directionInput = $('.directionInput');
     var $widthInput = $('.widthInput');
+    var $hpInput = $('.hpInput');
+    var $attackInput = $('.attackInput');
+    var $defenseInput = $('.defenseInput');
+    var $speedInput = $('.speedInput');
     var $heightInput = $('.heightInput');
     var $messages = $('.messages'); // Messages area
     var $inputMessage = $('.inputMessage'); // Input message input box
@@ -193,7 +197,11 @@ $(document).ready(function() {
                     yPos: parseInt(cleanInput($yPosInput.val().trim())),
                     direction: parseInt(cleanInput($directionInput.val().trim())),
                     width: parseInt(cleanInput($widthInput.val().trim())),
-                    height: parseInt(cleanInput($heightInput.val().trim()))
+                    height: parseInt(cleanInput($heightInput.val().trim())),
+                    hp: parseInt(cleanInput($hpInput.val().trim())),
+                    attack: parseInt(cleanInput($attackInput.val().trim())),
+                    defense: parseInt(cleanInput($defenseInput.val().trim())),
+                    speed: parseInt(cleanInput($speedInput.val().trim()))
                 };
 
                 var enemy = [{
@@ -381,6 +389,43 @@ $(document).ready(function() {
                                     layer.toggleHeightShadow(false);
                                 });
                                 break;
+                            case 32:
+                                console.log("player.x: "+player.xPos);
+                                console.log("player.y: "+player.yPos);
+                                playersonline.map(function(e) {
+                                    if(e.name != player.name){
+                                        console.log("enemie.x: "+e.xPos);
+                                        console.log("enemie.y: "+e.yPos);
+                                        switch(player.direction){
+                                            case 0:
+                                                if(player.xPos === e.xPos && (player.yPos-1) === e.yPos){
+                                                    e.hp = e.hp - (player.attack - e.defense);
+                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                }
+                                                break;
+                                            case 1:
+                                                if((player.xPos+1) === e.xPos && player.yPos === e.yPos){
+                                                    e.hp = e.hp - (player.attack - e.defense);
+                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                }
+                                                break;
+                                            case 2:
+                                                if(player.xPos === e.xPos && (player.yPos+1) === e.yPos){
+                                                    e.hp = e.hp - (player.attack - e.defense);
+                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                }
+                                                break;
+                                            case 3:
+                                                if((player.xPos-1) === e.xPos && player.yPos === e.yPos){
+                                                    e.hp = e.hp - (player.attack - e.defense);
+                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    
+                                });
+                                break;
                         }
                     }
                 });
@@ -470,7 +515,11 @@ $(document).ready(function() {
 	                            yPos: parseInt(cleanInput($yPosInput.val().trim())),
 	                            direction: parseInt(cleanInput($directionInput.val().trim())),
 	                            width: parseInt(cleanInput($widthInput.val().trim())),
-	                            height: parseInt(cleanInput($heightInput.val().trim()))
+	                            height: parseInt(cleanInput($heightInput.val().trim())),
+                                hp: parseInt(cleanInput($hpInput.val().trim())),
+                                attack: parseInt(cleanInput($attackInput.val().trim())),
+                                defense: parseInt(cleanInput($defenseInput.val().trim())),
+                                speed: parseInt(cleanInput($speedInput.val().trim()))
 	                        });
 
                     }

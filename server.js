@@ -189,6 +189,10 @@ app.all('/game', function(req,res){
 			        sess.character_direction=	 result[0].direction;
 			        sess.character_width=		 result[0].width;
 			        sess.character_height=		 result[0].height;
+			        sess.character_hp=		 	 result[0].hp;
+			        sess.character_attack=		 result[0].attack;
+			        sess.character_defense=		 result[0].defense;
+			        sess.character_speed=		 result[0].speed;
 			        res.render('game.html', {
 					  	sess: sess
 					});
@@ -239,7 +243,11 @@ io.on('connection', function (socket) {
         yPos: data.yPos,
         direction: data.direction,
         width: data.width,
-        height: data.height
+        height: data.height,
+        hp: data.hp,
+        attack: data.attack,
+        defense: data.defense,
+        speed: data.speed
     });
 
     xPosMia = data.xPos;
@@ -287,6 +295,10 @@ io.on('connection', function (socket) {
   		}
   	}
   	socket.broadcast.emit('someone moved', {playersonline: playersonline});
+  });
+
+  socket.on('hit', function (data) {
+    console.log(JSON.stringify(data));
   });
 
   // when the user disconnects.. perform this

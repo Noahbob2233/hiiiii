@@ -93,20 +93,6 @@ body {
 #index div.row:first-of-type {
   margin-top: 50px;
 }
-#index img {
-  width: 90%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-}
-#index img.pimg {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-#index img.original {
-  width: unset;
-  max-width: 100%;
-}
 #header {
   padding: 0px;
   background-color: #39c6c0;

@@ -247,8 +247,6 @@ $(document).ready(function() {
                 var rangeY = yrange;
                 var calculatePaths = 0;
 
-
-
                 var context = CanvasControl.create("canvas_id", window.innerWidth, window.innerHeight, {
                     background: "#000022",
                     display: "block",
@@ -261,12 +259,12 @@ $(document).ready(function() {
 
                 var input = new CanvasInput(document, CanvasControl());
                 input.mouse_action(function(coords) {
-                    tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y);
+                    //tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y);
                     //if (coords.x)
-                    var height = mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y);
-                    tile_coordinates.x = tile_coordinates.x + height - 1;
-                    tile_coordinates.y = tile_coordinates.y + height - 1;
-                    mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
+                    // var height = mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y);
+                    // tile_coordinates.x = tile_coordinates.x + height - 1;
+                    // tile_coordinates.y = tile_coordinates.y + height - 1;
+                    // mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
                     /*pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
                         var i = 0;
                         var move = setInterval(function() {
@@ -305,8 +303,8 @@ $(document).ready(function() {
                     });*/
                     //mapLayers[0].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1); // Increase heightmap tile
                     //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
-                    mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
-                    requestAnimFrame(draw);
+                    // mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
+                    // requestAnimFrame(draw);
                 });
                 /*input.mouse_move(function(coords) {
                     //tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y);
@@ -321,7 +319,7 @@ $(document).ready(function() {
                                 player.direction = 0;
                                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
                                     player.yPos--;
-                                    socket.emit('move', {player: player});
+                                    socket.emit('move', { player: player });
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
                                         mapLayers.map(function(layer) {
@@ -336,7 +334,7 @@ $(document).ready(function() {
                                 player.direction = 1;
                                 if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
                                     player.xPos++;
-                                    socket.emit('move', {player: player});
+                                    socket.emit('move', { player: player });
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
                                         mapLayers.map(function(layer) {
@@ -351,7 +349,7 @@ $(document).ready(function() {
                                 player.direction = 2;
                                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
                                     player.yPos++;
-                                    socket.emit('move', {player: player});
+                                    socket.emit('move', { player: player });
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
                                         mapLayers.map(function(layer) {
@@ -366,7 +364,7 @@ $(document).ready(function() {
                                 player.direction = 3;
                                 if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
                                     player.xPos--;
-                                    socket.emit('move', {player: player});
+                                    socket.emit('move', { player: player });
                                     mapLayers[1].applyFocus(player.xPos, player.yPos);
                                     if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
                                         mapLayers.map(function(layer) {
@@ -390,40 +388,40 @@ $(document).ready(function() {
                                 });
                                 break;
                             case 32:
-                                console.log("player.x: "+player.xPos);
-                                console.log("player.y: "+player.yPos);
+                                console.log("player.x: " + player.xPos);
+                                console.log("player.y: " + player.yPos);
                                 playersonline.map(function(e) {
-                                    if(e.name != player.name){
-                                        console.log("enemie.x: "+e.xPos);
-                                        console.log("enemie.y: "+e.yPos);
-                                        switch(player.direction){
+                                    if (e.name != player.name) {
+                                        console.log("enemie.x: " + e.xPos);
+                                        console.log("enemie.y: " + e.yPos);
+                                        switch (player.direction) {
                                             case 0:
-                                                if(player.xPos === e.xPos && (player.yPos-1) === e.yPos){
+                                                if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
                                                     e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                    socket.emit('hit', { name: e.name, hp: e.hp });
                                                 }
                                                 break;
                                             case 1:
-                                                if((player.xPos+1) === e.xPos && player.yPos === e.yPos){
+                                                if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
                                                     e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                    socket.emit('hit', { name: e.name, hp: e.hp });
                                                 }
                                                 break;
                                             case 2:
-                                                if(player.xPos === e.xPos && (player.yPos+1) === e.yPos){
+                                                if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
                                                     e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                    socket.emit('hit', { name: e.name, hp: e.hp });
                                                 }
                                                 break;
                                             case 3:
-                                                if((player.xPos-1) === e.xPos && player.yPos === e.yPos){
+                                                if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
                                                     e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', {name: e.name, hp: e.hp});
+                                                    socket.emit('hit', { name: e.name, hp: e.hp });
                                                 }
                                                 break;
                                         }
                                     }
-                                    
+
                                 });
                                 break;
                         }
@@ -462,7 +460,7 @@ $(document).ready(function() {
                                 //     }
                                 // });
                                 playersonline.map(function(e) {
-                                    if(player.name != e.name){
+                                    if (player.name != e.name) {
                                         if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
                                             layer.draw(i, j, e.image, e.width, e.direction);
                                             layer.draw(i, j, e.head, e.width, e.direction);
@@ -506,21 +504,21 @@ $(document).ready(function() {
                         $currentInput = $inputMessage.focus();
 
                         // Tell the server who you are
-						socket.emit('add user', {
-	                            name: username,
-	                            image: cleanInput($imageInput.val().trim()),
-	                            weapon: cleanInput($weaponInput.val().trim()),
-	                            head: cleanInput($headInput.val().trim()),
-	                            xPos: parseInt(cleanInput($xPosInput.val().trim())),
-	                            yPos: parseInt(cleanInput($yPosInput.val().trim())),
-	                            direction: parseInt(cleanInput($directionInput.val().trim())),
-	                            width: parseInt(cleanInput($widthInput.val().trim())),
-	                            height: parseInt(cleanInput($heightInput.val().trim())),
-                                hp: parseInt(cleanInput($hpInput.val().trim())),
-                                attack: parseInt(cleanInput($attackInput.val().trim())),
-                                defense: parseInt(cleanInput($defenseInput.val().trim())),
-                                speed: parseInt(cleanInput($speedInput.val().trim()))
-	                        });
+                        socket.emit('add user', {
+                            name: username,
+                            image: cleanInput($imageInput.val().trim()),
+                            weapon: cleanInput($weaponInput.val().trim()),
+                            head: cleanInput($headInput.val().trim()),
+                            xPos: parseInt(cleanInput($xPosInput.val().trim())),
+                            yPos: parseInt(cleanInput($yPosInput.val().trim())),
+                            direction: parseInt(cleanInput($directionInput.val().trim())),
+                            width: parseInt(cleanInput($widthInput.val().trim())),
+                            height: parseInt(cleanInput($heightInput.val().trim())),
+                            hp: parseInt(cleanInput($hpInput.val().trim())),
+                            attack: parseInt(cleanInput($attackInput.val().trim())),
+                            defense: parseInt(cleanInput($defenseInput.val().trim())),
+                            speed: parseInt(cleanInput($speedInput.val().trim()))
+                        });
 
                     }
                 }

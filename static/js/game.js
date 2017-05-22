@@ -8,6 +8,7 @@ $(document).ready(function() {
         '#58dc00', '#287b00', '#a8f07a', '#4ae8c4',
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
+    var cont = 0;
 
     // Initialize variables
     var $window = $(window);
@@ -190,12 +191,17 @@ $(document).ready(function() {
 
                 var player = {
                     name: cleanInput($usernameInput.val().trim()),
-                    image: playerImages.files[cleanInput($imageInput.val().trim())],
+                    /*image: playerImages.files[cleanInput($imageInput.val().trim())],
                     weapon: playerImages.files[cleanInput($weaponInput.val().trim())],
-                    head: playerImages.files[cleanInput($headInput.val().trim())],
+                    head: playerImages.files[cleanInput($headInput.val().trim())],*/
+                    image: playerImages.files["armor.png"],
+                    weapon: playerImages.files["greatstaff.png"],
+                    head: playerImages.files["womenhead.png"],
                     xPos: parseInt(cleanInput($xPosInput.val().trim())),
                     yPos: parseInt(cleanInput($yPosInput.val().trim())),
-                    direction: parseInt(cleanInput($directionInput.val().trim())),
+                    // direction: parseInt(cleanInput($directionInput.val().trim())),
+                    direction: 7,
+                    action: 0,
                     width: parseInt(cleanInput($widthInput.val().trim())),
                     height: parseInt(cleanInput($heightInput.val().trim())),
                     hp: parseInt(cleanInput($hpInput.val().trim())),
@@ -314,9 +320,13 @@ $(document).ready(function() {
                 });*/
                 input.keyboard(function(key, pressed) {
                     if (pressed) {
+                        if (player.animation) {
+                            clearInterval(player.animation);
+                            player.animation = undefined;
+                        }
                         switch (key) {
                             case 38:
-                                player.direction = 0;
+                                player.direction = 3;
                                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
                                     player.yPos--;
                                     socket.emit('move', { player: player });
@@ -331,7 +341,7 @@ $(document).ready(function() {
                                 requestAnimFrame(draw);
                                 break;
                             case 39:
-                                player.direction = 1;
+                                player.direction = 5;
                                 if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
                                     player.xPos++;
                                     socket.emit('move', { player: player });
@@ -346,7 +356,7 @@ $(document).ready(function() {
                                 requestAnimFrame(draw);
                                 break;
                             case 40:
-                                player.direction = 2;
+                                player.direction = 7;
                                 if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
                                     player.yPos++;
                                     socket.emit('move', { player: player });
@@ -361,7 +371,7 @@ $(document).ready(function() {
                                 requestAnimFrame(draw);
                                 break;
                             case 37:
-                                player.direction = 3;
+                                player.direction = 1;
                                 if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
                                     player.xPos--;
                                     socket.emit('move', { player: player });
@@ -428,29 +438,35 @@ $(document).ready(function() {
                     }
                 });
 
-                function draw() {
-                    context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                    calculatePaths++;
-                    if (calculatePaths === 3) {
-                        enemy.map(function(e) {
-                            //con el array de pj comprobar la pos del mas cercano al enemiho
-                            pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), true, true).then(function(data) {
-                                if (data.length > 0 && data[1] !== undefined) {
-                                    e.xPos = data[1].x;
-                                    e.yPos = data[1].y;
-                                }
-                            });
-                        });
-                        calculatePaths = 0;
-                    }
+                function drawMap() {
                     for (var i = startY, n = startY + rangeY; i < n; i++) {
                         for (var j = startX, h = startX + rangeX; j < h; j++) {
                             mapLayers.map(function(layer) {
-                                layer.setLight(player.xPos, player.yPos);
+                                //layer.setLight(player.xPos, player.yPos);
                                 if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
-                                    layer.draw(i, j, player.image, player.width, player.direction);
-                                    layer.draw(i, j, player.head, player.width, player.direction);
-                                    layer.draw(i, j, player.weapon, player.width, player.direction);
+                                    //var player.animation = setInterval(function(a, b) {
+                                        // if (cont == 0) {
+                                            //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                            layer.draw(i, j, player.image, player.width, player.action, player.height, player.direction);
+                                            layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
+                                            layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
+                                            player.action++;
+                                            if( player.action == 31) {
+                                                player.action = 0;
+                                            }
+                                            // cont++;
+                                        // } else if (cont == 1) {
+                                            //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                            // cont++;
+                                        // } else {
+                                            // context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                        //     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
+                                        //     cont = 0;
+                                        // }
+                                    //}, 500, i, j);
+                                    //layer.draw(i, j, player.image, player.width, player.direction);
+                                    //layer.draw(i, j, player.head, player.width, player.direction);
+                                    //layer.draw(i, j, player.weapon, player.width, player.direction);
                                 } else {
                                     layer.draw(i, j);
                                 }
@@ -472,6 +488,25 @@ $(document).ready(function() {
                             });
                         }
                     }
+                }
+
+                function draw() {
+                    context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                    calculatePaths++;
+                    if (calculatePaths === 3) {
+                        enemy.map(function(e) {
+                            //con el array de pj comprobar la pos del mas cercano al enemiho
+                            pathfind(e.id, [e.xPos, e.yPos], [player.xPos, player.yPos], mapLayers[1].getLayout(), true, true).then(function(data) {
+                                if (data.length > 0 && data[1] !== undefined) {
+                                    e.xPos = data[1].x;
+                                    e.yPos = data[1].y;
+                                }
+                            });
+                        });
+                        calculatePaths = 0;
+                    }
+                    drawMap();
+                    player.animation = setInterval(drawMap, 100);
                     //rain.Draw(CanvasControl().width / 4, 0);
                     //requestAnimFrame(draw);
                 }

@@ -191,12 +191,12 @@ $(document).ready(function() {
 
                 var player = {
                     name: cleanInput($usernameInput.val().trim()),
-                    /*image: playerImages.files[cleanInput($imageInput.val().trim())],
+                    image: playerImages.files[cleanInput($imageInput.val().trim())],
                     weapon: playerImages.files[cleanInput($weaponInput.val().trim())],
-                    head: playerImages.files[cleanInput($headInput.val().trim())],*/
-                    image: playerImages.files["armor.png"],
-                    weapon: playerImages.files["greatstaff.png"],
-                    head: playerImages.files["womenhead.png"],
+                    head: playerImages.files[cleanInput($headInput.val().trim())],
+                    // image: playerImages.files["armor.png"],
+                    // weapon: playerImages.files["greatstaff.png"],
+                    // head: playerImages.files["womenhead.png"],
                     xPos: parseInt(cleanInput($xPosInput.val().trim())),
                     yPos: parseInt(cleanInput($yPosInput.val().trim())),
                     // direction: parseInt(cleanInput($directionInput.val().trim())),

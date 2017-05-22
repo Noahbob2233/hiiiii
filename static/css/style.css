@@ -16,6 +16,10 @@
   -o-border-radius: 4px;
   border-radius: 4px;
 }
+html,
+body {
+  height: 100%;
+}
 body {
   background-image: url("/static/img/background.jpg");
   background-size: cover;
@@ -102,31 +106,14 @@ body {
 }
 #header {
   padding: 0px;
-  background-color: #39c6c0;
-  text-align: center;
-}
-#header h1 {
-  color: #232323;
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-#header.alter {
-  padding: 20px;
-}
-#header .filter {
-  margin-top: 20px;
-}
-#header .filter .form-inline .form-control {
-  width: 100%;
-}
-#header .filter input {
-  margin: 5px 0;
-}
-#header .filter label {
-  text-transform: uppercase;
-  font-weight: bold;
-  color: #232323;
+  min-height: 500px;
+  background: transparent;
+  /*height: 100%;
+	background-image: url("../img/header.png");
+	background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;*/
 }
 .navbar {
   margin-bottom: 0px !important;

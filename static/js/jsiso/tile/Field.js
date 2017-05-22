@@ -237,7 +237,7 @@ function(EffectLoader, Emitter, utils) {
       }
     }
 
-    function _draw(i, j, tileImageOverwite, widthSprite, direction) {
+    function _draw(i, j, tileImageOverwite, widthSprite, action, heightSprite, direction) {
       var xpos, ypos;
       i = Math.round(i);
       j = Math.round(j);
@@ -380,7 +380,7 @@ function(EffectLoader, Emitter, utils) {
                 // Draw overwriting image on top of height map
 
                 if (widthSprite) {
-                  ctx.drawImage(tileImageOverwite, (widthSprite*direction), 0, widthSprite, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
+                  ctx.drawImage(tileImageOverwite, (widthSprite*action), (heightSprite*direction), widthSprite, heightSprite, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
                 } else {
                   ctx.drawImage(tileImageOverwite, 0, 0, tileImageOverwite.width, tileImageOverwite.height, xpos, ypos + ((stack - 1) *(tileHeight - heightOffset - tileHeight)) * curZoom - (resizedTileHeight  - tileHeight) * curZoom, (tileWidth * curZoom), (resizedTileHeight * curZoom));
                 }
@@ -783,8 +783,8 @@ function(EffectLoader, Emitter, utils) {
         return _setup(settings);
       },
 
-      draw: function(tileX, tileY, tileImageOverwite, widthSprite, direction) {
-        return _draw(tileX, tileY, tileImageOverwite, widthSprite, direction);
+      draw: function(tileX, tileY, tileImageOverwite, widthSprite, action, heightSprite, direction) {
+        return _draw(tileX, tileY, tileImageOverwite, widthSprite, action, heightSprite, direction);
       },
 
       stackTiles: function(settings) {

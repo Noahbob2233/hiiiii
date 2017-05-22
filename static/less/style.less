@@ -55,6 +55,7 @@ body {
 
 #wrap {
 	padding: 0px;
+	background-color: @darkGrey !important;
 	box-shadow: 0px 0px 20px 6px rgba(0,0,0,0.26);
 
 	.modal-dialog {
@@ -88,8 +89,15 @@ body {
 		text-align: center;
 		.heading;
 	}
+	h2 {
+		margin-bottom: 50px;
+	}
 	div.row:first-of-type {
 		margin-top: 50px;
+	}
+	
+	.card-deck {
+		margin-top: 20px;
 	}
 }
 
@@ -168,9 +176,9 @@ body {
 }
 
 #box {
-	background-color: @darkGrey !important;
 	border-radius: 0px !important;
 	margin: 0px;
+	background-color: @darkGrey !important;
 
 	div[class^="col-"], h1 {
 		margin-bottom: 20px;

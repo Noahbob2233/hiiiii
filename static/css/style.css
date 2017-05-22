@@ -62,6 +62,7 @@ body {
 }
 #wrap {
   padding: 0px;
+  background-color: #232323 !important;
   box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.26);
 }
 #wrap .modal-dialog {
@@ -90,8 +91,14 @@ body {
   text-transform: uppercase;
   font-weight: bold;
 }
+#index h2 {
+  margin-bottom: 50px;
+}
 #index div.row:first-of-type {
   margin-top: 50px;
+}
+#index .card-deck {
+  margin-top: 20px;
 }
 #header {
   padding: 0px;
@@ -176,9 +183,9 @@ body {
   margin-bottom: 20px;
 }
 #box {
-  background-color: #232323 !important;
   border-radius: 0px !important;
   margin: 0px;
+  background-color: #232323 !important;
 }
 #box div[class^="col-"],
 #box h1 {

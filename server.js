@@ -157,9 +157,9 @@ app.post('/logout', function(req, res){
 	sess = req.session;
 
 	//guardamos los datos del pj
-        var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
-		var query_var = [xPosMia, yPosMia, sess.character_name];
-		db.Select(query, query_var).then(function(){
+  //       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
+		// var query_var = [xPosMia, yPosMia, sess.character_name];
+		// db.Select(query, query_var).then(function(){
 			delete sess.user;
 			delete sess.characters;
 			delete sess.characters_max;
@@ -167,7 +167,7 @@ app.post('/logout', function(req, res){
 			res.render('index.html', {
 					sess: sess
 				});
-		});
+		// });
 });
 //FIN LOGOUT
 //FIN USUARIOS
@@ -212,6 +212,7 @@ var numUsers = 0;
 var playersonline = [];
 var xPosMia;
 var yPosMia;
+var hpMia;
 
 io.on('connection', function (socket) {
   var addedUser = false;
@@ -252,6 +253,8 @@ io.on('connection', function (socket) {
 
     xPosMia = data.xPos;
     yPosMia = data.yPos;
+
+    console.log("Añadimos alguien al array: "+JSON.stringify(playersonline));
 
     // console.log(JSON.stringify(playersonline));
 
@@ -297,8 +300,32 @@ io.on('connection', function (socket) {
   	socket.broadcast.emit('someone moved', {playersonline: playersonline});
   });
 
+  socket.on('die', function(data){
+  	console.log("borramos de aqui: "+JSON.stringify(data.playersonline));
+  	console.log("esto: "+data.name);
+
+  	removeByAttr(data.playersonline, 'name', data.name);
+
+  	playersonline = data.playersonline;
+
+  	console.log('Borramos al muerto y se queda asi: '+JSON.stringify(playersonline));
+
+  	socket.broadcast.emit('someone die', {playersonline: playersonline});
+  });
+
   socket.on('hit', function (data) {
-    console.log(JSON.stringify(data));
+
+    for (var i = playersonline.length - 1; i >= 0; i--) {
+  		if(playersonline[i].name === data.enemy.name){
+  			playersonline[i].hp = data.enemy.hp;
+  			if (data.enemy.name === sess.character_name) {
+  				hpMia = data.enemy.hp;
+  			}
+  		}
+  	}
+
+  	socket.broadcast.emit('someone hitted', {playersonline: playersonline});
+
   });
 
   // when the user disconnects.. perform this
@@ -309,16 +336,16 @@ io.on('connection', function (socket) {
       removeByAttr(playersonline, 'name', sess.character_name);
 
         //guardamos los datos del pj
-        var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
-		var query_var = [xPosMia, yPosMia, sess.character_name];
+  //       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
+		// var query_var = [xPosMia, yPosMia, sess.character_name];
 		
-		db.Select(query, query_var).then(function(){
+		// db.Select(query, query_var).then(function(){
 			// echo globally that this client has left
 		      socket.broadcast.emit('user left', {
 		        username: socket.username,
 		        numUsers: numUsers
 		      });
-		});
+		// });
 
     }
   });

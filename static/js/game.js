@@ -397,26 +397,46 @@ $(document).ready(function() {
                                         switch (player.direction) {
                                             case 0:
                                                 if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
-                                                    e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', { name: e.name, hp: e.hp });
+                                                    if (e.xPos > 15 || e.yPos > 15) {
+                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
+                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
+                                                        log(message, {  
+                                                        });
+                                                        socket.emit('hit', { enemy: e });
+                                                    }
                                                 }
                                                 break;
                                             case 1:
                                                 if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
-                                                    e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', { name: e.name, hp: e.hp });
+                                                    if (e.xPos > 15 || e.yPos > 15) {
+                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
+                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
+                                                        log(message, {
+                                                        });
+                                                        socket.emit('hit', { enemy: e });
+                                                    }
                                                 }
                                                 break;
                                             case 2:
                                                 if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
-                                                    e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', { name: e.name, hp: e.hp });
+                                                    if (e.xPos > 15 || e.yPos > 15) {
+                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
+                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
+                                                        log(message, {
+                                                        });
+                                                        socket.emit('hit', { enemy: e });
+                                                    }
                                                 }
                                                 break;
                                             case 3:
                                                 if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
-                                                    e.hp = e.hp - (player.attack - e.defense);
-                                                    socket.emit('hit', { name: e.name, hp: e.hp });
+                                                    if (e.xPos > 15 || e.yPos > 15) {
+                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
+                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
+                                                        log(message, {
+                                                        });
+                                                        socket.emit('hit', { enemy: e });
+                                                    }
                                                 }
                                                 break;
                                         }
@@ -724,6 +744,8 @@ $(document).ready(function() {
                     }
                     playersonline = data.playersonline;
 
+                    console.log("El array en el servidor al añadir a alguien es asi: "+JSON.stringify(playersonline));
+
                     draw();
                 });
 
@@ -748,6 +770,37 @@ $(document).ready(function() {
                     }
                     playersonline = data.playersonline;
                     draw();
+                });
+
+                //Cuando se golpea a alguien
+                socket.on('someone hitted', function(data) {
+
+                    for (var i = data.playersonline.length - 1; i >= 0; i--) {
+                        data.playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        data.playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
+                        if (player.name === data.playersonline[i].name) {
+                            if (data.playersonline[i].hp <= 0) {
+                                socket.emit('die', {playersonline: playersonline, name: data.playersonline[i].name});
+                                window.location.href = "/character";
+                                // alert("Has muerto.");
+                            }
+                            var message = "Te quedan "+data.playersonline[i].hp;
+                            log(message, {
+                            });
+                        }
+                    }
+
+                    playersonline = data.playersonline;
+
+                });
+
+                //cuando muere alguien
+                socket.on('someone die', function(data) {
+                    console.log(JSON.stringify(data.playersonline));
+                    playersonline = data.playersonline;
+                    draw();
+
                 });
 
                 // Whenever the server emits 'stop typing', kill the typing message

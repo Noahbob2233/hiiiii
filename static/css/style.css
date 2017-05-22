@@ -90,8 +90,14 @@ body {
   text-transform: uppercase;
   font-weight: bold;
 }
+#index h2 {
+  margin-bottom: 50px;
+}
 #index div.row:first-of-type {
   margin-top: 50px;
+}
+#index .card-deck {
+  margin-top: 20px;
 }
 #header {
   padding: 0px;

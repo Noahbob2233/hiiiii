@@ -1,6 +1,8 @@
 @import "variables.less";
 
-
+html, body {
+	height: 100%;
+}
 body {
 	background-image: url("/static/img/background.jpg");
 	background-size: cover;
@@ -103,30 +105,14 @@ body {
 
 #header {
 	padding: 0px;
-	background-color: @darkGreenBlue;
-	text-align: center;
-	h1 {
-		color: @darkGrey;
-		text-align: center;
-		.heading;
-	}
-	&.alter {
-		padding: 20px;
-	}
-
-	.filter {
-		margin-top: 20px;
-		.form-inline .form-control {
-			width: 100%;
-		}
-		input {
-			margin: 5px 0;
-		}
-		label {
-			.heading;
-			color: @darkGrey;
-		}
-	}
+	min-height: 500px;
+    background: transparent;
+	/*height: 100%;
+	background-image: url("../img/header.png");
+	background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;*/
 }
 
 .navbar {

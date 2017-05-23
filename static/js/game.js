@@ -322,10 +322,6 @@ $(document).ready(function() {
                 });*/
                 input.keyboard(function(key, pressed) {
                     if (pressed) {
-                        if (player.animation) {
-                            clearInterval(player.animation);
-                            player.animation = undefined;
-                        }
                         switch (key) {
                             case 38:
                                 player.direction = 3;
@@ -339,6 +335,10 @@ $(document).ready(function() {
                                         });
                                         startX--;
                                     }
+                                }
+                                if (player.animation) {
+                                    clearInterval(player.animation);
+                                    player.animation = undefined;
                                 }
                                 requestAnimFrame(draw);
                                 break;
@@ -355,6 +355,10 @@ $(document).ready(function() {
                                         startY++;
                                     }
                                 }
+                                if (player.animation) {
+                                    clearInterval(player.animation);
+                                    player.animation = undefined;
+                                }
                                 requestAnimFrame(draw);
                                 break;
                             case 40:
@@ -370,6 +374,10 @@ $(document).ready(function() {
                                         startX++;
                                     }
                                 }
+                                if (player.animation) {
+                                    clearInterval(player.animation);
+                                    player.animation = undefined;
+                                }
                                 requestAnimFrame(draw);
                                 break;
                             case 37:
@@ -384,6 +392,10 @@ $(document).ready(function() {
                                         });
                                         startY--;
                                     }
+                                }
+                                if (player.animation) {
+                                    clearInterval(player.animation);
+                                    player.animation = undefined;
                                 }
                                 requestAnimFrame(draw);
                                 break;
@@ -516,9 +528,7 @@ $(document).ready(function() {
                     }
                 }
 
-                function draw(playerActioning) {
-                    //playerActioning = playerActioning || {};
-                    console.log(playerActioning);
+                function draw() {
                     context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
                     calculatePaths++;
                     if (calculatePaths === 3) {
@@ -533,8 +543,8 @@ $(document).ready(function() {
                         });
                         calculatePaths = 0;
                     }
-                    drawMap(playerActioning);
-                    player.animation = setInterval(function() { drawMap(playerActioning); }, 100);
+                    drawMap();
+                    player.animation = setInterval(drawMap, 100);
                     //rain.Draw(CanvasControl().width / 4, 0);
                     //requestAnimFrame(draw);
                 }
@@ -848,13 +858,12 @@ $(document).ready(function() {
 
                 //cuando muere alguien
                 socket.on('someone die', function(data) {
-                    console.log(JSON.stringify(data.playersonline));
                     playersonline = data.playersonline;
                     if (player.animation) {
                         clearInterval(player.animation);
                         player.animation = undefined;
                     }
-                    draw(data.playerDead);
+                    draw();
 
                 });
 

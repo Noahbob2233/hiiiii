@@ -187,6 +187,7 @@ app.all('/game', function(req,res){
 			        sess.character_xPos=		 result[0].xPos;
 			       	sess.character_yPos=		 result[0].yPos;
 			        sess.character_direction=	 result[0].direction;
+              sess.character_action=	 result[0].action;
 			        sess.character_width=		 result[0].width;
 			        sess.character_height=		 result[0].height;
 			        sess.character_hp=		 	 result[0].hp;
@@ -237,18 +238,19 @@ io.on('connection', function (socket) {
 
     playersonline.push({
     	name: data.name,
-        image: data.image,
-        weapon: data.weapon,
-        head: data.head,
-        xPos: data.xPos,
-        yPos: data.yPos,
-        direction: data.direction,
-        width: data.width,
-        height: data.height,
-        hp: data.hp,
-        attack: data.attack,
-        defense: data.defense,
-        speed: data.speed
+      image: data.image,
+      weapon: data.weapon,
+      head: data.head,
+      xPos: data.xPos,
+      yPos: data.yPos,
+      direction: data.direction,
+      action: data.action,
+      width: data.width,
+      height: data.height,
+      hp: data.hp,
+      attack: data.attack,
+      defense: data.defense,
+      speed: data.speed
     });
 
     xPosMia = data.xPos;
@@ -291,6 +293,7 @@ io.on('connection', function (socket) {
   			playersonline[i].xPos = data.player.xPos;
   			playersonline[i].yPos = data.player.yPos;
   			playersonline[i].direction = data.player.direction;
+        playersonline[i].action = data.player.action;
   			if (data.player.name === sess.character_name) {
   				xPosMia = data.player.xPos;
 	  			yPosMia = data.player.yPos;
@@ -310,7 +313,7 @@ io.on('connection', function (socket) {
 
   	console.log('Borramos al muerto y se queda asi: '+JSON.stringify(playersonline));
 
-  	socket.broadcast.emit('someone die', {playersonline: playersonline});
+  	socket.broadcast.emit('someone die', {playersonline: playersonline, playerDead: data.name});
   });
 
   socket.on('hit', function (data) {
@@ -338,7 +341,7 @@ io.on('connection', function (socket) {
         //guardamos los datos del pj
   //       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
 		// var query_var = [xPosMia, yPosMia, sess.character_name];
-		
+
 		// db.Select(query, query_var).then(function(){
 			// echo globally that this client has left
 		      socket.broadcast.emit('user left', {

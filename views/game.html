@@ -12,16 +12,16 @@
 		margin: 0px;
 		overflow: hidden;
 	}
-	
+
 	.twitter-follow-button {
 		position: absolute !important;
 	}
-	
+
 	a,
 	a:visited {
 		color: #FFF;
 	}
-	
+
 	.gameInfo {
 		position: absolute;
 		right: 0px;
@@ -33,7 +33,7 @@
 		color: #FFF;
 	}
 	</style>
-	
+
 {% endblock %}
 {% block content %}
 <div id="gamechat" class="no-active">
@@ -51,6 +51,7 @@
     <input class="xPosInput" value="{{sess.character_xPos}}" type="hidden" disabled="disabled" />
     <input class="yPosInput" value="{{sess.character_yPos}}" type="hidden" disabled="disabled" />
     <input class="directionInput" value="{{sess.character_direction}}" type="hidden" disabled="disabled" />
+		<input class="actionInput" value="{{sess.character_action}}" type="hidden" disabled="disabled" />
     <input class="widthInput" value="{{sess.character_width}}" type="hidden" disabled="disabled" />
     <input class="heightInput" value="{{sess.character_height}}" type="hidden" disabled="disabled" />
     <input class="hpInput" value="{{sess.character_hp}}" type="hidden" disabled="disabled" />

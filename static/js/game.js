@@ -323,7 +323,6 @@ $(document).ready(function() {
                 input.keyboard(function(key, pressed) {
                     if (pressed) {
                         if (player.animation) {
-                            console.log(player.animation);
                             clearInterval(player.animation);
                             player.animation = undefined;
                         }

@@ -246,7 +246,6 @@ $(document).ready(function() {
                     height: 128
                 }];
 
-                // var playersonline = [];
                 var mapLayers = [];
                 var tile_coordinates = {};
                 var startY = y;
@@ -254,6 +253,7 @@ $(document).ready(function() {
                 var rangeX = xrange;
                 var rangeY = yrange;
                 var calculatePaths = 0;
+                var canAttack = true;
 
                 var context = CanvasControl.create("canvas_id", window.innerWidth, window.innerHeight, {
                     background: "#000022",
@@ -266,54 +266,54 @@ $(document).ready(function() {
 
 
                 var input = new CanvasInput(document, CanvasControl());
-                input.mouse_action(function(coords) {
-                    //tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y);
-                    //if (coords.x)
-                    // var height = mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y);
-                    // tile_coordinates.x = tile_coordinates.x + height - 1;
-                    // tile_coordinates.y = tile_coordinates.y + height - 1;
-                    // mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
-                    /*pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
-                        var i = 0;
-                        var move = setInterval(function() {
-                            if (data.length > 0 && data[i] !== undefined) {
-                                player.xPos = data[i].x;
-                                player.yPos = data[i].y;
-                                if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("down");
-                                    });
-                                    startX--;
-                                } else if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("left");
-                                    });
-                                    startY++;
-                                } else if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("right");
-                                    });
-                                    startX++;
-                                } else if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
-                                    mapLayers.map(function(layer) {
-                                        layer.move("up");
-                                    });
-                                    startY--;
-                                }
-                                i++;
-                                if (i == data.length) {
-                                    clearInterval(move);
-                                    move = undefined;
-                                }
-                            }
-                        }, 100);
+                // input.mouse_action(function(coords) {
+                //     //tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y);
+                //     //if (coords.x)
+                //     // var height = mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y);
+                //     // tile_coordinates.x = tile_coordinates.x + height - 1;
+                //     // tile_coordinates.y = tile_coordinates.y + height - 1;
+                //     // mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
+                //     pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
+                //         var i = 0;
+                //         var move = setInterval(function() {
+                //             if (data.length > 0 && data[i] !== undefined) {
+                //                 player.xPos = data[i].x;
+                //                 player.yPos = data[i].y;
+                //                 if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+                //                     mapLayers.map(function(layer) {
+                //                         layer.move("down");
+                //                     });
+                //                     startX--;
+                //                 } else if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
+                //                     mapLayers.map(function(layer) {
+                //                         layer.move("left");
+                //                     });
+                //                     startY++;
+                //                 } else if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
+                //                     mapLayers.map(function(layer) {
+                //                         layer.move("right");
+                //                     });
+                //                     startX++;
+                //                 } else if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+                //                     mapLayers.map(function(layer) {
+                //                         layer.move("up");
+                //                     });
+                //                     startY--;
+                //                 }
+                //                 i++;
+                //                 if (i == data.length) {
+                //                     clearInterval(move);
+                //                     move = undefined;
+                //                 }
+                //             }
+                //         }, 100);
 
-                    });*/
-                    //mapLayers[0].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1); // Increase heightmap tile
-                    //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
-                    // mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
-                    // requestAnimFrame(draw);
-                });
+                //     });
+                //     //mapLayers[0].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1); // Increase heightmap tile
+                //     //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
+                //     // mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
+                //     // requestAnimFrame(draw);
+                // });
                 /*input.mouse_move(function(coords) {
                     //tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y);
                     mapLayers.map(function(layer) {
@@ -412,61 +412,68 @@ $(document).ready(function() {
                                 });
                                 break;
                             case 32:
-                                console.log("player.x: " + player.xPos);
-                                console.log("player.y: " + player.yPos);
-                                playersonline.map(function(e) {
-                                    if (e.name != player.name) {
-                                        console.log("enemie.x: " + e.xPos);
-                                        console.log("enemie.y: " + e.yPos);
-                                        switch (player.direction) {
-                                            case 3:
-                                                if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
-                                                    if (e.xPos > 15 || e.yPos > 15) {
-                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                        log(message, {
-                                                        });
-                                                        socket.emit('hit', { enemy: e });
+                                /*console.log("player.x: " + player.xPos);
+                                console.log("player.y: " + player.yPos);*/
+                                if (canAttack) {
+                                    canAttack = false;
+                                    var dps = 2000 - (player.speed * 100);
+                                    $('#autoattack').toggleClass('disabled');
+                                    setTimeout(function() {
+                                        canAttack = true;
+                                        $('#autoattack').toggleClass('disabled');
+                                    }, dps);
+                                    playersonline.map(function(e) {
+                                        var message;
+                                        if (e.name != player.name) {
+                                            /*console.log("enemie.x: " + e.xPos);
+                                            console.log("enemie.y: " + e.yPos);*/
+                                            switch (player.direction) {
+                                                case 3:
+                                                    if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
+                                                        if (e.xPos > 15 || e.yPos > 15) {
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
+                                                            socket.emit('hit', { enemy: e });
+                                                        }
                                                     }
-                                                }
-                                                break;
-                                            case 5:
-                                                if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
-                                                    if (e.xPos > 15 || e.yPos > 15) {
-                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                        log(message, {
-                                                        });
-                                                        socket.emit('hit', { enemy: e });
+                                                    break;
+                                                case 5:
+                                                    if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
+                                                        if (e.xPos > 15 || e.yPos > 15) {
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
+                                                            socket.emit('hit', { enemy: e });
+                                                        }
                                                     }
-                                                }
-                                                break;
-                                            case 7:
-                                                if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
-                                                    if (e.xPos > 15 || e.yPos > 15) {
-                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                        log(message, {
-                                                        });
-                                                        socket.emit('hit', { enemy: e });
+                                                    break;
+                                                case 7:
+                                                    if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
+                                                        if (e.xPos > 15 || e.yPos > 15) {
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
+                                                            socket.emit('hit', { enemy: e });
+                                                        }
                                                     }
-                                                }
-                                                break;
-                                            case 1:
-                                                if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
-                                                    if (e.xPos > 15 || e.yPos > 15) {
-                                                        e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                        var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                        log(message, {
-                                                        });
-                                                        socket.emit('hit', { enemy: e });
+                                                    break;
+                                                case 1:
+                                                    if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
+                                                        if (e.xPos > 15 || e.yPos > 15) {
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
+                                                            socket.emit('hit', { enemy: e });
+                                                        }
                                                     }
-                                                }
-                                                break;
-                                        }
-                                    }
+                                                    break;
+                                            }
 
-                                });
+                                        }
+
+                                    });
+                                }
                                 break;
                         }
                     }
@@ -479,24 +486,24 @@ $(document).ready(function() {
                                 //layer.setLight(player.xPos, player.yPos);
                                 if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
                                     //var player.animation = setInterval(function(a, b) {
-                                        // if (cont == 0) {
-                                            //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                            layer.draw(i, j, player.image, player.width, player.action, player.height, player.direction);
-                                            layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
-                                            layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
-                                            player.action++;
-                                            if( player.action == 31) {
-                                                player.action = 0;
-                                            }
-                                            // cont++;
-                                        // } else if (cont == 1) {
-                                            //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                            // cont++;
-                                        // } else {
-                                            // context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                        //     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
-                                        //     cont = 0;
-                                        // }
+                                    // if (cont == 0) {
+                                    //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                    layer.draw(i, j, player.image, player.width, player.action, player.height, player.direction);
+                                    layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
+                                    layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
+                                    player.action++;
+                                    if (player.action == 31) {
+                                        player.action = 0;
+                                    }
+                                    // cont++;
+                                    // } else if (cont == 1) {
+                                    //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                    // cont++;
+                                    // } else {
+                                    // context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                    //     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
+                                    //     cont = 0;
+                                    // }
                                     //}, 500, i, j);
                                     //layer.draw(i, j, player.image, player.width, player.direction);
                                     //layer.draw(i, j, player.head, player.width, player.direction);
@@ -516,7 +523,7 @@ $(document).ready(function() {
                                             layer.draw(i, j, e.head, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.weapon, e.width, e.action, e.height, e.direction);
                                             e.action++;
-                                            if( e.action == 31) {
+                                            if (e.action == 31) {
                                                 e.action = 0;
                                             }
                                         }
@@ -530,7 +537,7 @@ $(document).ready(function() {
 
                 function draw() {
                     context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                    calculatePaths++;
+                    /*calculatePaths++;
                     if (calculatePaths === 3) {
                         enemy.map(function(e) {
                             //con el array de pj comprobar la pos del mas cercano al enemiho
@@ -542,7 +549,8 @@ $(document).ready(function() {
                             });
                         });
                         calculatePaths = 0;
-                    }
+
+                    }*/
                     drawMap();
                     player.animation = setInterval(drawMap, 100);
                     //rain.Draw(CanvasControl().width / 4, 0);
@@ -798,7 +806,7 @@ $(document).ready(function() {
                     }
                     playersonline = data.playersonline;
 
-                    console.log("El array en el servidor al añadir a alguien es asi: "+JSON.stringify(playersonline));
+                    console.log("El array en el servidor al añadir a alguien es asi: " + JSON.stringify(playersonline));
                     if (player.animation) {
                         clearInterval(player.animation);
                         player.animation = undefined;
@@ -842,13 +850,12 @@ $(document).ready(function() {
                         data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
                         if (player.name === data.playersonline[i].name) {
                             if (data.playersonline[i].hp <= 0) {
-                                socket.emit('die', {playersonline: playersonline, name: data.playersonline[i].name});
+                                socket.emit('die', { playersonline: playersonline, name: data.playersonline[i].name });
                                 window.location.href = "/character";
                                 // alert("Has muerto.");
                             }
-                            var message = "Te quedan "+data.playersonline[i].hp;
-                            log(message, {
-                            });
+                            var message = "Te quedan " + data.playersonline[i].hp;
+                            log(message, {});
                         }
                     }
 

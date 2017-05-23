@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 <head>
 <style>
@@ -18,7 +18,7 @@ th {text-align: left;}
 <body>
 
 <?php
-$q = intval($_GET['q']);
+/*$q = intval($_GET['q']);
 
 $con = mysqli_connect('localhost','root','root','warbo');
 if (!$con) {
@@ -35,7 +35,7 @@ while($row = mysqli_fetch_array($result)) {
          "<li>Defensa:   " . $row['defense'] . "</li>"
          "<li>Velocidad: " . $row['speed'] . "</li>";
 }
-mysqli_close($con);
+mysqli_close($con);*/
 ?>
 </body>
-</html>
+</html> -->

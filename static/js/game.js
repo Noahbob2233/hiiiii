@@ -19,6 +19,7 @@ $(document).ready(function() {
     var $xPosInput = $('.xPosInput');
     var $yPosInput = $('.yPosInput');
     var $directionInput = $('.directionInput');
+    var $actionInput = $('.actionInput');
     var $widthInput = $('.widthInput');
     var $hpInput = $('.hpInput');
     var $attackInput = $('.attackInput');
@@ -200,7 +201,7 @@ $(document).ready(function() {
                     xPos: parseInt(cleanInput($xPosInput.val().trim())),
                     yPos: parseInt(cleanInput($yPosInput.val().trim())),
                     // direction: parseInt(cleanInput($directionInput.val().trim())),
-                    direction: 7,
+                    direction: 7, //aqui
                     action: 0,
                     width: parseInt(cleanInput($widthInput.val().trim())),
                     height: parseInt(cleanInput($heightInput.val().trim())),
@@ -401,69 +402,66 @@ $(document).ready(function() {
                             case 32:
                                 /*console.log("player.x: " + player.xPos);
                                 console.log("player.y: " + player.yPos);*/
-                                if(canAttack) {
+                                if (canAttack) {
                                     canAttack = false;
-                                    var dps = 2000 - (player.speed*100);
+                                    var dps = 2000 - (player.speed * 100);
                                     $('#autoattack').toggleClass('disabled');
-                                    setTimeout(function(){
+                                    setTimeout(function() {
                                         canAttack = true;
                                         $('#autoattack').toggleClass('disabled');
                                     }, dps);
                                     playersonline.map(function(e) {
+                                        var message;
                                         if (e.name != player.name) {
-                                            console.log("enemie.x: " + e.xPos);
-                                            console.log("enemie.y: " + e.yPos);
+                                            /*console.log("enemie.x: " + e.xPos);
+                                            console.log("enemie.y: " + e.yPos);*/
                                             switch (player.direction) {
-                                                case 0:
+                                                case 3:
                                                     if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                            var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                            log(message, {  
-                                                            });
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
+                                                            socket.emit('hit', { enemy: e });
+                                                        }
+                                                    }
+                                                    break;
+                                                case 5:
+                                                    if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
+                                                        if (e.xPos > 15 || e.yPos > 15) {
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
+                                                            socket.emit('hit', { enemy: e });
+                                                        }
+                                                    }
+                                                    break;
+                                                case 7:
+                                                    if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
+                                                        if (e.xPos > 15 || e.yPos > 15) {
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
                                                     }
                                                     break;
                                                 case 1:
-                                                    if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
-                                                        if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                            var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                            log(message, {
-                                                            });
-                                                            socket.emit('hit', { enemy: e });
-                                                        }
-                                                    }
-                                                    break;
-                                                case 2:
-                                                    if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
-                                                        if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                            var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                            log(message, {
-                                                            });
-                                                            socket.emit('hit', { enemy: e });
-                                                        }
-                                                    }
-                                                    break;
-                                                case 3:
                                                     if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense/(e.defense+100))+1));
-                                                            var message = player.name+" ha atacado a "+e.name+" y ahora le quedan "+e.hp+" !!!";
-                                                            log(message, {
-                                                            });
+                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            log(message, {});
                                                             socket.emit('hit', { enemy: e });
-                                                        }
+                                                        }  
                                                     }
                                                     break;
                                             }
+
                                         }
 
                                     });
                                 }
-                                
                                 break;
                         }
                     }
@@ -476,24 +474,24 @@ $(document).ready(function() {
                                 //layer.setLight(player.xPos, player.yPos);
                                 if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
                                     //var player.animation = setInterval(function(a, b) {
-                                        // if (cont == 0) {
-                                            //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                            layer.draw(i, j, player.image, player.width, player.action, player.height, player.direction);
-                                            layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
-                                            layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
-                                            player.action++;
-                                            if( player.action == 31) {
-                                                player.action = 0;
-                                            }
-                                            // cont++;
-                                        // } else if (cont == 1) {
-                                            //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                            // cont++;
-                                        // } else {
-                                            // context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                        //     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
-                                        //     cont = 0;
-                                        // }
+                                    // if (cont == 0) {
+                                    //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                    layer.draw(i, j, player.image, player.width, player.action, player.height, player.direction);
+                                    layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
+                                    layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
+                                    player.action++;
+                                    if (player.action == 31) {
+                                        player.action = 0;
+                                    }
+                                    // cont++;
+                                    // } else if (cont == 1) {
+                                    //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                    // cont++;
+                                    // } else {
+                                    // context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
+                                    //     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
+                                    //     cont = 0;
+                                    // }
                                     //}, 500, i, j);
                                     //layer.draw(i, j, player.image, player.width, player.direction);
                                     //layer.draw(i, j, player.head, player.width, player.direction);
@@ -509,9 +507,13 @@ $(document).ready(function() {
                                 playersonline.map(function(e) {
                                     if (player.name != e.name) {
                                         if (i === e.xPos && j === e.yPos && layer.getTitle() === "Object Layer") {
-                                            layer.draw(i, j, e.image, e.width, e.direction);
-                                            layer.draw(i, j, e.head, e.width, e.direction);
-                                            layer.draw(i, j, e.weapon, e.width, e.direction);
+                                            layer.draw(i, j, e.image, e.width, e.action, e.height, e.direction);
+                                            layer.draw(i, j, e.head, e.width, e.action, e.height, e.direction);
+                                            layer.draw(i, j, e.weapon, e.width, e.action, e.height, e.direction);
+                                            e.action++;
+                                            if (e.action == 31) {
+                                                e.action = 0;
+                                            }
                                         }
                                     }
                                 });
@@ -521,7 +523,9 @@ $(document).ready(function() {
                     }
                 }
 
-                function draw() {
+                function draw(playerActioning) {
+                    //playerActioning = playerActioning || {};
+                    console.log(playerActioning);
                     context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
                     /*calculatePaths++;
                     if (calculatePaths === 3) {
@@ -536,8 +540,8 @@ $(document).ready(function() {
                         });
                         calculatePaths = 0;
                     }*/
-                    drawMap();
-                    player.animation = setInterval(drawMap, 100);
+                    drawMap(playerActioning);
+                    player.animation = setInterval(function() { drawMap(playerActioning); }, 100);
                     //rain.Draw(CanvasControl().width / 4, 0);
                     //requestAnimFrame(draw);
                 }
@@ -578,6 +582,7 @@ $(document).ready(function() {
                             xPos: parseInt(cleanInput($xPosInput.val().trim())),
                             yPos: parseInt(cleanInput($yPosInput.val().trim())),
                             direction: parseInt(cleanInput($directionInput.val().trim())),
+                            action: parseInt(cleanInput($actionInput.val().trim())),
                             width: parseInt(cleanInput($widthInput.val().trim())),
                             height: parseInt(cleanInput($heightInput.val().trim())),
                             hp: parseInt(cleanInput($hpInput.val().trim())),
@@ -782,7 +787,7 @@ $(document).ready(function() {
                 socket.on('user joined', function(data) {
                     log(data.username + ' joined');
                     addParticipantsMessage(data);
-                    //AQUI SE DIBUJARA EL NUEVO PJ
+                    //DIBJAMOS EL NUEVO PJ
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
                         data.playersonline[i].image = playerImages.files[data.playersonline[i].image];
                         data.playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
@@ -790,8 +795,11 @@ $(document).ready(function() {
                     }
                     playersonline = data.playersonline;
 
-                    console.log("El array en el servidor al añadir a alguien es asi: "+JSON.stringify(playersonline));
-
+                    console.log("El array en el servidor al añadir a alguien es asi: " + JSON.stringify(playersonline));
+                    if (player.animation) {
+                        clearInterval(player.animation);
+                        player.animation = undefined;
+                    }
                     draw();
                 });
 
@@ -815,6 +823,10 @@ $(document).ready(function() {
                         data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
                     }
                     playersonline = data.playersonline;
+                    if (player.animation) {
+                        clearInterval(player.animation);
+                        player.animation = undefined;
+                    }
                     draw();
                 });
 
@@ -827,13 +839,12 @@ $(document).ready(function() {
                         data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
                         if (player.name === data.playersonline[i].name) {
                             if (data.playersonline[i].hp <= 0) {
-                                socket.emit('die', {playersonline: playersonline, name: data.playersonline[i].name});
+                                socket.emit('die', { playersonline: playersonline, name: data.playersonline[i].name });
                                 window.location.href = "/character";
                                 // alert("Has muerto.");
                             }
-                            var message = "Te quedan "+data.playersonline[i].hp;
-                            log(message, {
-                            });
+                            var message = "Te quedan " + data.playersonline[i].hp;
+                            log(message, {});
                         }
                     }
 
@@ -845,7 +856,11 @@ $(document).ready(function() {
                 socket.on('someone die', function(data) {
                     console.log(JSON.stringify(data.playersonline));
                     playersonline = data.playersonline;
-                    draw();
+                    if (player.animation) {
+                        clearInterval(player.animation);
+                        player.animation = undefined;
+                    }
+                    draw(data.playerDead);
 
                 });
 

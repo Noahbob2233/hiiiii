@@ -77,7 +77,7 @@ app.all('/', function(req, res) {
 	res.render('index.html', {
 			sess: sess
 		});
-	delete sess.signup;
+	delete sess.info;
 });
 //FIN INICIO
 
@@ -116,7 +116,7 @@ app.post('/login', function(req, res){
 		});
 		//SI NO
 		}else{
-			sess.signup = "El Usuario no existe";
+			sess.info = "El Usuario no existe";
 			res.redirect(page);
 		}
 
@@ -129,27 +129,35 @@ app.post('/signup', function(req, res){
 
 	var user = req.body.username || "";
 	var pass = sha256(req.body.password) || "";
-
-	var query_select = "SELECT name FROM users WHERE name=?";
-	var query_select_var = [user];
-	var query_insert = "INSERT INTO users (name, password) VALUES (?,?)";
-	var query_insert_var = [user, pass];
-
-	sess = req.session;
 	var page = req.body.url;
-	db.Select(query_select, query_select_var).then(function(result){
-		if(typeof result[0] != 'undefined'){
-			sess.signup = "Ya existe un Usuario con ese nombre.";
-			res.redirect(page);
-		}else{
-			db.Insert(query_insert, query_insert_var).then(function(){
-				sess.signup = "Usuario creado correctamente. Ya puedes loguearte!";
-				sess.characters_max = 0;
-				res.redirect(page);
-			});
-		}
+	sess = req.session;
+	if(pass == sha256(req.body.passwordalt)) {
+		var query_select = "SELECT name FROM users WHERE name=?";
+		var query_select_var = [user];
+		var query_insert = "INSERT INTO users (name, password) VALUES (?,?)";
+		var query_insert_var = [user, pass];
 
-	}).catch((err) => setImmediate(() => { console.log(err); }));
+		db.Select(query_select, query_select_var).then(function(result){
+			if(typeof result[0] != 'undefined'){
+				sess.info = "Ya existe un Usuario con ese nombre.";
+				res.redirect(page);
+			}else{
+				db.Insert(query_insert, query_insert_var).then(function(){
+					sess.info = "Usuario creado correctamente. ¡Ya puedes iniciar sesión!";
+					sess.characters_max = 0;
+					res.redirect(page);
+				});
+			}
+
+		}).catch((err) => setImmediate(() => { console.log(err); }));
+	}
+	else {
+		sess.info = "Las contraseñas no coinciden";
+		res.redirect(page);
+	}
+
+
+	
 });
 //FIN SIGN UP
 //LOGOUT

@@ -207,7 +207,8 @@ $(document).ready(function() {
                     hp: parseInt(cleanInput($hpInput.val().trim())),
                     attack: parseInt(cleanInput($attackInput.val().trim())),
                     defense: parseInt(cleanInput($defenseInput.val().trim())),
-                    speed: parseInt(cleanInput($speedInput.val().trim()))
+                    speed: parseInt(cleanInput($speedInput.val().trim())),
+                    animation: false
                 };
 
                 var enemy = [{
@@ -321,6 +322,7 @@ $(document).ready(function() {
                 input.keyboard(function(key, pressed) {
                     if (pressed) {
                         if (player.animation) {
+                            console.log(player.animation);
                             clearInterval(player.animation);
                             player.animation = undefined;
                         }

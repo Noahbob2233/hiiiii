@@ -42,16 +42,17 @@
 					<li class="dropdown" id="menuLogout">
 						<a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown" id="navLogout">{{sess.user}}</a>
 						<div class="dropdown-menu">
+							<span>Personajes</span>
 							{% if sess.characters %}
 									{% for char in sess.characters %}
 									<form action="/character" method="post">
 										<input type="hidden" name='charname' value="{{char.name}}">
-								        <button type="submit">{{char.name}}</button>
+								        <button class="btn btn-warning btn-block" type="submit">{{char.name}}</button>
 							        </form>
 								    {% endfor %}
 						    {% endif %}
 						    {% if sess.characters_max < 3 %}
-						    	<a href="/newchar">Crear un PJ nuevo</a>
+						    	<a href="/newchar" class="btn btn-success btn-block">Nuevo</a>
 						    {% endif %}
 							<form action="/logout" method="post" class="form" id="formLogout">
 								<input type="hidden" name="url" value="{{url}}">
@@ -78,6 +79,7 @@
 							<form action="/signup" method="post" class="form" id="formSignup">
 								<input name="username" placeholder="Usuario" type="text">
 								<input name="password" placeholder="Contraseña" type="password">
+								<input name="passwordalt" placeholder="Repite la contraseña" type="password">
 								<input type="hidden" name="url" value="{{url}}">
 								<br>
 								<button type="submit" id="btnSignup" class="btn btn-warning">Signup</button>
@@ -89,11 +91,11 @@
 		</div>
 	</nav>
 	<div id="wrap" class="container-fluid">
-		{% if sess.signup %}
-		<div class="card">
+		{% if sess.info %}
+		<div class="card card-danger">
 		  <div class="card-block">
-		    <h4 style="color:black;" class="card-title">Información</h4>
-		    <p style="color:black;" class="card-text">{{sess.signup}}</p>
+		    <h4 class="card-title">Información</h4>
+		    <p class="card-text">{{sess.info}}</p>
 		  </div>
 		</div>
 		{% endif %}

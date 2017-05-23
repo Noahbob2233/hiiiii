@@ -16,15 +16,9 @@
   -o-border-radius: 4px;
   border-radius: 4px;
 }
-html,
 body {
-  height: 100%;
-}
-body {
-  background-image: url("/static/img/background.jpg");
-  background-size: cover;
+  background-color: #232323 !important;
   font-family: 'Roboto';
-  background-attachment: fixed;
 }
 #gamechat {
   position: fixed;
@@ -65,9 +59,9 @@ body {
   display: none;
 }
 #wrap {
+  margin-top: 48px;
   padding: 0px;
   background-color: #232323 !important;
-  box-shadow: 0px 0px 20px 6px rgba(0, 0, 0, 0.26);
 }
 #wrap .modal-dialog {
   max-width: 80%;
@@ -85,7 +79,6 @@ body {
   display: unset;
 }
 #index {
-  color: white;
   font-size: 18px;
   text-align: justify;
 }
@@ -179,8 +172,6 @@ body {
   margin-bottom: 20px;
 }
 .card {
-  background-color: white;
-  color: #232323;
   margin-top: 0px;
   font-size: 14px;
   height: 100%;
@@ -203,4 +194,15 @@ body {
 }
 .dropdown > a > span.green:before {
   border-left-color: #2dcb73;
+}
+#menuLogout .btn {
+  margin-top: 10px;
+}
+.char {
+  padding-top: 20px;
+  color: white;
+}
+.char ul {
+  list-style-type: none;
+  padding: 0px;
 }

@@ -1,15 +1,15 @@
 {% extends "layouts/master.html" %}
 {% set url = '/newcharacter' %}
 {% block content %}
-<div class="container">
+<div class="container char">
 	<select name="samplechars" id="samplechars">
 		{% for char in result %}
 		<option value="{{char.id}}">{{char.name}}</option>
 		{% endfor %}
 	</select>
     <ul id="charstats"></ul>
-    <input type="text" id="name">
-    <button id="guardar">Elegir PJ</button>
+    <input type="text" id="name" placeholder="Nombre del personaje" required="required">
+    <button id="guardar" class="btn btn-success">Confirmar</button>
 </div>
 
 <script>
@@ -38,31 +38,35 @@
 	});
 
 	$("#guardar").click(function(){
-		var parameters = {name: $("#name").val(), hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value')};
-		$.post( '/saveselectedchar', parameters, function(){
-			$.extend(
-				{
-				    redirectPost: function(location, args)
-				    {
-				        var form = $('<form></form>');
-				        form.attr("method", "post");
-				        form.attr("action", location);
+		var name = $("#name").val();
+		if(name && name.search(/[^a-zA-Z0-9]+/) === -1) {
+			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value')};
+			$.post( '/saveselectedchar', parameters, function(){
+				$.extend(
+					{
+					    redirectPost: function(location, args)
+					    {
+					        var form = $('<form></form>');
+					        form.attr("method", "post");
+					        form.attr("action", location);
 
-				        $.each( args, function( key, value ) {
-				            var field = $('<input></input>');
+					        $.each( args, function( key, value ) {
+					            var field = $('<input></input>');
 
-				            field.attr("type", "hidden");
-				            field.attr("name", key);
-				            field.attr("value", value);
+					            field.attr("type", "hidden");
+					            field.attr("name", key);
+					            field.attr("value", value);
 
-				            form.append(field);
-				        });
-				        $(form).appendTo('body').submit();
-				    }
-				});
-			var redirect = '/character';
-			$.redirectPost(redirect, {charname: $("#name").val()});
-		});
+					            form.append(field);
+					        });
+					        $(form).appendTo('body').submit();
+					    }
+					});
+				var redirect = '/character';
+				$.redirectPost(redirect, {charname: $("#name").val()});
+			});
+		}
+		
 	});
 	
 </script>

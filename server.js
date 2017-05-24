@@ -157,7 +157,7 @@ app.post('/signup', function(req, res){
 	}
 
 
-	
+
 });
 //FIN SIGN UP
 //LOGOUT
@@ -321,7 +321,7 @@ io.on('connection', function (socket) {
 
   	console.log('Borramos al muerto y se queda asi: '+JSON.stringify(playersonline));
 
-  	socket.broadcast.emit('someone die', {playersonline: playersonline, playerDead: data.name});
+  	socket.broadcast.emit('someone die', {playersonline: playersonline});
   });
 
   socket.on('hit', function (data) {

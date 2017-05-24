@@ -430,7 +430,7 @@ app.post('/loadsamplechars', function(req,res){
 app.post('/saveselectedchar', function(req,res){
 	sess = req.session;
 
-	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height) VALUES (?,1,?,?,?,?,?,'armor.png','greatstaff.png','womenhead.png',7,7,1,128,128)";
+	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'armor.png','greatstaff.png','womenhead.png',7,7,1,128,128,0)";
 	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid];
 	db.Select(query, query_var).then(function(){
 		sess.characters.push({name: req.body.name});

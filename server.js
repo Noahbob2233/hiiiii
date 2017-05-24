@@ -195,7 +195,7 @@ app.all('/game', function(req,res){
 			        sess.character_xPos=		 result[0].xPos;
 			       	sess.character_yPos=		 result[0].yPos;
 			        sess.character_direction=	 result[0].direction;
-              sess.character_action=	 result[0].action;
+          			sess.character_action=	     result[0].action;
 			        sess.character_width=		 result[0].width;
 			        sess.character_height=		 result[0].height;
 			        sess.character_hp=		 	 result[0].hp;
@@ -245,7 +245,7 @@ io.on('connection', function (socket) {
     ++numUsers;
     console.log("Action server: "+data.action);
     playersonline.push({
-    	name: data.name,
+      name: data.name,
       image: data.image,
       weapon: data.weapon,
       head: data.head,

@@ -243,7 +243,7 @@ io.on('connection', function (socket) {
     // we store the username in the socket session for this client
     socket.username = data.name;
     ++numUsers;
-
+    console.log("Action server: "+data.action);
     playersonline.push({
     	name: data.name,
       image: data.image,

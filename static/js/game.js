@@ -254,6 +254,7 @@ $(document).ready(function() {
                 var rangeY = yrange;
                 var calculatePaths = 0;
                 var canAttack = true;
+                var canMove = true;
 
                 var context = CanvasControl.create("canvas_id", window.innerWidth, window.innerHeight, {
                     background: "#000022",
@@ -324,80 +325,108 @@ $(document).ready(function() {
                     if (pressed) {
                         switch (key) {
                             case 38:
-                                player.direction = 3;
-                                if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
-                                    player.yPos--;
-                                    socket.emit('move', { player: player });
-                                    mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                    if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
-                                        mapLayers.map(function(layer) {
-                                            layer.move("down");
-                                        });
-                                        startX--;
+                                if (canMove) {
+                                    canMove = false;
+                                    var ms = 1500 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canMove = true;
+                                    }, ms);
+                                    player.direction = 3;
+                                    if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
+                                        player.yPos--;
+                                        socket.emit('move', { player: player, playersonline: playersonline });
+                                        mapLayers[1].applyFocus(player.xPos, player.yPos);
+                                        if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+                                            mapLayers.map(function(layer) {
+                                                layer.move("down");
+                                            });
+                                            startX--;
+                                        }
                                     }
+                                    if (player.animation) {
+                                        clearInterval(player.animation);
+                                        player.animation = undefined;
+                                    }
+                                    requestAnimFrame(draw);
                                 }
-                                if (player.animation) {
-                                    clearInterval(player.animation);
-                                    player.animation = undefined;
-                                }
-                                requestAnimFrame(draw);
                                 break;
                             case 39:
-                                player.direction = 5;
-                                if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
-                                    player.xPos++;
-                                    socket.emit('move', { player: player });
-                                    mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                    if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
-                                        mapLayers.map(function(layer) {
-                                            layer.move("left");
-                                        });
-                                        startY++;
+                                if (canMove) {
+                                    canMove = false;
+                                    var ms = 1500 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canMove = true;
+                                    }, ms);
+                                    player.direction = 5;
+                                    if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
+                                        player.xPos++;
+                                        socket.emit('move', { player: player, playersonline: playersonline });
+                                        mapLayers[1].applyFocus(player.xPos, player.yPos);
+                                        if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
+                                            mapLayers.map(function(layer) {
+                                                layer.move("left");
+                                            });
+                                            startY++;
+                                        }
                                     }
+                                    if (player.animation) {
+                                        clearInterval(player.animation);
+                                        player.animation = undefined;
+                                    }
+                                    requestAnimFrame(draw);
                                 }
-                                if (player.animation) {
-                                    clearInterval(player.animation);
-                                    player.animation = undefined;
-                                }
-                                requestAnimFrame(draw);
                                 break;
                             case 40:
-                                player.direction = 7;
-                                if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
-                                    player.yPos++;
-                                    socket.emit('move', { player: player });
-                                    mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                    if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
-                                        mapLayers.map(function(layer) {
-                                            layer.move("right");
-                                        });
-                                        startX++;
+                                if (canMove) {
+                                    canMove = false;
+                                    var ms = 1500 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canMove = true;
+                                    }, ms);
+                                    player.direction = 7;
+                                    if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
+                                        player.yPos++;
+                                        socket.emit('move', { player: player, playersonline: playersonline });
+                                        mapLayers[1].applyFocus(player.xPos, player.yPos);
+                                        if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
+                                            mapLayers.map(function(layer) {
+                                                layer.move("right");
+                                            });
+                                            startX++;
+                                        }
                                     }
+                                    if (player.animation) {
+                                        clearInterval(player.animation);
+                                        player.animation = undefined;
+                                    }
+                                    requestAnimFrame(draw);
                                 }
-                                if (player.animation) {
-                                    clearInterval(player.animation);
-                                    player.animation = undefined;
-                                }
-                                requestAnimFrame(draw);
                                 break;
                             case 37:
-                                player.direction = 1;
-                                if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
-                                    player.xPos--;
-                                    socket.emit('move', { player: player });
-                                    mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                    if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
-                                        mapLayers.map(function(layer) {
-                                            layer.move("up");
-                                        });
-                                        startY--;
+                                if (canMove) {
+                                    canMove = false;
+                                    var ms = 1500 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canMove = true;
+                                    }, ms);
+                                    player.direction = 1;
+                                    if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
+                                        player.xPos--;
+                                        socket.emit('move', { player: player, playersonline: playersonline });
+                                        mapLayers[1].applyFocus(player.xPos, player.yPos);
+                                        if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+                                            mapLayers.map(function(layer) {
+                                                layer.move("up");
+                                            });
+                                            startY--;
+                                        }
                                     }
+                                    if (player.animation) {
+                                        clearInterval(player.animation);
+                                        player.animation = undefined;
+                                    }
+                                    requestAnimFrame(draw);
                                 }
-                                if (player.animation) {
-                                    clearInterval(player.animation);
-                                    player.animation = undefined;
-                                }
-                                requestAnimFrame(draw);
                                 break;
                             case 49:
                                 mapLayers.map(function(layer) {
@@ -522,6 +551,7 @@ $(document).ready(function() {
                                             layer.draw(i, j, e.image, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.head, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.weapon, e.width, e.action, e.height, e.direction);
+                                            console.log(e.name+": "+e.action);
                                             e.action++;
                                             if (e.action == 31) {
                                                 e.action = 0;
@@ -881,18 +911,23 @@ $(document).ready(function() {
 
                 socket.on('disconnect', function() {
                     log('you have been disconnected');
+                    // socket.emit('die', { playersonline: playersonline, name: player.name });
+                    // window.location.href = "/character";
                 });
 
                 socket.on('reconnect', function() {
-                    log('you have been reconnected');
-                    if (username) {
-                        socket.emit('add user', username);
-                    }
+                    //log('you have been reconnected (not)');
+                    // if (username) {
+                    //     socket.emit('add user', username);
+                    // }
+                    // log('you have been disconnected');
+                    socket.emit('die', { playersonline: playersonline, name: player.name });
+                    window.location.href = "/character";
                 });
-
-                socket.on('reconnect_error', function() {
-                    log('attempt to reconnect has failed');
-                });
+                //
+                // socket.on('reconnect_error', function() {
+                //     log('attempt to reconnect has failed');
+                // });
 
                 return {
                     init: function(layers) {

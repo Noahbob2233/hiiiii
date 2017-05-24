@@ -195,7 +195,7 @@ app.all('/game', function(req,res){
 			        sess.character_xPos=		 result[0].xPos;
 			       	sess.character_yPos=		 result[0].yPos;
 			        sess.character_direction=	 result[0].direction;
-          			sess.character_action=	     result[0].action;
+        			sess.character_action=	     result[0].action;
 			        sess.character_width=		 result[0].width;
 			        sess.character_height=		 result[0].height;
 			        sess.character_hp=		 	 result[0].hp;
@@ -296,12 +296,13 @@ io.on('connection', function (socket) {
   });
 
   socket.on('move', function(data){
-  	for (var i = playersonline.length - 1; i >= 0; i--) {
+  	for (var i = data.playersonline.length - 1; i >= 0; i--) {
+      playersonline[i].action = data.playersonline[i].action;
   		if(playersonline[i].name === data.player.name){
   			playersonline[i].xPos = data.player.xPos;
   			playersonline[i].yPos = data.player.yPos;
   			playersonline[i].direction = data.player.direction;
-        playersonline[i].action = data.player.action;
+        //playersonline[i].action = data.player.action;
   			if (data.player.name === sess.character_name) {
   				xPosMia = data.player.xPos;
 	  			yPosMia = data.player.yPos;
@@ -314,7 +315,7 @@ io.on('connection', function (socket) {
   socket.on('die', function(data){
   	console.log("borramos de aqui: "+JSON.stringify(data.playersonline));
   	console.log("esto: "+data.name);
-
+    
   	removeByAttr(data.playersonline, 'name', data.name);
 
   	playersonline = data.playersonline;

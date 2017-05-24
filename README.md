@@ -1,4 +1,3 @@
-# Warbo
 ![Cartel](/static/img/Cartel_Warbo_Adrian_Dani_Guillem.png?raw=true)
 
 Warbo es un juego de navegador que coge como base el estilo de juego de Agair.io y lo lleva al mundo de los rpg.

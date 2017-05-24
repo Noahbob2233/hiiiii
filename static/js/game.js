@@ -327,7 +327,7 @@ $(document).ready(function() {
                             case 38:
                                 if (canMove) {
                                     canMove = false;
-                                    var ms = 1500 - (player.speed * 100);
+                                    var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
                                         canMove = true;
                                     }, ms);
@@ -353,7 +353,7 @@ $(document).ready(function() {
                             case 39:
                                 if (canMove) {
                                     canMove = false;
-                                    var ms = 1500 - (player.speed * 100);
+                                    var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
                                         canMove = true;
                                     }, ms);
@@ -379,7 +379,7 @@ $(document).ready(function() {
                             case 40:
                                 if (canMove) {
                                     canMove = false;
-                                    var ms = 1500 - (player.speed * 100);
+                                    var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
                                         canMove = true;
                                     }, ms);
@@ -405,7 +405,7 @@ $(document).ready(function() {
                             case 37:
                                 if (canMove) {
                                     canMove = false;
-                                    var ms = 1500 - (player.speed * 100);
+                                    var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
                                         canMove = true;
                                     }, ms);

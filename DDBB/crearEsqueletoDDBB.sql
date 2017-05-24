@@ -95,6 +95,7 @@ CREATE TABLE users_chars (
 	head varchar(50),
 	xPos INT,
 	yPos INT,
+	action INT,
 	direction INT,
 	width INT,
 	height INT,
@@ -106,8 +107,8 @@ CREATE TABLE users_chars (
 
 );
 
-INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height) VALUES ("admin",100,1000,100,100,100,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128);
-INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height) VALUES ("Admin2",200,2000,200,200,200,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128);
+INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES ("admin",100,1000,100,100,100,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128,0);
+INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES ("Admin2",200,2000,200,200,200,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128,0);
 
 DROP TABLE IF EXISTS inventories;
 

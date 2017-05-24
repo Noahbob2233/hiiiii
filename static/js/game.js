@@ -846,6 +846,12 @@ $(document).ready(function() {
 
                 // Whenever the server emits 'user left', log it in the chat body
                 socket.on('user left', function(data) {
+                    playersonline = data.playersonline;
+                    if (player.animation) {
+                        clearInterval(player.animation);
+                        player.animation = undefined;
+                    }
+                    draw();
                     log(data.username + ' left');
                     addParticipantsMessage(data);
                     removeChatTyping(data);

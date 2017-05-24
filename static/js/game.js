@@ -551,7 +551,7 @@ $(document).ready(function() {
                                             layer.draw(i, j, e.image, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.head, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.weapon, e.width, e.action, e.height, e.direction);
-                                            console.log(e.name+": "+e.action);
+                                            // console.log(e.name+": "+e.action);
                                             e.action++;
                                             if (e.action == 31) {
                                                 e.action = 0;
@@ -880,28 +880,36 @@ $(document).ready(function() {
                 //Cuando se golpea a alguien
                 socket.on('someone hitted', function(data) {
 
+                    console.log("Usuario: "+player.name);
+
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
-                        data.playersonline[i].image = playerImages.files[data.playersonline[i].image];
-                        data.playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
-                        data.playersonline[i].head = playerImages.files[data.playersonline[i].head];
-                        if (player.name === data.playersonline[i].name) {
-                            if (data.playersonline[i].hp <= 0) {
-                                socket.emit('die', { playersonline: playersonline, name: data.playersonline[i].name });
-                                window.location.href = "/character";
-                                // alert("Has muerto.");
-                            }
+                        playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        playersonline[i].head = playerImages.files[data.playersonline[i].head];
+                        console.log("Vida de "+playersonline[i].name+" : "+playersonline[i].hp);
+                        if(playersonline[i].name === data.enemy.name){
+                            playersonline[i].hp = data.enemy.hp;
+                        }
+                        if (player.name === data.enemy.name === playersonline[i].name) {
                             var message = "Te quedan " + data.playersonline[i].hp;
                             log(message, {});
+                            console.log("He sido golpeado: "+data.enemy.name);
+                        }
+                        if(playersonline[i].hp <= 0 && playersonline[i].name == player.name){
+                            socket.emit('die', { playersonline: playersonline, name: data.enemy.die });
+                            window.location.href = "/character";
                         }
                     }
-
-                    playersonline = data.playersonline;
 
                 });
 
                 //cuando muere alguien
                 socket.on('someone die', function(data) {
-                    playersonline = data.playersonline;
+                    for (var i = data.playersonline.length - 1; i >= 0; i--) {
+                        playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        playersonline[i].head = playerImages.files[data.playersonline[i].head];
+                    }
                     if (player.animation) {
                         clearInterval(player.animation);
                         player.animation = undefined;

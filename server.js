@@ -225,7 +225,6 @@ var hpMia;
 
 io.on('connection', function (socket) {
   var addedUser = false;
-  var players = [];
 
   // when the client emits 'new message', this listens and executes
   socket.on('new message', function (data) {
@@ -243,7 +242,7 @@ io.on('connection', function (socket) {
     // we store the username in the socket session for this client
     socket.username = data.name;
     ++numUsers;
-    console.log("Action server: "+data.action);
+    // console.log("Action server: "+data.action);
     playersonline.push({
       name: data.name,
       image: data.image,
@@ -309,16 +308,17 @@ io.on('connection', function (socket) {
   			}
   		}
   	}
+
+  	console.log('Alguien se ha movido y es posible que se haya dibujado: '+JSON.stringify(playersonline));
+
   	socket.broadcast.emit('someone moved', {playersonline: playersonline});
   });
 
   socket.on('die', function(data){
-  	console.log("borramos de aqui: "+JSON.stringify(data.playersonline));
+  	console.log("borramos de aqui: "+JSON.stringify(playersonline));
   	console.log("esto: "+data.name);
     
-  	removeByAttr(data.playersonline, 'name', data.name);
-
-  	playersonline = data.playersonline;
+  	removeByAttr(playersonline, 'name', data.name);
 
   	console.log('Borramos al muerto y se queda asi: '+JSON.stringify(playersonline));
 
@@ -336,7 +336,7 @@ io.on('connection', function (socket) {
   		}
   	}
 
-  	socket.broadcast.emit('someone hitted', {playersonline: playersonline});
+  	socket.broadcast.emit('someone hitted', {playersonline: playersonline, enemy: data.enemy});
 
   });
 
@@ -345,7 +345,13 @@ io.on('connection', function (socket) {
     if (addedUser) {
       --numUsers;
 
+
+  	console.log("borramos de aqui: "+JSON.stringify(playersonline));
+  	console.log("esto: "+sess.character_name);
+
       removeByAttr(playersonline, 'name', sess.character_name);
+
+  	console.log('Borramos al deslogueado y se queda asi: '+JSON.stringify(playersonline));
 
         //guardamos los datos del pj
   //       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";

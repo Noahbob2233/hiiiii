@@ -255,6 +255,7 @@ $(document).ready(function() {
                 var calculatePaths = 0;
                 var canAttack = true;
                 var canMove = true;
+                var canRotate = true;
 
                 var context = CanvasControl.create("canvas_id", window.innerWidth, window.innerHeight, {
                     background: "#000022",
@@ -324,7 +325,7 @@ $(document).ready(function() {
                 input.keyboard(function(key, pressed) {
                     if (pressed) {
                         switch (key) {
-                            case 38:
+                            case 38: //Arriba
                                 if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
@@ -332,7 +333,14 @@ $(document).ready(function() {
                                         canMove = true;
                                     }, ms);
                                     player.direction = 3;
-                                    if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0) {
+                                    var movimiento = true;
+                                    playersonline.map(function(e) {
+                                        if (player.xPos == e.xPos && player.yPos - 1 == e.yPos) {
+                                            socket.emit('rotation', { player: player });
+                                            movimiento = false;
+                                        }
+                                    });
+                                    if (Number(mapLayers[1].getTile([player.xPos], [player.yPos - 1])) === 0 && movimiento) {
                                         player.yPos--;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -350,7 +358,7 @@ $(document).ready(function() {
                                     requestAnimFrame(draw);
                                 }
                                 break;
-                            case 39:
+                            case 39: //Derecha
                                 if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
@@ -358,7 +366,14 @@ $(document).ready(function() {
                                         canMove = true;
                                     }, ms);
                                     player.direction = 5;
-                                    if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0) {
+                                    var movimiento = true;
+                                    playersonline.map(function(e) {
+                                        if (player.xPos + 1 == e.xPos && player.yPos == e.yPos) {
+                                            socket.emit('rotation', { player: player });
+                                            movimiento = false;
+                                        }
+                                    });
+                                    if (Number(mapLayers[1].getTile([player.xPos + 1], [player.yPos])) === 0 && movimiento) {
                                         player.xPos++;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -376,7 +391,7 @@ $(document).ready(function() {
                                     requestAnimFrame(draw);
                                 }
                                 break;
-                            case 40:
+                            case 40: //Abajo
                                 if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
@@ -384,7 +399,14 @@ $(document).ready(function() {
                                         canMove = true;
                                     }, ms);
                                     player.direction = 7;
-                                    if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0) {
+                                    var movimiento = true;
+                                    playersonline.map(function(e) {
+                                        if (player.xPos == e.xPos && player.yPos + 1 == e.yPos) {
+                                            socket.emit('rotation', { player: player });
+                                            movimiento = false;
+                                        }
+                                    });
+                                    if (Number(mapLayers[1].getTile([player.xPos], [player.yPos + 1])) === 0 && movimiento) {
                                         player.yPos++;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -402,7 +424,7 @@ $(document).ready(function() {
                                     requestAnimFrame(draw);
                                 }
                                 break;
-                            case 37:
+                            case 37: //Izquierda
                                 if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
@@ -410,7 +432,14 @@ $(document).ready(function() {
                                         canMove = true;
                                     }, ms);
                                     player.direction = 1;
-                                    if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0) {
+                                    var movimiento = true;
+                                    playersonline.map(function(e) {
+                                        if (player.xPos - 1 == e.xPos && player.yPos == e.yPos) {
+                                            socket.emit('rotation', { player: player });
+                                            movimiento = false;
+                                        }
+                                    });
+                                    if (Number(mapLayers[1].getTile([player.xPos - 1], [player.yPos])) === 0 && movimiento) {
                                         player.xPos--;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
@@ -428,27 +457,55 @@ $(document).ready(function() {
                                     requestAnimFrame(draw);
                                 }
                                 break;
-                            case 49:
-                                mapLayers.map(function(layer) {
-                                    layer.toggleGraphicsHide(true);
-                                    layer.toggleHeightShadow(true);
-                                });
-                                break;
-                            case 50:
-                                mapLayers.map(function(layer) {
-                                    layer.toggleGraphicsHide(false);
-                                    layer.toggleHeightShadow(false);
-                                });
-                                break;
-                            case 32:
-                                if (canAttack) {
-                                    if (player.animation) {
-                                        clearInterval(player.animation);
-                                        player.animation = undefined;
+                            case 69: //E
+                                if (canAttack && canRotate) {
+                                    canRotate = false;
+                                    var ms = 1000 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canRotate = true;
+                                    }, ms);
+                                    player.direction += 2;
+                                    if (player.direction > 7) {
+                                        player.direction = 1;
                                     }
-                                    //if es arquero... 28, si es mago 24, si es guerrero 12
-                                    player.action = 28;
-                                    requestAnimFrame(draw);
+                                    socket.emit('rotation', { player: player });
+                                }
+                                break;
+                            case 81: //Q
+                                if (canAttack && canRotate) {
+                                    canRotate = false;
+                                    var ms = 1000 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canRotate = true;
+                                    }, ms);
+                                    player.direction -= 2;
+                                    if (player.direction < 1) {
+                                        player.direction = 7;
+                                    }
+                                    socket.emit('rotation', { player: player });
+                                }
+                                break;
+                            case 87: //W
+                                if (canAttack && canRotate) {
+                                    canRotate = false;
+                                    var ms = 1000 - (player.speed * 100);
+                                    setTimeout(function() {
+                                        canRotate = true;
+                                    }, ms);
+                                    if (player.direction == 1) {
+                                        player.direction = 5;
+                                    } else if (player.direction == 3) {
+                                        player.direction = 7;
+                                    } else if (player.direction == 5) {
+                                        player.direction = 1;
+                                    } else { //case 7
+                                        player.direction = 3;
+                                    }
+                                    socket.emit('rotation', { player: player });
+                                }
+                                break;
+                            case 32: //Espacio
+                                if (canAttack) {
                                     canAttack = false;
                                     //var dps = 2000 - (player.speed * 100);
                                     var dps = 800;
@@ -457,6 +514,9 @@ $(document).ready(function() {
                                         canAttack = true;
                                         $('#autoattack').toggleClass('disabled');
                                     }, dps);
+                                    //if es arquero... 28, si es mago 24, si es guerrero 12
+                                    player.action = 28;
+                                    socket.emit('attacking', { attacker: player });
                                     playersonline.map(function(e) {
                                         var message;
                                         if (e.name != player.name) {
@@ -562,7 +622,6 @@ $(document).ready(function() {
                                         }
                                     }
                                 });
-
                             });
                         }
                     }
@@ -880,6 +939,40 @@ $(document).ready(function() {
                     draw();
                 });
 
+                // Cuando alguien cambia de dirección
+                socket.on('someone rotated', function(data) {
+                    for (var i = playersonline.length - 1; i >= 0; i--) {
+                        playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        playersonline[i].head = playerImages.files[data.playersonline[i].head];
+                        if (playersonline[i].name == data.rotated.name) {
+                            playersonline[i].direction = data.rotated.direction;
+                        }
+                    }
+                    if (player.animation) {
+                        clearInterval(player.animation);
+                        player.animation = undefined;
+                    }
+                    draw();
+                });
+
+                // Cuando alguien ataca
+                socket.on('someone attacked', function(data) {
+                    for (var i = playersonline.length - 1; i >= 0; i--) {
+                        playersonline[i].image = playerImages.files[data.playersonline[i].image];
+                        playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
+                        playersonline[i].head = playerImages.files[data.playersonline[i].head];
+                        if (playersonline[i].name == data.attacker.name) {
+                            playersonline[i].action = data.attacker.action;
+                        }
+                    }
+                    if (player.animation) {
+                        clearInterval(player.animation);
+                        player.animation = undefined;
+                    }
+                    draw();
+                });
+
                 //Cuando se golpea a alguien
                 socket.on('someone hitted', function(data) {
 
@@ -957,6 +1050,10 @@ $(document).ready(function() {
                             mapLayers[i].align("v-center", CanvasControl().height, yrange, 0);
                         }
                         // rain = new EffectLoader().getEffect("rain", context, utils.range(-100, CanvasControl().height), utils.range(-100, CanvasControl().width));
+                        if (player.animation) {
+                            clearInterval(player.animation);
+                            player.animation = undefined;
+                        }
                         draw();
                     }
                 };

@@ -294,6 +294,16 @@ io.on('connection', function (socket) {
     });
   });
 
+  socket.on('rotation', function(data){
+    for (var i = playersonline.length - 1; i >= 0; i--) {
+      if(playersonline[i].name === data.player.name){
+        playersonline[i].direction = data.player.direction;
+      }
+    }
+
+    socket.broadcast.emit('someone rotated', {playersonline: playersonline, rotated: data.player});
+  });
+
   socket.on('move', function(data){
   	for (var i = data.playersonline.length - 1; i >= 0; i--) {
       playersonline[i].action = data.playersonline[i].action;
@@ -301,7 +311,6 @@ io.on('connection', function (socket) {
   			playersonline[i].xPos = data.player.xPos;
   			playersonline[i].yPos = data.player.yPos;
   			playersonline[i].direction = data.player.direction;
-        //playersonline[i].action = data.player.action;
   			if (data.player.name === sess.character_name) {
   				xPosMia = data.player.xPos;
 	  			yPosMia = data.player.yPos;
@@ -309,9 +318,18 @@ io.on('connection', function (socket) {
   		}
   	}
 
-  	console.log('Alguien se ha movido y es posible que se haya dibujado: '+JSON.stringify(playersonline));
+  	//console.log('Alguien se ha movido y es posible que se haya dibujado: '+JSON.stringify(playersonline));
 
   	socket.broadcast.emit('someone moved', {playersonline: playersonline});
+  });
+
+  socket.on('attacking', function(data){
+  	for (var i = playersonline.length - 1; i >= 0; i--) {
+  		if(playersonline[i].name === data.attacker.name){
+        playersonline[i].action = data.attacker.action;
+  		}
+  	}
+  	socket.broadcast.emit('someone attacked', {playersonline: playersonline, attacker: data.attacker});
   });
 
   socket.on('die', function(data){

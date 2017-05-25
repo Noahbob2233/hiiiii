@@ -4,6 +4,42 @@
 	<script data-main="../static/js/config.js" src="../static/js/requirejs/require.js"></script>
 	<script src="../static/js/game.js"></script>
 	<!-- <script src="/static/js/chat.js"></script> -->
+
+	<!-- AUDIO -->
+	<script>
+		var audio = new Audio('static/music/bgm.mp3');
+		audio.play();
+
+		function startbgmusic()
+			{
+			    setInterval(function(){
+				audio.pause();
+				audio.currentTime = 0;
+				audio.play();
+				},76000);
+			}
+
+		startbgmusic();
+	</script>
+
+	<!-- KONAMI -->
+	<script>
+        // ▲ ▲ ▼ ▼ ◀ ▶ ◀ ▶ b a
+        var kkeys = [], konami = "38,38,40,40,37,39,37,39,66,65";
+        $(document).keydown(function(e) {
+          kkeys.push( e.keyCode );
+          if(e.keycode!)
+          if ( kkeys.toString().indexOf( konami ) >= 0 ){
+            $(document).unbind('keydown',arguments.callee);
+            $.getScript('http://www.cornify.com/js/cornify.js',function(){
+              cornify_add();
+            alert("Cheat activated");
+            document.getElementById("asd").innerHTML = "<iframe src='https://www.youtube.com/embed/-7Pa1adrYlI?autoplay=1' width='0' height='0' frameborder='0'></iframe>"
+              $(document).keydown(cornify_add);
+            });
+          }
+        });
+    </script>
 	<style type="text/css">
 	html,
 	body {

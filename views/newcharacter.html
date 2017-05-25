@@ -24,7 +24,7 @@
 			$('#charstats').append("<li id='defense' value='"+data.defense+"'>Defensa: "+data.defense+"</li>");
 			$('#charstats').append("<li id='speed' value='"+data.speed+"'>Velocidad: "+data.speed+"</li>");
 		});
-    }
+  }
 
 	$("#samplechars").change(function(){
 		var parameters = {search: $(this).val()};
@@ -40,7 +40,7 @@
 	$("#guardar").click(function(){
 		var name = $("#name").val();
 		if(name && name.search(/[^a-zA-Z0-9]+/) === -1) {
-			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value')};
+			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value'), class: $('#samplechars :selected').text()};
 			$.post( '/saveselectedchar', parameters, function(){
 				$.extend(
 					{
@@ -66,8 +66,8 @@
 				$.redirectPost(redirect, {charname: $("#name").val()});
 			});
 		}
-		
+
 	});
-	
+
 </script>
 {% endblock %}

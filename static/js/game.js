@@ -441,8 +441,6 @@ $(document).ready(function() {
                                 });
                                 break;
                             case 32:
-                                /*console.log("player.x: " + player.xPos);
-                                console.log("player.y: " + player.yPos);*/
                                 if (canAttack) {
                                     canAttack = false;
                                     var dps = 2000 - (player.speed * 100);
@@ -454,8 +452,6 @@ $(document).ready(function() {
                                     playersonline.map(function(e) {
                                         var message;
                                         if (e.name != player.name) {
-                                            /*console.log("enemie.x: " + e.xPos);
-                                            console.log("enemie.y: " + e.yPos);*/
                                             switch (player.direction) {
                                                 case 3:
                                                     if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
@@ -521,7 +517,7 @@ $(document).ready(function() {
                                     layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
                                     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
                                     player.action++;
-                                    if (player.action == 31) {
+                                    if (player.action == 4) {
                                         player.action = 0;
                                     }
                                     // cont++;
@@ -551,9 +547,8 @@ $(document).ready(function() {
                                             layer.draw(i, j, e.image, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.head, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.weapon, e.width, e.action, e.height, e.direction);
-                                            // console.log(e.name+": "+e.action);
                                             e.action++;
-                                            if (e.action == 31) {
+                                            if (e.action == 4) {
                                                 e.action = 0;
                                             }
                                         }
@@ -582,7 +577,7 @@ $(document).ready(function() {
 
                     }*/
                     drawMap();
-                    player.animation = setInterval(drawMap, 100);
+                    player.animation = setInterval(drawMap, 200);
                     //rain.Draw(CanvasControl().width / 4, 0);
                     //requestAnimFrame(draw);
                 }

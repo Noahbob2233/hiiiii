@@ -325,7 +325,7 @@ $(document).ready(function() {
                     if (pressed) {
                         switch (key) {
                             case 38:
-                                if (canMove) {
+                                if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
@@ -351,7 +351,7 @@ $(document).ready(function() {
                                 }
                                 break;
                             case 39:
-                                if (canMove) {
+                                if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
@@ -377,7 +377,7 @@ $(document).ready(function() {
                                 }
                                 break;
                             case 40:
-                                if (canMove) {
+                                if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
@@ -403,7 +403,7 @@ $(document).ready(function() {
                                 }
                                 break;
                             case 37:
-                                if (canMove) {
+                                if (canMove && canAttack) {
                                     canMove = false;
                                     var ms = 1000 - (player.speed * 100);
                                     setTimeout(function() {
@@ -442,8 +442,16 @@ $(document).ready(function() {
                                 break;
                             case 32:
                                 if (canAttack) {
+                                    if (player.animation) {
+                                        clearInterval(player.animation);
+                                        player.animation = undefined;
+                                    }
+                                    //if es arquero... 28, si es mago 24, si es guerrero 12
+                                    player.action = 28;
+                                    requestAnimFrame(draw);
                                     canAttack = false;
-                                    var dps = 2000 - (player.speed * 100);
+                                    //var dps = 2000 - (player.speed * 100);
+                                    var dps = 800;
                                     $('#autoattack').toggleClass('disabled');
                                     setTimeout(function() {
                                         canAttack = true;
@@ -517,7 +525,7 @@ $(document).ready(function() {
                                     layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
                                     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
                                     player.action++;
-                                    if (player.action == 4) {
+                                    if (player.action == 4 || player.action == 15 || player.action == 27 || player.action == 31) {
                                         player.action = 0;
                                     }
                                     // cont++;
@@ -548,7 +556,7 @@ $(document).ready(function() {
                                             layer.draw(i, j, e.head, e.width, e.action, e.height, e.direction);
                                             layer.draw(i, j, e.weapon, e.width, e.action, e.height, e.direction);
                                             e.action++;
-                                            if (e.action == 4) {
+                                            if (e.action == 4 || e.action == 15 || e.action == 27 || e.action == 31) {
                                                 e.action = 0;
                                             }
                                         }

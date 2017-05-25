@@ -88,6 +88,7 @@
     "static/img/characters/players/isometric_heroine/buckler2.png",
     "static/img/characters/players/isometric_heroine/shield2.png",
     "static/img/characters/enemies/antlion/antlion.png",
-    "static/img/characters/enemies/wyverns/wyvern_fire.png"
+    "static/img/characters/enemies/wyverns/wyvern_fire.png",
+    "static/img/attacks/projectiles.png"
   ]
 }

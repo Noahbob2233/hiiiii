@@ -55,27 +55,20 @@ body {
 	padding: 0px;
 	background-color: @darkGrey !important;
 	// box-shadow: 0px 0px 20px 6px rgba(0,0,0,0.26);
+}
 
-	.modal-dialog {
-		max-width: 80%;
-		
-		.modal-body {
-			padding: 15px 25px;
+.modal-dialog {
+	max-width: 80%;
+	
+	.modal-body {
+		padding: 15px 25px;
 
-			img {
-				width: 60px;
-			}
-		}
-
-		.comment {
-			display: none;
-
-
-			&.visible {
-				display: unset;
-			}
+		.row {
+			margin: 0px;
+			margin-bottom: 20px;
 		}
 	}
+
 }
 
 #index {
@@ -166,26 +159,40 @@ body {
 	}
 }
 
+footer {
+	background-color: #C8C8C8;
+	padding: 50px;
+
+	div[class^="col"] {
+		text-align: center;
+	}
+	
+	.ftext {
+		margin: 0 auto;
+		position: relative;
+		top: 50%;
+		margin-top: -25px;
+
+		img {
+			width: 50px;
+			height: auto;
+			margin: 0 20px;
+		}
+
+	}
+	
+}
+
 .card {
 	margin-top: 0px;
 	font-size: 14px;
 	height: 100%;
 	box-shadow: 0px 0px 20px 6px rgba(0,0,0,0.26);
+	border: 0px;
 	border-radius: 0px;
-	/*img {
-		width: 60px;
-		margin: 0 auto;
-		display: block;
+	.card-img-top {
+		border-radius:0px;
 	}
-	.row, p {
-		margin-bottom: 5px;
-	}
-	.card-text span, .card-title {
-		.heading;
-	}
-	ul {
-		padding-left: 0px;
-	}*/
 }
 
 

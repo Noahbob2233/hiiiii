@@ -18,8 +18,9 @@
 					<h4 class="card-title">Quiénes somos</h4>
 					<p class="card-text">Nuestro equipo se compone de tres personas. Los tres somos estudiantes de grado superior de desarrollo de aplicaciones web y Warbo no es ni más ni menos que nuestro proyecto de final de curso.</p>
 					<h4 class="card-title">¿En qué consiste Warbo?</h4>
-					<p class="card-text">Warbo empezó siendo un proyecto muy ambicioso que no ha llegado a ser todo lo que debería dado el escaso tiempo que hemos tenido para desarrollarlo. Tal vez en un futuro retomemos su desarrollo o reutilicemos alguna de sus ideas en otros proyectos, pero de momento, esto es todo lo que podemos ofreceros.<br><br>
-					En este momento, Warbo es un battle royale con movimiento por casillas. Dispone de varios tipos de personajes y es posible derrotar a otros jugadores para subir de nivel y hacer más fuertes a tus personajes. Sin embargo, a pesar de que te vuelvas más fuerte, no hay forma de recuperar tu vida, con lo que tendrás que ingeniártelas para golpear a otros jugadores sin ser golpeado. ¿Serás capaz de seguir invicto día tras día?</p>
+					<p class="card-text">Warbo empezó siendo un proyecto muy ambicioso que no ha llegado a ser todo lo que debería dado el escaso tiempo que hemos tenido para desarrollarlo. Tal vez en un futuro retomemos su desarrollo o reutilicemos alguna de sus ideas en otros proyectos, pero de momento, esto es todo lo que podemos ofreceros.
+						<br>
+						<br> En este momento, Warbo es un battle royale con movimiento por casillas. Dispone de varios tipos de personajes y es posible derrotar a otros jugadores para subir de nivel y hacer más fuertes a tus personajes. Sin embargo, a pesar de que te vuelvas más fuerte, no hay forma de recuperar tu vida, con lo que tendrás que ingeniártelas para golpear a otros jugadores sin ser golpeado. ¿Serás capaz de seguir invicto día tras día?</p>
 				</div>
 				<div class="card-block tab-pane fade" id="segundo" role="tabpanel">
 					<h4 class="card-title">Crea tu cuenta</h4>
@@ -29,17 +30,16 @@
 				</div>
 			</div>
 		</div>
-			
 		<div class="card-deck">
 			<div class="card">
-				<img class="card-img-top img-fluid" src="http://placehold.it/1140x400" alt="Card image cap">
+				<img class="card-img-top img-fluid" src="/static/img/web/img1.png" alt="Card image cap">
 				<div class="card-block">
 					<h4 class="card-title">Es simple</h4>
 					<p class="card-text">Crea tu personaje y reparte espadazos a diestro y siniestro.</p>
 				</div>
 			</div>
 			<div class="card">
-				<img class="card-img-top img-fluid" src="http://placehold.it/1140x400" alt="Card image cap">
+				<img class="card-img-top img-fluid" src="/static/img/web/img2.png" alt="Card image cap">
 				<div class="card-block">
 					<h4 class="card-title">Ser el más fuerte no implica ser el mejor</h4>
 					<p class="card-text">Vigila tu nivel de vida en todo momento. Sé más inteligente que el resto. </p>
@@ -48,15 +48,19 @@
 			<div class="card">
 				<img class="card-img-top img-fluid" src="http://placehold.it/1140x400" alt="Card image cap">
 				<div class="card-block">
-					<h4 class="card-title">Tu casa, tus reglas</h4>
-					<p class="card-text">Tendrás ventaja si peleas en tu territorio. Dispondrás de todas tus trampas, pero tendrás que apostar más cantidad de objetos. Tú decides.</p>
+					<h4 class="card-title">Compite por la cima</h4>
+					<p class="card-text">Derrota a otros jugadores para avanzar en el ránking. ¿Conseguirás hacerte con el primer lugar?</p>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script>
-		$(document).ready(function(){
-			$('#header').parallax({imageSrc: '/static/img/header.png', zIndex: 10});
-		})
-	</script>
-	{% endblock %}
+</div>
+<script>
+$(document).ready(function() {
+	$('#header').parallax({
+		imageSrc: '/static/img/header.png',
+		zIndex: 10
+	});
+})
+</script>
+{% endblock %}

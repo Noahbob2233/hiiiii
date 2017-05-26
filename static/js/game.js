@@ -514,6 +514,7 @@ $(document).ready(function() {
                                         canAttack = true;
                                         $('#autoattack').toggleClass('disabled');
                                     }, dps);
+                                    console.log(player);
                                     //if es arquero... 28, si es mago 24, si es guerrero 12
                                     player.action = 28;
                                     socket.emit('attacking', { attacker: player });

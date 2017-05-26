@@ -32,8 +32,8 @@ $(document).ready(function() {
     var $loginPage = $('.login.page'); // The login page
     var $chatPage = $('.chat.page'); // The chatroom page
     var hBar = $('.health-bar'),
-        bar = hBar.find('.bar'),
-        hit = hBar.find('.hit');
+        bar = $('.bar'),
+        hit = $('.hit');
 
     // Prompt for setting a username
     var username;
@@ -1010,12 +1010,10 @@ $(document).ready(function() {
                         log(message, {});
                         play(hitted);
                         console.log("He sido golpeado: " + data.enemy.name);
-                        var total = hBar.data('total'),
-                            value = hBar.data('value');
-
+                        /*var total = parseInt($(hBar).attr('total')),
+                            value = parseInt($(hBar).attr('value'));
                         // max damage is essentially quarter of max life
-                        var damage = Math.floor(Math.random() * total);
-                        // damage = 100;
+                        var damage = parseInt(player.hp) - parseInt(data.enemy.hp);
                         var newValue = value - damage;
                         // calculate the percentage of the total width
                         var barWidth = (newValue / total) * 100;
@@ -1026,9 +1024,9 @@ $(document).ready(function() {
                         hBar.data('value', newValue);
 
                         setTimeout(function() {
-                            hit.css({ 'width': '0' });
+                            hit.css( 'width', '0' );
                             bar.css('width', barWidth + "%");
-                        }, 500);
+                        }, 500);*/
                     }
 
                 });

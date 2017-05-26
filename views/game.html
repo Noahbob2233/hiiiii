@@ -49,7 +49,7 @@ a:visited {
 {% endblock %} {% block content %}
 <div id="barras">
 	<p>{{ sess.character_name }} - {{ sess.character_class }}</p>
-	<div class="health-bar" data-total="{{sess.character_hp}}" data-value="{{sess.character_hp}}">
+	<div class="health-bar" total="{{sess.character_hp}}" value="{{sess.character_hp}}">
 		<div class="bar">
 			<div class="hit"></div>
 		</div>

@@ -7,39 +7,20 @@
 
 	<!-- AUDIO -->
 	<script>
-		var audio = new Audio('static/music/bgm.mp3');
-		audio.play();
+		// var audio = new Audio('static/music/bgm.mp3');
+		// audio.play();
 
-		function startbgmusic()
-			{
-			    setInterval(function(){
-				audio.pause();
-				audio.currentTime = 0;
-				audio.play();
-				},76000);
-			}
+		// function startbgmusic()
+		// 	{
+		// 	    setInterval(function(){
+		// 		audio.pause();
+		// 		audio.currentTime = 0;
+		// 		audio.play();
+		// 		},76000);
+		// 	}
 
-		startbgmusic();
+		// startbgmusic();
 	</script>
-
-	<!-- KONAMI -->
-	<script>
-        // ▲ ▲ ▼ ▼ ◀ ▶ ◀ ▶ b a
-        var kkeys = [], konami = "38,38,40,40,37,39,37,39,66,65";
-        $(document).keydown(function(e) {
-          kkeys.push( e.keyCode );
-          if(e.keycode!)
-          if ( kkeys.toString().indexOf( konami ) >= 0 ){
-            $(document).unbind('keydown',arguments.callee);
-            $.getScript('http://www.cornify.com/js/cornify.js',function(){
-              cornify_add();
-            alert("Cheat activated");
-            document.getElementById("asd").innerHTML = "<iframe src='https://www.youtube.com/embed/-7Pa1adrYlI?autoplay=1' width='0' height='0' frameborder='0'></iframe>"
-              $(document).keydown(cornify_add);
-            });
-          }
-        });
-    </script>
 	<style type="text/css">
 	html,
 	body {
@@ -94,13 +75,14 @@
     <input class="xPosInput" value="{{sess.character_xPos}}" type="hidden" disabled="disabled" />
     <input class="yPosInput" value="{{sess.character_yPos}}" type="hidden" disabled="disabled" />
     <input class="directionInput" value="{{sess.character_direction}}" type="hidden" disabled="disabled" />
-		<input class="actionInput" value="{{sess.character_action}}" type="hidden" disabled="disabled" />
+	<input class="actionInput" value="{{sess.character_action}}" type="hidden" disabled="disabled" />
     <input class="widthInput" value="{{sess.character_width}}" type="hidden" disabled="disabled" />
     <input class="heightInput" value="{{sess.character_height}}" type="hidden" disabled="disabled" />
     <input class="hpInput" value="{{sess.character_hp}}" type="hidden" disabled="disabled" />
     <input class="attackInput" value="{{sess.character_attack}}" type="hidden" disabled="disabled" />
     <input class="defenseInput" value="{{sess.character_defense}}" type="hidden" disabled="disabled" />
     <input class="speedInput" value="{{sess.character_speed}}" type="hidden" disabled="disabled" />
+    <input class="soundInput" value="{{sess.character_sound}}" type="hidden" disabled="disabled" />
     <!-- <li class="login page">
       <div class="form">
         <h3 class="title">Press Enter to join</h3>

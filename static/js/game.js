@@ -27,6 +27,7 @@ $(document).ready(function() {
     var $speedInput = $('.speedInput');
     var $soundInput = $('.soundInput');
     var $heightInput = $('.heightInput');
+    var $classInput = $('.classInput').val();
     var $messages = $('.messages'); // Messages area
     var $inputMessage = $('.inputMessage'); // Input message input box
     var $loginPage = $('.login.page'); // The login page
@@ -524,7 +525,16 @@ $(document).ready(function() {
                                     }, dps);
                                     console.log(player);
                                     //if es arquero... 28, si es mago 24, si es guerrero 12
-                                    player.action = 28;
+                                    if($classInput == 'Guerrero') {
+                                        player.action = 12;
+                                    }
+                                    else if ($classInput == 'Mago') {
+                                        player.action = 24;
+                                    }
+                                    else {
+                                        player.action = 28;
+                                    }
+                                    
                                     socket.emit('attacking', { attacker: player });
                                     playersonline.map(function(e) {
                                         var message;
@@ -1010,23 +1020,6 @@ $(document).ready(function() {
                         log(message, {});
                         play(hitted);
                         console.log("He sido golpeado: " + data.enemy.name);
-                        /*var total = parseInt($(hBar).attr('total')),
-                            value = parseInt($(hBar).attr('value'));
-                        // max damage is essentially quarter of max life
-                        var damage = parseInt(player.hp) - parseInt(data.enemy.hp);
-                        var newValue = value - damage;
-                        // calculate the percentage of the total width
-                        var barWidth = (newValue / total) * 100;
-                        var hitWidth = (damage / value) * 100 + "%";
-
-                        // show hit bar and set the width
-                        hit.css('width', hitWidth);
-                        hBar.data('value', newValue);
-
-                        setTimeout(function() {
-                            hit.css( 'width', '0' );
-                            bar.css('width', barWidth + "%");
-                        }, 500);*/
                     }
 
                 });

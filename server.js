@@ -402,6 +402,7 @@ app.all('/character', function(req,res){
 		sess.character_attack = result[0].attack;
 		sess.character_defense = result[0].defense;
 		sess.character_speed = result[0].speed;
+		sess.character_class = result[0].class;
 		res.render('character.html', {
 			sess: sess
 		});
@@ -457,14 +458,14 @@ app.post('/saveselectedchar', function(req,res){
 	sess = req.session;
 
   if (req.body.class === "Arquero") {
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0)";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0,?)";
   } else if (req.body.class === "Mago") {
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0)";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0,?)";
   } else { //Guerrero
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0)";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?)";
   }
 
-	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid];
+	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid,req.body.class];
 	db.Select(query, query_var).then(function(){
 		sess.characters.push({name: req.body.name});
 		sess.characters_max += 1;
@@ -474,6 +475,7 @@ app.post('/saveselectedchar', function(req,res){
 		sess.character_attack = req.body.attack;
 		sess.character_defense = req.body.defense;
 		sess.character_speed = req.body.speed;
+		sess.character_class = req.body.class;
 		res.render('character.html', {
 			sess: sess
 		});

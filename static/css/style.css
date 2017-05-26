@@ -167,7 +167,7 @@ body {
   margin-bottom: 20px;
 }
 footer {
-  background-color: #C8C8C8;
+  background-color: #c8c8c8;
   padding: 50px;
 }
 footer div[class^="col"] {
@@ -202,8 +202,9 @@ footer .ftext img {
   margin-top: 10px;
 }
 .char {
-  padding-top: 20px;
-  color: white;
+  padding: 20px;
+  margin-bottom: 50px;
+  background-color: #c8c8c8;
 }
 .char ul {
   list-style-type: none;

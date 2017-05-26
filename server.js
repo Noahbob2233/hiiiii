@@ -202,6 +202,7 @@ app.all('/game', function(req,res){
 			        sess.character_attack=		 result[0].attack;
 			        sess.character_defense=		 result[0].defense;
 			        sess.character_speed=		 result[0].speed;
+			        sess.character_sound=		 result[0].sound;
 			        res.render('game.html', {
 					  	sess: sess
 					});
@@ -458,11 +459,11 @@ app.post('/saveselectedchar', function(req,res){
 	sess = req.session;
 
   if (req.body.class === "Arquero") {
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0,?)";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0,?,'bow.wav')";
   } else if (req.body.class === "Mago") {
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0,?)";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0,?,'spell.wav')";
   } else { //Guerrero
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?)";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?,'sword.flac')";
   }
 
 	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid,req.body.class];

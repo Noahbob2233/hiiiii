@@ -25,6 +25,7 @@ $(document).ready(function() {
     var $attackInput = $('.attackInput');
     var $defenseInput = $('.defenseInput');
     var $speedInput = $('.speedInput');
+    var $soundInput = $('.soundInput');
     var $heightInput = $('.heightInput');
     var $messages = $('.messages'); // Messages area
     var $inputMessage = $('.inputMessage'); // Input message input box
@@ -211,6 +212,11 @@ $(document).ready(function() {
                     speed: parseInt(cleanInput($speedInput.val().trim())),
                     animation: false
                 };
+
+                var hitted = new Audio('static/music/hit.wav');
+                var hit_sound = new Audio('static/music/'+cleanInput($soundInput.val().trim()));
+
+                console.log('audio: static/music/'+cleanInput($soundInput.val().trim()));
 
                 var enemy = [{
                     id: 0,
@@ -526,7 +532,8 @@ $(document).ready(function() {
                                                     if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            message = "Has atacado a " + e.name;
+                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -536,7 +543,8 @@ $(document).ready(function() {
                                                     if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            message = "Has atacado a " + e.name;
+                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -546,7 +554,8 @@ $(document).ready(function() {
                                                     if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            message = "Has atacado a " + e.name;
+                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -556,7 +565,8 @@ $(document).ready(function() {
                                                     if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = player.name + " ha atacado a " + e.name + " y ahora le quedan " + e.hp + " !!!";
+                                                            message = "Has atacado a " + e.name;
+                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -987,15 +997,17 @@ $(document).ready(function() {
                         if(playersonline[i].name === data.enemy.name){
                             playersonline[i].hp = data.enemy.hp;
                         }
-                        if (player.name === data.enemy.name === playersonline[i].name) {
-                            var message = "Te quedan " + data.playersonline[i].hp;
-                            log(message, {});
-                            console.log("He sido golpeado: "+data.enemy.name);
-                        }
                         if(playersonline[i].hp <= 0 && playersonline[i].name == player.name){
                             socket.emit('die', { playersonline: playersonline, name: data.enemy.die });
                             window.location.href = "/character";
                         }
+                    }
+
+                    if (player.name === data.enemy.name) {
+                        var message = "Te quedan " + data.enemy.hp;
+                        log(message, {});
+                        play(hitted);
+                        console.log("He sido golpeado: "+data.enemy.name);
                     }
 
                 });
@@ -1039,6 +1051,14 @@ $(document).ready(function() {
                 // socket.on('reconnect_error', function() {
                 //     log('attempt to reconnect has failed');
                 // });
+                // 
+                
+                //funcion to rexu para reiniciar un adio
+                function play(sound) {
+                  if(!sound.paused) sound.pause();
+                  sound.currentTime = 0;
+                  sound.play();
+                }
 
                 return {
                     init: function(layers) {

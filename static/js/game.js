@@ -29,9 +29,11 @@ $(document).ready(function() {
     var $heightInput = $('.heightInput');
     var $messages = $('.messages'); // Messages area
     var $inputMessage = $('.inputMessage'); // Input message input box
-
     var $loginPage = $('.login.page'); // The login page
     var $chatPage = $('.chat.page'); // The chatroom page
+    var hBar = $('.health-bar'),
+        bar = hBar.find('.bar'),
+        hit = hBar.find('.hit');
 
     // Prompt for setting a username
     var username;
@@ -214,9 +216,9 @@ $(document).ready(function() {
                 };
 
                 var hitted = new Audio('static/music/hit.wav');
-                var hit_sound = new Audio('static/music/'+cleanInput($soundInput.val().trim()));
+                var hit_sound = new Audio('static/music/' + cleanInput($soundInput.val().trim()));
 
-                console.log('audio: static/music/'+cleanInput($soundInput.val().trim()));
+                console.log('audio: static/music/' + cleanInput($soundInput.val().trim()));
 
                 var enemy = [{
                     id: 0,
@@ -350,7 +352,7 @@ $(document).ready(function() {
                                         player.yPos--;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                        if ( /*startX > 0 && */ player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
+                                        if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
                                             mapLayers.map(function(layer) {
                                                 layer.move("down");
                                             });
@@ -383,7 +385,7 @@ $(document).ready(function() {
                                         player.xPos++;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                        if (startY + rangeY < mapLayers[0].getLayout().length /*&& player.xPos >= 0 + 1 + rangeX / 2*/ ) {
+                                        if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
                                             mapLayers.map(function(layer) {
                                                 layer.move("left");
                                             });
@@ -416,7 +418,7 @@ $(document).ready(function() {
                                         player.yPos++;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                        if (startX + rangeX < mapLayers[0].getLayout().length /*&& player.yPos >= 0 + 1 + rangeY / 2*/ ) {
+                                        if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
                                             mapLayers.map(function(layer) {
                                                 layer.move("right");
                                             });
@@ -449,7 +451,7 @@ $(document).ready(function() {
                                         player.xPos--;
                                         socket.emit('move', { player: player, playersonline: playersonline });
                                         mapLayers[1].applyFocus(player.xPos, player.yPos);
-                                        if ( /*startY > 0 && */ player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
+                                        if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
                                             mapLayers.map(function(layer) {
                                                 layer.move("up");
                                             });
@@ -699,7 +701,7 @@ $(document).ready(function() {
                             action: parseInt(cleanInput($actionInput.val().trim())),
                             width: parseInt(cleanInput($widthInput.val().trim())),
                             height: parseInt(cleanInput($heightInput.val().trim())),
-                            hp: parseInt(cleanInput($hpInput.val().trim())),
+                            hpF: parseInt(cleanInput($hpInput.val().trim())),
                             attack: parseInt(cleanInput($attackInput.val().trim())),
                             defense: parseInt(cleanInput($defenseInput.val().trim())),
                             speed: parseInt(cleanInput($speedInput.val().trim()))
@@ -987,17 +989,17 @@ $(document).ready(function() {
                 //Cuando se golpea a alguien
                 socket.on('someone hitted', function(data) {
 
-                    console.log("Usuario: "+player.name);
+                    console.log("Usuario: " + player.name);
 
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
                         playersonline[i].image = playerImages.files[data.playersonline[i].image];
                         playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
                         playersonline[i].head = playerImages.files[data.playersonline[i].head];
-                        console.log("Vida de "+playersonline[i].name+" : "+playersonline[i].hp);
-                        if(playersonline[i].name === data.enemy.name){
+                        console.log("Vida de " + playersonline[i].name + " : " + playersonline[i].hp);
+                        if (playersonline[i].name === data.enemy.name) {
                             playersonline[i].hp = data.enemy.hp;
                         }
-                        if(playersonline[i].hp <= 0 && playersonline[i].name == player.name){
+                        if (playersonline[i].hp <= 0 && playersonline[i].name == player.name) {
                             socket.emit('die', { playersonline: playersonline, name: data.enemy.die });
                             window.location.href = "/character";
                         }
@@ -1007,7 +1009,26 @@ $(document).ready(function() {
                         var message = "Te quedan " + data.enemy.hp;
                         log(message, {});
                         play(hitted);
-                        console.log("He sido golpeado: "+data.enemy.name);
+                        console.log("He sido golpeado: " + data.enemy.name);
+                        var total = hBar.data('total'),
+                            value = hBar.data('value');
+
+                        // max damage is essentially quarter of max life
+                        var damage = Math.floor(Math.random() * total);
+                        // damage = 100;
+                        var newValue = value - damage;
+                        // calculate the percentage of the total width
+                        var barWidth = (newValue / total) * 100;
+                        var hitWidth = (damage / value) * 100 + "%";
+
+                        // show hit bar and set the width
+                        hit.css('width', hitWidth);
+                        hBar.data('value', newValue);
+
+                        setTimeout(function() {
+                            hit.css({ 'width': '0' });
+                            bar.css('width', barWidth + "%");
+                        }, 500);
                     }
 
                 });
@@ -1052,12 +1073,12 @@ $(document).ready(function() {
                 //     log('attempt to reconnect has failed');
                 // });
                 // 
-                
+
                 //funcion to rexu para reiniciar un adio
                 function play(sound) {
-                  if(!sound.paused) sound.pause();
-                  sound.currentTime = 0;
-                  sound.play();
+                    if (!sound.paused) sound.pause();
+                    sound.currentTime = 0;
+                    sound.play();
                 }
 
                 return {

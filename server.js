@@ -463,7 +463,7 @@ app.post('/saveselectedchar', function(req,res){
   } else if (req.body.class === "Mago") {
     var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0,?,'spell.wav')";
   } else { //Guerrero
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?,'sword.flac')";
+    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?,'sword.wav')";
   }
 
 	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid,req.body.class];

@@ -32,6 +32,9 @@ $(document).ready(function() {
     var $inputMessage = $('.inputMessage'); // Input message input box
     var $loginPage = $('.login.page'); // The login page
     var $chatPage = $('.chat.page'); // The chatroom page
+    var hBar = $('.health-bar'),
+        bar = hBar.find('.bar'),
+        hit = hBar.find('.hit');
 
     // Prompt for setting a username
     var username;
@@ -522,16 +525,14 @@ $(document).ready(function() {
                                     }, dps);
                                     //console.log(player);
                                     //if es arquero... 28, si es mago 24, si es guerrero 12
-                                    if($classInput == 'Guerrero') {
+                                    if ($classInput == 'Guerrero') {
                                         player.action = 12;
-                                    }
-                                    else if ($classInput == 'Mago') {
+                                    } else if ($classInput == 'Mago') {
                                         player.action = 24;
-                                    }
-                                    else {
+                                    } else {
                                         player.action = 28;
                                     }
-                                    
+
                                     socket.emit('attacking', { attacker: player });
                                     playersonline.map(function(e) {
                                         var message;
@@ -1019,6 +1020,23 @@ $(document).ready(function() {
                         log(message, {});
                         play(hitted);
                         console.log("He sido golpeado: " + data.enemy.name);
+                        var total = hBar.data('total'),
+                            value = hBar.data('value');
+                        
+                        // calculate the percentage of the total width
+                        var damage = value - enemyHP;
+                        var newValue = enemyHP;
+                        var barWidth = (newValue / total) * 100;
+                        var hitWidth = (damage / value) * 100 + "%";
+
+                        // show hit bar and set the width
+                        hit.css('width', hitWidth);
+                        hBar.data('value', newValue);
+
+                        setTimeout(function() {
+                            hit.css({ 'width': '0' });
+                            bar.css('width', barWidth + "%");
+                        }, 500);
                     }
 
                 });

@@ -237,6 +237,8 @@ footer .ftext img {
   position: fixed;
   top: 60px;
   left: 20px;
+  padding: 10px;
+  background-color: #c8c8c8;
 }
 #barras .health-bar {
   -webkit-box-sizing: border-box;

@@ -32,9 +32,6 @@ $(document).ready(function() {
     var $inputMessage = $('.inputMessage'); // Input message input box
     var $loginPage = $('.login.page'); // The login page
     var $chatPage = $('.chat.page'); // The chatroom page
-    var hBar = $('.health-bar'),
-        bar = $('.bar'),
-        hit = $('.hit');
 
     // Prompt for setting a username
     var username;
@@ -523,7 +520,7 @@ $(document).ready(function() {
                                         canAttack = true;
                                         $('#autoattack').toggleClass('disabled');
                                     }, dps);
-                                    console.log(player);
+                                    //console.log(player);
                                     //if es arquero... 28, si es mago 24, si es guerrero 12
                                     if($classInput == 'Guerrero') {
                                         player.action = 12;
@@ -711,7 +708,7 @@ $(document).ready(function() {
                             action: parseInt(cleanInput($actionInput.val().trim())),
                             width: parseInt(cleanInput($widthInput.val().trim())),
                             height: parseInt(cleanInput($heightInput.val().trim())),
-                            hpF: parseInt(cleanInput($hpInput.val().trim())),
+                            hp: parseInt(cleanInput($hpInput.val().trim())),
                             attack: parseInt(cleanInput($attackInput.val().trim())),
                             defense: parseInt(cleanInput($defenseInput.val().trim())),
                             speed: parseInt(cleanInput($speedInput.val().trim()))
@@ -1000,23 +997,25 @@ $(document).ready(function() {
                 socket.on('someone hitted', function(data) {
 
                     console.log("Usuario: " + player.name);
+                    var enemyName = JSON.stringify(data.enemy.name).replace(/"/g, '');
+                    var enemyHP = JSON.stringify(data.enemy.hp).replace(/"/g, '');
 
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
                         playersonline[i].image = playerImages.files[data.playersonline[i].image];
                         playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
                         playersonline[i].head = playerImages.files[data.playersonline[i].head];
                         console.log("Vida de " + playersonline[i].name + " : " + playersonline[i].hp);
-                        if (playersonline[i].name === data.enemy.name) {
-                            playersonline[i].hp = data.enemy.hp;
+                        if (playersonline[i].name === enemyName) {
+                            playersonline[i].hp = enemyHP;
                         }
                         if (playersonline[i].hp <= 0 && playersonline[i].name == player.name) {
-                            socket.emit('die', { playersonline: playersonline, name: data.enemy.die });
+                            socket.emit('die', { name: player.name });
                             window.location.href = "/character";
                         }
                     }
 
-                    if (player.name === data.enemy.name) {
-                        var message = "Te quedan " + data.enemy.hp;
+                    if (player.name === enemyName) {
+                        var message = "Te quedan " + enemyHP;
                         log(message, {});
                         play(hitted);
                         console.log("He sido golpeado: " + data.enemy.name);
@@ -1026,6 +1025,7 @@ $(document).ready(function() {
 
                 //cuando muere alguien
                 socket.on('someone die', function(data) {
+                    playersonline = data.playersonline;
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
                         playersonline[i].image = playerImages.files[data.playersonline[i].image];
                         playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];

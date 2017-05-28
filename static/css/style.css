@@ -194,6 +194,9 @@ footer .ftext img {
 .card .card-img-top {
   border-radius: 0px;
 }
+.card .tab-content img {
+  width: 100%;
+}
 .dropdown > a > span.green:before {
   border-left-color: #2dcb73;
 }

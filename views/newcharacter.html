@@ -24,13 +24,16 @@
 			$('#weaponType').empty();
 			for (var i = 0; i < data[1].length; i++) {
 				$('#weaponType').append("<option value="+data[1][i].img+">"+data[1][i].name+"</option>");
+				if ( $('#weaponType :selected').text() === data[1][i].name) {
+					var pos = i;
+				}
 			}
 
 			$('#charstats').empty();
-			$('#charstats').append("<li id='hp' value='"+data[0].hp+"'>Vida: "+data[0].hp+"</li>");
-			$('#charstats').append("<li id='attack' value='"+data[0].attack+"'>Ataque: "+data[0].attack+"</li>");
-			$('#charstats').append("<li id='defense' value='"+data[0].defense+"'>Defensa: "+data[0].defense+"</li>");
-			$('#charstats').append("<li id='speed' value='"+data[0].speed+"'>Velocidad: "+data[0].speed+"</li>");
+			$('#charstats').append("<li id='hp' value='"+(data[0].attack+data[1][pos].hp)+"'>Vida: "+(data[0].attack+data[1][pos].hp)+"</li>");
+			$('#charstats').append("<li id='attack' value='"+(data[0].attack+data[1][pos].attack)+"'>Ataque: "+(data[0].attack+data[1][pos].attack)+"</li>");
+			$('#charstats').append("<li id='defense' value='"+(data[0].attack+data[1][pos].defense)+"'>Defensa: "+(data[0].attack+data[1][pos].defense)+"</li>");
+			$('#charstats').append("<li id='speed' value='"+(data[0].attack+data[1][pos].speed)+"'>Velocidad: "+(data[0].attack+data[1][pos].speed)+"</li>");
 		});
   }
 
@@ -42,13 +45,39 @@
 			$('#weaponType').empty();
 			for (var i = 0; i < data[1].length; i++) {
 				$('#weaponType').append("<option value="+data[1][i].img+">"+data[1][i].name+"</option>");
+				if ( $('#weaponType :selected').text() === data[1][i].name) {
+					var pos = i;
+				}
+			}
+
+			console.log("pos: "+pos);
+			console.log("arma: "+data[1][pos]);
+			console.log("attack: "+data[1][pos].attack);
+
+			$('#charstats').empty();
+			$('#charstats').append("<li id='hp' value='"+(data[0].attack+data[1][pos].hp)+"'>Vida: "+(data[0].attack+data[1][pos].hp)+"</li>");
+			$('#charstats').append("<li id='attack' value='"+(data[0].attack+data[1][pos].attack)+"'>Ataque: "+(data[0].attack+data[1][pos].attack)+"</li>");
+			$('#charstats').append("<li id='defense' value='"+(data[0].attack+data[1][pos].defense)+"'>Defensa: "+(data[0].attack+data[1][pos].defense)+"</li>");
+			$('#charstats').append("<li id='speed' value='"+(data[0].attack+data[1][pos].speed)+"'>Velocidad: "+(data[0].attack+data[1][pos].speed)+"</li>");
+		});
+	});
+
+	$("#weaponType").change(function(){
+		var parameters = {search: $("#samplechars").val()};
+
+		$.post( '/loadsamplechars', parameters, function(data) {
+
+			for (var i = 0; i < data[1].length; i++) {
+				if ( $('#weaponType :selected').text() === data[1][i].name) {
+					var pos = i;
+				}
 			}
 
 			$('#charstats').empty();
-			$('#charstats').append("<li id='hp' value='"+data[0].hp+"'>Vida: "+data[0].hp+"</li>");
-			$('#charstats').append("<li id='attack' value='"+data[0].attack+"'>Ataque: "+data[0].attack+"</li>");
-			$('#charstats').append("<li id='defense' value='"+data[0].defense+"'>Defensa: "+data[0].defense+"</li>");
-			$('#charstats').append("<li id='speed' value='"+data[0].speed+"'>Velocidad: "+data[0].speed+"</li>");
+			$('#charstats').append("<li id='hp' value='"+(data[0].attack+data[1][pos].hp)+"'>Vida: "+(data[0].attack+data[1][pos].hp)+"</li>");
+			$('#charstats').append("<li id='attack' value='"+(data[0].attack+data[1][pos].attack)+"'>Ataque: "+(data[0].attack+data[1][pos].attack)+"</li>");
+			$('#charstats').append("<li id='defense' value='"+(data[0].attack+data[1][pos].defense)+"'>Defensa: "+(data[0].attack+data[1][pos].defense)+"</li>");
+			$('#charstats').append("<li id='speed' value='"+(data[0].attack+data[1][pos].speed)+"'>Velocidad: "+(data[0].attack+data[1][pos].speed)+"</li>");
 		});
 	});
 

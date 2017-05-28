@@ -116,6 +116,7 @@ app.post('/login', function(req, res) {
 			//SI NO
 		} else {
 			sess.info = "El Usuario no existe";
+			sess.infoType = "danger";
 			res.redirect(page);
 		}
 
@@ -139,10 +140,12 @@ app.post('/signup', function(req, res) {
 		db.Select(query_select, query_select_var).then(function(result) {
 			if (typeof result[0] != 'undefined') {
 				sess.info = "Ya existe un Usuario con ese nombre.";
+				sess.infoType = "warning";
 				res.redirect(page);
 			} else {
 				db.Insert(query_insert, query_insert_var).then(function() {
 					sess.info = "Usuario creado correctamente. ¡Ya puedes iniciar sesión!";
+					sess.infoType = "success";
 					sess.characters_max = 0;
 					res.redirect(page);
 				});
@@ -151,6 +154,7 @@ app.post('/signup', function(req, res) {
 		}).catch((err) => setImmediate(() => { console.log(err); }));
 	} else {
 		sess.info = "Las contraseñas no coinciden";
+		sess.infoType = "warning";
 		res.redirect(page);
 	}
 

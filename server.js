@@ -462,14 +462,9 @@ app.all('/newchar', function(req, res) {
 
 		var query_var = [];
 		db.Select(query, query_var).then(function(result) {
-			var query2 = "SELECT * FROM weapons WHERE weapon = 'sword'";
-			var query_var2 = [];
-			db.Select(query2, query_var2).then(function(weapons) {
-				res.render('newcharacter.html', {
-					result: result,
-					weapons: weapons,
-					sess: sess
-				});
+			res.render('newcharacter.html', {
+				result: result,
+				sess: sess
 			});
 		});
 	} else {

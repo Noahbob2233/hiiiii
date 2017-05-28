@@ -534,6 +534,7 @@ $(document).ready(function() {
                                     }
 
                                     socket.emit('attacking', { attacker: player });
+                                    play(hit_sound);
                                     playersonline.map(function(e) {
                                         var message;
                                         if (e.name != player.name) {
@@ -543,7 +544,6 @@ $(document).ready(function() {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
-                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -554,7 +554,6 @@ $(document).ready(function() {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
-                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -565,7 +564,6 @@ $(document).ready(function() {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
-                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -576,7 +574,6 @@ $(document).ready(function() {
                                                         if (e.xPos > 15 || e.yPos > 15) {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
-                                                            play(hit_sound);
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e });
                                                         }
@@ -1022,7 +1019,7 @@ $(document).ready(function() {
                         console.log("He sido golpeado: " + data.enemy.name);
                         var total = hBar.data('total'),
                             value = hBar.data('value');
-                        
+
                         // calculate the percentage of the total width
                         var damage = value - enemyHP;
                         var newValue = enemyHP;
@@ -1081,7 +1078,7 @@ $(document).ready(function() {
                 // socket.on('reconnect_error', function() {
                 //     log('attempt to reconnect has failed');
                 // });
-                // 
+                //
 
                 //funcion to rexu para reiniciar un adio
                 function play(sound) {

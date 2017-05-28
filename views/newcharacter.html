@@ -84,7 +84,7 @@
 	$("#guardar").click(function(){
 		var name = $("#name").val();
 		if(name && name.search(/[^a-zA-Z0-9]+/) === -1) {
-			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value'), class: $('#samplechars :selected').text(), weapon: $('#weaponType :selected').val()};
+			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value'), class: $('#samplechars :selected').text(), weapon: $('#weaponType :selected').val(), weaponName: $('#weaponType :selected').text()};
 			$.post( '/saveselectedchar', parameters, function(){
 				$.extend(
 					{

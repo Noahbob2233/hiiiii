@@ -437,6 +437,8 @@ app.all('/character', function(req, res) {
 		var query = "SELECT * FROM users_chars WHERE name=?";
 		var query_var = [req.body.charname];
 		db.Select(query, query_var).then(function(result) {
+			var query2 = "SELECT name FROM weapons WHERE img=?";
+			var query_var2 = [result[0].weapon];
 			sess.character_name = result[0].name;
 			sess.character_lvl = result[0].lvl;
 			sess.character_hp = result[0].hp;
@@ -444,8 +446,12 @@ app.all('/character', function(req, res) {
 			sess.character_defense = result[0].defense;
 			sess.character_speed = result[0].speed;
 			sess.character_class = result[0].class;
-			res.render('character.html', {
-				sess: sess
+			
+			db.Select(query2, query_var2).then(function(result){
+				sess.character_weapon = result[0].name;
+				res.render('character.html', {
+					sess: sess
+				});
 			});
 		});
 	} else {
@@ -529,6 +535,7 @@ app.post('/saveselectedchar', function(req, res) {
 		sess.character_defense = req.body.defense;
 		sess.character_speed = req.body.speed;
 		sess.character_class = req.body.class;
+		sess.character_weapon = req.body.weaponName;
 		res.render('character.html', {
 			sess: sess
 		});

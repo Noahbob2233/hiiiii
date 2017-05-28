@@ -96,12 +96,10 @@ body {
   padding: 0px;
   min-height: 500px;
   background: transparent;
-  /*height: 100%;
-	background-image: url("../img/header.png");
-	background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;*/
+}
+#ranking {
+  background-color: #c8c8c8;
+  padding: 50px;
 }
 .navbar {
   margin-bottom: 0px !important;
@@ -169,6 +167,7 @@ body {
 footer {
   background-color: #c8c8c8;
   padding: 50px;
+  margin-top: 60px;
 }
 footer div[class^="col"] {
   text-align: center;

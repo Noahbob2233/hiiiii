@@ -219,8 +219,6 @@ $(document).ready(function() {
                 var hitted = new Audio('static/music/hit.wav');
                 var hit_sound = new Audio('static/music/' + cleanInput($soundInput.val().trim()));
 
-                console.log('audio: static/music/' + cleanInput($soundInput.val().trim()));
-
                 var enemy = [{
                     id: 0,
                     image: playerImages.files["antlion.png"],
@@ -545,7 +543,7 @@ $(document).ready(function() {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
                                                             log(message, {});
-                                                            socket.emit('hit', { enemy: e });
+                                                            socket.emit('hit', { enemy: e, attacker: player.name });
                                                         }
                                                     }
                                                     break;
@@ -555,7 +553,7 @@ $(document).ready(function() {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
                                                             log(message, {});
-                                                            socket.emit('hit', { enemy: e });
+                                                            socket.emit('hit', { enemy: e, attacker: player.name });
                                                         }
                                                     }
                                                     break;
@@ -565,7 +563,7 @@ $(document).ready(function() {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
                                                             log(message, {});
-                                                            socket.emit('hit', { enemy: e });
+                                                            socket.emit('hit', { enemy: e, attacker: player.name });
                                                         }
                                                     }
                                                     break;
@@ -575,7 +573,7 @@ $(document).ready(function() {
                                                             e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
                                                             message = "Has atacado a " + e.name;
                                                             log(message, {});
-                                                            socket.emit('hit', { enemy: e });
+                                                            socket.emit('hit', { enemy: e, attacker: player.name });
                                                         }
                                                     }
                                                     break;
@@ -709,7 +707,8 @@ $(document).ready(function() {
                             hp: parseInt(cleanInput($hpInput.val().trim())),
                             attack: parseInt(cleanInput($attackInput.val().trim())),
                             defense: parseInt(cleanInput($defenseInput.val().trim())),
-                            speed: parseInt(cleanInput($speedInput.val().trim()))
+                            speed: parseInt(cleanInput($speedInput.val().trim())),
+                            kills: 0
                         });
 
                     }
@@ -997,6 +996,7 @@ $(document).ready(function() {
                     console.log("Usuario: " + player.name);
                     var enemyName = JSON.stringify(data.enemy.name).replace(/"/g, '');
                     var enemyHP = JSON.stringify(data.enemy.hp).replace(/"/g, '');
+                    var attackerName = JSON.stringify(data.attacker).replace(/"/g, '');
 
                     for (var i = data.playersonline.length - 1; i >= 0; i--) {
                         playersonline[i].image = playerImages.files[data.playersonline[i].image];
@@ -1007,7 +1007,7 @@ $(document).ready(function() {
                             playersonline[i].hp = enemyHP;
                         }
                         if (playersonline[i].hp <= 0 && playersonline[i].name == player.name) {
-                            socket.emit('die', { name: player.name });
+                            socket.emit('die', { name: player.name, attacker: attackerName });
                             window.location.href = "/character";
                         }
                     }
@@ -1045,6 +1045,9 @@ $(document).ready(function() {
                         playersonline[i].image = playerImages.files[data.playersonline[i].image];
                         playersonline[i].weapon = playerImages.files[data.playersonline[i].weapon];
                         playersonline[i].head = playerImages.files[data.playersonline[i].head];
+                        if(playersonline[i].name === player.name) {
+                            $('#killCount').text(playersonline[i].kills);
+                        }
                     }
                     if (player.animation) {
                         clearInterval(player.animation);

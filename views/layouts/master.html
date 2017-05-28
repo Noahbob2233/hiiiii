@@ -31,6 +31,9 @@
 				<li class="nav-item {{ 'active' if url=='/'}}">
 					<a class="nav-link" href="/">Inicio</a>
 				</li>
+				<li class="nav-item {{ 'active' if url=='/ranking'}}">
+					<a class="nav-link" href="/ranking">Ranking</a>
+				</li>
 				{% if sess.user %}
 				<li class="nav-item {{ 'active' if url=='/game'}}">
 					<a class="nav-link" href="/game">Juego</a>
@@ -88,12 +91,19 @@
 	</nav>
 	<div id="wrap" class="container-fluid">
 		{% if sess.info %}
-		<div class="card card-danger">
-			<div class="card-block">
-				<h4 class="card-title">Información</h4>
-				<p class="card-text">{{sess.info}}</p>
+			{% if sess.infoType=='danger' %}
+				{% set card='card-danger' %}
+			{% elif sess.infoType=='success' %}
+				{% set card='card-success' %}
+			{% elif sess.infoType=='warning' %}
+				{% set card='card-warning '%}
+			{% endif %}
+			<div class="card {{card}}">
+				<div class="card-block">
+					<h4 class="card-title">Información</h4>
+					<p class="card-text">{{sess.info}}</p>
+				</div>
 			</div>
-		</div>
 		{% endif %} {% block content %}{% endblock %}
 	</div>
 	{% if url != '/game' %}

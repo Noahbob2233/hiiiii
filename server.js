@@ -116,6 +116,7 @@ app.post('/login', function(req, res) {
 			//SI NO
 		} else {
 			sess.info = "El Usuario no existe";
+			sess.infoType = "danger";
 			res.redirect(page);
 		}
 
@@ -139,10 +140,12 @@ app.post('/signup', function(req, res) {
 		db.Select(query_select, query_select_var).then(function(result) {
 			if (typeof result[0] != 'undefined') {
 				sess.info = "Ya existe un Usuario con ese nombre.";
+				sess.infoType = "warning";
 				res.redirect(page);
 			} else {
 				db.Insert(query_insert, query_insert_var).then(function() {
 					sess.info = "Usuario creado correctamente. ¡Ya puedes iniciar sesión!";
+					sess.infoType = "success";
 					sess.characters_max = 0;
 					res.redirect(page);
 				});
@@ -151,6 +154,7 @@ app.post('/signup', function(req, res) {
 		}).catch((err) => setImmediate(() => { console.log(err); }));
 	} else {
 		sess.info = "Las contraseñas no coinciden";
+		sess.infoType = "warning";
 		res.redirect(page);
 	}
 
@@ -176,6 +180,19 @@ app.post('/logout', function(req, res) {
 	// });
 });
 //FIN LOGOUT
+
+//RANKING
+app.get('/ranking', function(req, res) {
+	sess = req.session;
+	var query = "SELECT * FROM users_chars ORDER BY kills DESC LIMIT 10;";
+	db.Select(query).then(function(result){
+		res.render('ranking.html', {
+			sess: sess,
+			characters: result
+		});
+	});
+});
+//FIN RANKING
 //FIN USUARIOS
 
 //SOCKETIO
@@ -256,7 +273,8 @@ io.on('connection', function(socket) {
 			hp: data.hp,
 			attack: data.attack,
 			defense: data.defense,
-			speed: data.speed
+			speed: data.speed,
+			kills: 0
 		});
 
 		xPosMia = data.xPos;
@@ -332,19 +350,25 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('die', function(data) {
-		console.log("borramos de aqui: " + JSON.stringify(playersonline));
+		/*console.log("borramos de aqui: " + JSON.stringify(playersonline));
 		console.log("esto: " + JSON.stringify(data.name));
-		var name = JSON.stringify(data.name).replace(/"/g, '');
-		removeByAttr(playersonline, 'name', name);
+		var name = JSON.stringify(data.name).replace(/"/g, '');*/
+		var attackerName = JSON.stringify(data.attacker).replace(/"/g, '');
 
-		console.log('Borramos al muerto y se queda asi: ' + JSON.stringify(playersonline));
+		for (var i = 0; i < playersonline.length; i++) {
+			if (playersonline[i].name == attackerName) playersonline[i].kills += 1;
+		}
+
+		/*removeByAttr(playersonline, 'name', name);
+
+		console.log('Borramos al muerto y se queda asi: ' + JSON.stringify(playersonline));*/
 
 		socket.broadcast.emit('someone die', { playersonline: playersonline });
 	});
 
 	socket.on('hit', function(data) {
 		var enemyHP = parseFloat(JSON.stringify(data.enemy.hp).replace(/"/g, ''));
-		var enemyName = JSON.stringify(data.enemy.name).replace(/"/g, '')
+		var enemyName = JSON.stringify(data.enemy.name).replace(/"/g, '');
 		for (var i = playersonline.length - 1; i >= 0; i--) {
 			if (playersonline[i].name === enemyName) {
 				playersonline[i].hp = enemyHP;
@@ -354,7 +378,7 @@ io.on('connection', function(socket) {
 			}
 		}
 
-		socket.broadcast.emit('someone hitted', { playersonline: playersonline, enemy: data.enemy });
+		socket.broadcast.emit('someone hitted', { playersonline: playersonline, enemy: data.enemy, attacker: data.attacker });
 
 	});
 
@@ -365,24 +389,41 @@ io.on('connection', function(socket) {
 
 
 			console.log("borramos de aqui: " + JSON.stringify(playersonline));
-			console.log("esto: " + sess.character_name);
-
-			removeByAttr(playersonline, 'name', sess.character_name);
-
-			console.log('Borramos al deslogueado y se queda asi: ' + JSON.stringify(playersonline));
+			console.log("esto: " + socket.username);
 
 			//guardamos los datos del pj
-			//       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
-			// var query_var = [xPosMia, yPosMia, sess.character_name];
+			var query = "SELECT kills FROM users_chars WHERE name=?";
+			var query_var = [socket.username];
 
-			// db.Select(query, query_var).then(function(){
-			// echo globally that this client has left
-			socket.broadcast.emit('user left', {
-				username: socket.username,
-				numUsers: numUsers,
-				playersonline: playersonline
+
+			db.Select(query, query_var).then(function(result) {
+				var sessionKills;
+				for (var i = 0; i < playersonline.length; i++) {
+					if (playersonline[i].name == socket.username) {
+						sessionKills = playersonline[i].kills;
+						break;
+					}
+
+				}
+				if (sessionKills > result[0].kills) {
+					var updateQuery = "UPDATE users_chars SET kills=? WHERE name=?";
+					var updateQuery_var = [sessionKills, socket.username];
+
+					db.Select(updateQuery, updateQuery_var).then(function(result){
+						console.log(result);
+					});
+				}
+				removeByAttr(playersonline, 'name', socket.username);
+				console.log('Borramos al deslogueado y se queda asi: ' + JSON.stringify(playersonline));
+				// echo globally that this client has left
+				socket.broadcast.emit('user left', {
+					username: socket.username,
+					numUsers: numUsers,
+					playersonline: playersonline
+				});
+
 			});
-			// });
+
 
 		}
 	});
@@ -479,7 +520,7 @@ app.post('/saveselectedchar', function(req, res) {
 		sonido = "sword.wav";
 	}
 
-	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,?,?,'male_head.png',7,7,1,128,128,0,?,?)";
+	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound,kills) VALUES (?,1,?,?,?,?,?,?,?,'male_head.png',7,7,1,128,128,0,?,?,0)";
 
 	var query_var = [req.body.name, req.body.hp, req.body.attack, req.body.defense, req.body.speed, sess.userid, ropa, req.body.weapon, req.body.class, sonido];
 	db.Select(query, query_var).then(function() {

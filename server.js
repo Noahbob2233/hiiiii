@@ -446,7 +446,7 @@ app.all('/character', function(req, res) {
 			sess.character_defense = result[0].defense;
 			sess.character_speed = result[0].speed;
 			sess.character_class = result[0].class;
-			
+
 			db.Select(query2, query_var2).then(function(result){
 				sess.character_weapon = result[0].name;
 				res.render('character.html', {

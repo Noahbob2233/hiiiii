@@ -56,9 +56,9 @@ CREATE TABLE chars(
 
 );
 
-INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Guerrero',90,8,5,7,1);
-INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Arquero',60,6,8,6,1);
-INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Mago',40,9,3,5,1);
+INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Guerrero',80,6,10,8,1);
+INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Arquero',60,8,6,6,1);
+INSERT INTO chars (name,hp,attack,defense,speed,type_id) VALUES ('Mago',70,10,8,4,1);
 
 -- CREAMOS LOS TIPOS DE ARMAS
 DROP TABLE IF EXISTS weapons;
@@ -77,14 +77,14 @@ CREATE TABLE weapons(
 );
 
 INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Espada corta','sword','shortsword.png',0,1,0,1);
-INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Espada larga','sword','longsword.png',0,2,0,0);
-INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Gran espada','sword','greatsword.png',0,3,0,-1);
+INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Espada larga','sword','longsword.png',0,3,0,0);
+INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Gran espada','sword','greatsword.png',0,5,0,-1);
 INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Arco corto','bow','shortbow.png',0,1,0,1);
-INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Arco largo','bow','longbow.png',0,2,0,0);
-INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Gran arco','bow','greatbow.png',0,3,0,-1);
+INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Arco largo','bow','longbow.png',0,3,0,0);
+INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Gran arco','bow','greatbow.png',0,5,0,-1);
 INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Vara','staff','rod.png',0,1,0,1);
-INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Bastón','staff','staff.png',0,2,0,0);
-INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Gran bastón','staff','greatstaff.png',0,3,0,-1);
+INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Bastón','staff','staff.png',0,3,0,0);
+INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Gran bastón','staff','greatstaff.png',0,5,0,-1);
 INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Mini escudo','shield','buckler.png',0,0,1,0);
 INSERT INTO weapons (name,weapon,img,hp,attack,defense,speed) VALUES ('Escudo','shield','shield.png',0,0,2,0);
 

@@ -540,7 +540,7 @@ $(document).ready(function() {
                                                 case 3:
                                                     if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
                                                         if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
+                                                            e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
                                                             message = "Has atacado a " + e.name;
                                                             log(message, {});
                                                             socket.emit('hit', { enemy: e, attacker: player.name });

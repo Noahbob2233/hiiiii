@@ -29,10 +29,10 @@ function alCargar() {
 		}
 
 		$('#charstats').empty();
-		$('#charstats').append("<li id='hp' value='" + (data[0].attack + data[1][pos].hp) + "'>Vida: " + (data[0].attack + data[1][pos].hp) + "</li>");
+		$('#charstats').append("<li id='hp' value='" + (data[0].hp + data[1][pos].hp) + "'>Vida: " + (data[0].hp + data[1][pos].hp) + "</li>");
 		$('#charstats').append("<li id='attack' value='" + (data[0].attack + data[1][pos].attack) + "'>Ataque: " + (data[0].attack + data[1][pos].attack) + "</li>");
-		$('#charstats').append("<li id='defense' value='" + (data[0].attack + data[1][pos].defense) + "'>Defensa: " + (data[0].attack + data[1][pos].defense) + "</li>");
-		$('#charstats').append("<li id='speed' value='" + (data[0].attack + data[1][pos].speed) + "'>Velocidad: " + (data[0].attack + data[1][pos].speed) + "</li>");
+		$('#charstats').append("<li id='defense' value='" + (data[0].defense + data[1][pos].defense) + "'>Defensa: " + (data[0].defense + data[1][pos].defense) + "</li>");
+		$('#charstats').append("<li id='speed' value='" + (data[0].speed + data[1][pos].speed) + "'>Velocidad: " + (data[0].speed + data[1][pos].speed) + "</li>");
 	});
 }
 
@@ -56,10 +56,10 @@ $("#samplechars").change(function() {
 		console.log("attack: " + data[1][pos].attack);
 
 		$('#charstats').empty();
-		$('#charstats').append("<li id='hp' value='" + (data[0].attack + data[1][pos].hp) + "'>Vida: " + (data[0].attack + data[1][pos].hp) + "</li>");
+		$('#charstats').append("<li id='hp' value='" + (data[0].hp + data[1][pos].hp) + "'>Vida: " + (data[0].hp + data[1][pos].hp) + "</li>");
 		$('#charstats').append("<li id='attack' value='" + (data[0].attack + data[1][pos].attack) + "'>Ataque: " + (data[0].attack + data[1][pos].attack) + "</li>");
-		$('#charstats').append("<li id='defense' value='" + (data[0].attack + data[1][pos].defense) + "'>Defensa: " + (data[0].attack + data[1][pos].defense) + "</li>");
-		$('#charstats').append("<li id='speed' value='" + (data[0].attack + data[1][pos].speed) + "'>Velocidad: " + (data[0].attack + data[1][pos].speed) + "</li>");
+		$('#charstats').append("<li id='defense' value='" + (data[0].defense + data[1][pos].defense) + "'>Defensa: " + (data[0].defense + data[1][pos].defense) + "</li>");
+		$('#charstats').append("<li id='speed' value='" + (data[0].speed + data[1][pos].speed) + "'>Velocidad: " + (data[0].speed + data[1][pos].speed) + "</li>");
 	});
 });
 
@@ -77,10 +77,10 @@ $("#weaponType").change(function() {
 		}
 
 		$('#charstats').empty();
-		$('#charstats').append("<li id='hp' value='" + (data[0].attack + data[1][pos].hp) + "'>Vida: " + (data[0].attack + data[1][pos].hp) + "</li>");
+		$('#charstats').append("<li id='hp' value='" + (data[0].hp + data[1][pos].hp) + "'>Vida: " + (data[0].hp + data[1][pos].hp) + "</li>");
 		$('#charstats').append("<li id='attack' value='" + (data[0].attack + data[1][pos].attack) + "'>Ataque: " + (data[0].attack + data[1][pos].attack) + "</li>");
-		$('#charstats').append("<li id='defense' value='" + (data[0].attack + data[1][pos].defense) + "'>Defensa: " + (data[0].attack + data[1][pos].defense) + "</li>");
-		$('#charstats').append("<li id='speed' value='" + (data[0].attack + data[1][pos].speed) + "'>Velocidad: " + (data[0].attack + data[1][pos].speed) + "</li>");
+		$('#charstats').append("<li id='defense' value='" + (data[0].defense + data[1][pos].defense) + "'>Defensa: " + (data[0].defense + data[1][pos].defense) + "</li>");
+		$('#charstats').append("<li id='speed' value='" + (data[0].speed + data[1][pos].speed) + "'>Velocidad: " + (data[0].speed + data[1][pos].speed) + "</li>");
 	});
 });
 

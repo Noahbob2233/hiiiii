@@ -45,18 +45,22 @@
 				<li class="dropdown" id="menuLogout">
 					<a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown" id="navLogout">{{sess.user}}</a>
 					<div class="dropdown-menu">
-						<span>Personajes</span> {% if sess.characters %} {% for char in sess.characters %}
-						<form action="/character" method="post">
-							<input type="hidden" name='charname' value="{{char.name}}">
-							<button class="btn btn-warning btn-block" type="submit">{{char.name}}</button>
+						<span>Personajes</span> 
+						{% if sess.characters %} 
+							{% for char in sess.characters %}
+								<form action="/character" method="post">
+									<input type="hidden" name='charname' value="{{char.name}}">
+									<button class="btn btn-warning btn-block" type="submit">{{char.name}}</button>
+								</form>
+							{% endfor %} 
+						{% endif %} 
+						{% if sess.characters_max < 3 %} 
+							<a href="/newchar" class="btn btn-success btn-block">Nuevo</a>
+						{% endif %}
+						<form action="/logout" method="post" class="form" id="formLogout">
+							<input type="hidden" name="url" value="{{url}}">
+							<button type="submit" id="btnLogout" class="btn btn-danger">Logout</button>
 						</form>
-						{% endfor %} {% endif %} {% if sess.characters_max
-						< 3 %} <a href="/newchar" class="btn btn-success btn-block">Nuevo</a>
-							{% endif %}
-							<form action="/logout" method="post" class="form" id="formLogout">
-								<input type="hidden" name="url" value="{{url}}">
-								<button type="submit" id="btnLogout" class="btn btn-danger">Logout</button>
-							</form>
 					</div>
 				</li>
 				{% else %}

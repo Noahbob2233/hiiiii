@@ -507,6 +507,7 @@ app.post('/loadsamplechars', function(req, res) {
 //GUARDAMOS EL CHAR SELECCIONADO EN LA BASE DE DATOS PARA EL USUARIO
 
 app.post('/saveselectedchar', function(req, res) {
+	sess = req.session;
 	var ropa;
 	var sonido;
 	if (req.body.class === "Arquero") {

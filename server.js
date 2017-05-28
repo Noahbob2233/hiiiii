@@ -417,13 +417,18 @@ app.all('/character', function(req, res) {
 app.all('/newchar', function(req, res) {
 	sess = req.session;
 	if (sess.user && sess.characters_max < 3) {
-		var query = "" + "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed " + "FROM chars c " + "LEFT JOIN type_chars tc ON c.type_id=tc.id " + "WHERE tc.name='sample'";
+		var query = "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed " + "FROM chars c " + "LEFT JOIN type_chars tc ON c.type_id=tc.id " + "WHERE tc.name='sample'";
 
 		var query_var = [];
 		db.Select(query, query_var).then(function(result) {
-			res.render('newcharacter.html', {
-				result: result,
-				sess: sess
+			var query2 = "SELECT * FROM weapons WHERE weapon = 'sword'";
+			var query_var2 = [];
+			db.Select(query2, query_var2).then(function(weapons) {
+				res.render('newcharacter.html', {
+					result: result,
+					weapons: weapons,
+					sess: sess
+				});
 			});
 		});
 	} else {
@@ -444,24 +449,39 @@ app.post('/loadsamplechars', function(req, res) {
 	var query_var = [req.body.search];
 
 	db.Select(query, query_var).then(function(result) {
-		res.send(result[0]);
+		if (result[0].name === 'Guerrero') {
+			var query2 = "SELECT * FROM weapons WHERE weapon='sword'";
+		} else if (result[0].name === 'Arquero') {
+			var query2 = "SELECT * FROM weapons WHERE weapon='bow'";
+		} else { //Mago
+			var query2 = "SELECT * FROM weapons WHERE weapon='staff'";
+		}
+		var query_var2 = [];
+		db.Select(query2, query_var2).then(function(weapons) {
+			res.send([result[0],weapons]);
+		});
 	});
 });
 
 //GUARDAMOS EL CHAR SELECCIONADO EN LA BASE DE DATOS PARA EL USUARIO
 
 app.post('/saveselectedchar', function(req, res) {
-	sess = req.session;
-
+	var ropa;
+	var sonido;
 	if (req.body.class === "Arquero") {
-		var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0,?,'bow.wav')";
+		ropa = "clothes.png";
+		sonido = "bow.wav";
 	} else if (req.body.class === "Mago") {
-		var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0,?,'spell.wav')";
+		ropa = "leather_armor.png";
+		sonido = "spell.wav";
 	} else { //Guerrero
-		var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?,'sword.wav')";
+		ropa = "steel_armor.png";
+		sonido = "sword.wav";
 	}
 
-	var query_var = [req.body.name, req.body.hp, req.body.attack, req.body.defense, req.body.speed, sess.userid, req.body.class];
+	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,?,?,'male_head.png',7,7,1,128,128,0,?,?)";
+
+	var query_var = [req.body.name, req.body.hp, req.body.attack, req.body.defense, req.body.speed, sess.userid, ropa, req.body.weapon, req.body.class, sonido];
 	db.Select(query, query_var).then(function() {
 		sess.characters.push({ name: req.body.name });
 		sess.characters_max += 1;

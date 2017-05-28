@@ -7,40 +7,52 @@
 		<option value="{{char.id}}">{{char.name}}</option>
 		{% endfor %}
 	</select>
-    <ul id="charstats"></ul>
-    <input type="text" id="name" placeholder="Nombre del personaje" required="required">
-    <button id="guardar" class="btn btn-success">Confirmar</button>
+	<select name="weaponType" id="weaponType">
+		{% for weapon in weapons %}
+		<option value="{{weapon.img}}">{{weapon.name}}</option>
+		{% endfor %}
+	</select>
+  <ul id="charstats"></ul>
+  <input type="text" id="name" placeholder="Nombre del personaje" required="required">
+  <button id="guardar" class="btn btn-success">Confirmar</button>
 </div>
 
 <script>
 	window.onload = alCargar;
 
 	function alCargar(){
-        var parameters = {search: $('#samplechars').val()};
+    var parameters = {search: $('#samplechars').val()};
 		$.post( '/loadsamplechars', parameters, function(data) {
 			$('#charstats').empty();
-			$('#charstats').append("<li id='hp' value='"+data.hp+"'>Vida: "+data.hp+"</li>");
-			$('#charstats').append("<li id='attack' value='"+data.attack+"'>Ataque: "+data.attack+"</li>");
-			$('#charstats').append("<li id='defense' value='"+data.defense+"'>Defensa: "+data.defense+"</li>");
-			$('#charstats').append("<li id='speed' value='"+data.speed+"'>Velocidad: "+data.speed+"</li>");
+			$('#charstats').append("<li id='hp' value='"+data[0].hp+"'>Vida: "+data[0].hp+"</li>");
+			$('#charstats').append("<li id='attack' value='"+data[0].attack+"'>Ataque: "+data[0].attack+"</li>");
+			$('#charstats').append("<li id='defense' value='"+data[0].defense+"'>Defensa: "+data[0].defense+"</li>");
+			$('#charstats').append("<li id='speed' value='"+data[0].speed+"'>Velocidad: "+data[0].speed+"</li>");
 		});
   }
 
 	$("#samplechars").change(function(){
 		var parameters = {search: $(this).val()};
+
 		$.post( '/loadsamplechars', parameters, function(data) {
+
+			$('#weaponType').empty();
+			for (var i = 0; i < data[1].length; i++) {
+				$('#weaponType').append("<option value="+data[1][i].img+">"+data[1][i].name+"</option>");
+			}
+
 			$('#charstats').empty();
-			$('#charstats').append("<li id='hp' value='"+data.hp+"'>Vida: "+data.hp+"</li>");
-			$('#charstats').append("<li id='attack' value='"+data.attack+"'>Ataque: "+data.attack+"</li>");
-			$('#charstats').append("<li id='defense' value='"+data.defense+"'>Defensa: "+data.defense+"</li>");
-			$('#charstats').append("<li id='speed' value='"+data.speed+"'>Velocidad: "+data.speed+"</li>");
+			$('#charstats').append("<li id='hp' value='"+data[0].hp+"'>Vida: "+data[0].hp+"</li>");
+			$('#charstats').append("<li id='attack' value='"+data[0].attack+"'>Ataque: "+data[0].attack+"</li>");
+			$('#charstats').append("<li id='defense' value='"+data[0].defense+"'>Defensa: "+data[0].defense+"</li>");
+			$('#charstats').append("<li id='speed' value='"+data[0].speed+"'>Velocidad: "+data[0].speed+"</li>");
 		});
 	});
 
 	$("#guardar").click(function(){
 		var name = $("#name").val();
 		if(name && name.search(/[^a-zA-Z0-9]+/) === -1) {
-			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value'), class: $('#samplechars :selected').text()};
+			var parameters = {name: name, hp: $("#hp").attr('value'), attack: $("#attack").attr('value'), defense: $("#defense").attr('value'), speed: $("#speed").attr('value'), class: $('#samplechars :selected').text(), weapon: $('#weaponType :selected').val()};
 			$.post( '/saveselectedchar', parameters, function(){
 				$.extend(
 					{

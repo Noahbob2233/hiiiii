@@ -127,6 +127,8 @@ CREATE TABLE users_chars (
 	width INT,
 	height INT,
 	user_id INT,
+	class varchar(50),
+	sound varchar(50),
 	FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE,

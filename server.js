@@ -1,4 +1,3 @@
-
 //NCESARIO PARA PRODUCCION
 const express = require('express');
 const nunjucks = require('nunjucks');
@@ -19,8 +18,8 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var port = process.env.PORT || 3000;
 
-server.listen(port, function () {
-  console.log('http://localhost:'+port);
+server.listen(port, function() {
+	console.log('http://localhost:' + port);
 });
 
 // Set view engine
@@ -31,10 +30,10 @@ var env = nunjucks.configure('views', {
 });
 
 app.use(session({
-  secret: 'whatisthis',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
+	secret: 'whatisthis',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: false }
 }));
 
 // Set views folder
@@ -75,47 +74,47 @@ app.all('/', function(req, res) {
 	//fin inicio automatico descomentar
 
 	res.render('index.html', {
-			sess: sess
-		});
+		sess: sess
+	});
 	delete sess.info;
 });
 //FIN INICIO
 
 //USUARIOS
 //LOGIN
-app.post('/login', function(req, res){
+app.post('/login', function(req, res) {
 	sess = req.session;
 
 	var user = req.body.username || "";
 	var pass = sha256(req.body.password) || "";
 
 	var query_select = "SELECT name, id FROM users WHERE name=? AND password=?";
-	var query_select_var = [user,pass];
+	var query_select_var = [user, pass];
 
 	var page = req.body.url;
 
 	//LOGUEAMOS
-	db.Select(query_select, query_select_var).then(function(result){
+	db.Select(query_select, query_select_var).then(function(result) {
 		//SI SE ENCUENTRA EL USUARIO:
-		if(typeof result[0] != 'undefined'){
-		sess.userid = result[0].id;
-		//MIRAMOS SUS PJS CREADOS
-		var query = "SELECT name FROM users_chars WHERE user_id=?";
-		var query_var = [result[0].id];
-		db.Select(query, query_var).then(function(result){
-			var size = Object.size(result);
-			sess.user = user;
-			if(size>0){
-				sess.characters = result;
-				sess.characters_max = size;
-			}else{
-				sess.characters = [];
-				sess.characters_max = 0;
-			}
-			res.redirect(page);
-		});
-		//SI NO
-		}else{
+		if (typeof result[0] != 'undefined') {
+			sess.userid = result[0].id;
+			//MIRAMOS SUS PJS CREADOS
+			var query = "SELECT name FROM users_chars WHERE user_id=?";
+			var query_var = [result[0].id];
+			db.Select(query, query_var).then(function(result) {
+				var size = Object.size(result);
+				sess.user = user;
+				if (size > 0) {
+					sess.characters = result;
+					sess.characters_max = size;
+				} else {
+					sess.characters = [];
+					sess.characters_max = 0;
+				}
+				res.redirect(page);
+			});
+			//SI NO
+		} else {
 			sess.info = "El Usuario no existe";
 			res.redirect(page);
 		}
@@ -125,24 +124,24 @@ app.post('/login', function(req, res){
 });
 //FIN LOGIN
 //SIGN UP
-app.post('/signup', function(req, res){
+app.post('/signup', function(req, res) {
 
 	var user = req.body.username || "";
 	var pass = sha256(req.body.password) || "";
 	var page = req.body.url;
 	sess = req.session;
-	if(pass == sha256(req.body.passwordalt)) {
+	if (pass == sha256(req.body.passwordalt)) {
 		var query_select = "SELECT name FROM users WHERE name=?";
 		var query_select_var = [user];
 		var query_insert = "INSERT INTO users (name, password) VALUES (?,?)";
 		var query_insert_var = [user, pass];
 
-		db.Select(query_select, query_select_var).then(function(result){
-			if(typeof result[0] != 'undefined'){
+		db.Select(query_select, query_select_var).then(function(result) {
+			if (typeof result[0] != 'undefined') {
 				sess.info = "Ya existe un Usuario con ese nombre.";
 				res.redirect(page);
-			}else{
-				db.Insert(query_insert, query_insert_var).then(function(){
+			} else {
+				db.Insert(query_insert, query_insert_var).then(function() {
 					sess.info = "Usuario creado correctamente. ¡Ya puedes iniciar sesión!";
 					sess.characters_max = 0;
 					res.redirect(page);
@@ -150,8 +149,7 @@ app.post('/signup', function(req, res){
 			}
 
 		}).catch((err) => setImmediate(() => { console.log(err); }));
-	}
-	else {
+	} else {
 		sess.info = "Las contraseñas no coinciden";
 		res.redirect(page);
 	}
@@ -161,55 +159,56 @@ app.post('/signup', function(req, res){
 });
 //FIN SIGN UP
 //LOGOUT
-app.post('/logout', function(req, res){
+app.post('/logout', function(req, res) {
 	sess = req.session;
 
 	//guardamos los datos del pj
-  //       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
-		// var query_var = [xPosMia, yPosMia, sess.character_name];
-		// db.Select(query, query_var).then(function(){
-			delete sess.user;
-			delete sess.characters;
-			delete sess.characters_max;
-			delete sess.userid;
-			res.render('index.html', {
-					sess: sess
-				});
-		// });
+	//       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
+	// var query_var = [xPosMia, yPosMia, sess.character_name];
+	// db.Select(query, query_var).then(function(){
+	delete sess.user;
+	delete sess.characters;
+	delete sess.characters_max;
+	delete sess.userid;
+	res.render('index.html', {
+		sess: sess
+	});
+	// });
 });
 //FIN LOGOUT
 //FIN USUARIOS
 
 //SOCKETIO
-app.all('/game', function(req,res){
+app.all('/game', function(req, res) {
 	sess = req.session;
 
-	if(sess.user){
+	if (sess.user) {
 		if (sess.character_name) {
 			var query = "SELECT * FROM users_chars WHERE name=? LIMIT 1";
 			var query_var = [sess.character_name];
-			db.Select(query, query_var).then(function(result){
-			        sess.character_image=		 result[0].image;
-			        sess.character_weapon=		 result[0].weapon;
-			        sess.character_head=		 result[0].head;
-			        sess.character_xPos=		 result[0].xPos;
-			       	sess.character_yPos=		 result[0].yPos;
-			        sess.character_direction=	 result[0].direction;
-        			sess.character_action=	     result[0].action;
-			        sess.character_width=		 result[0].width;
-			        sess.character_height=		 result[0].height;
-			        sess.character_hp=		 	 result[0].hp;
-			        sess.character_attack=		 result[0].attack;
-			        sess.character_defense=		 result[0].defense;
-			        sess.character_speed=		 result[0].speed;
-			        res.render('game.html', {
-					  	sess: sess
-					});
+			db.Select(query, query_var).then(function(result) {
+				sess.character_image = result[0].image;
+				sess.character_weapon = result[0].weapon;
+				sess.character_head = result[0].head;
+				sess.character_xPos = result[0].xPos;
+				sess.character_yPos = result[0].yPos;
+				sess.character_direction = result[0].direction;
+				sess.character_action = result[0].action;
+				sess.character_width = result[0].width;
+				sess.character_height = result[0].height;
+				sess.character_hp = result[0].hp;
+				sess.character_attack = result[0].attack;
+				sess.character_defense = result[0].defense;
+				sess.character_speed = result[0].speed;
+				sess.character_sound = result[0].sound;
+				res.render('game.html', {
+					sess: sess
+				});
 			});
-		}else{
+		} else {
 			res.redirect('/');
 		}
-	}else{
+	} else {
 		res.redirect('/');
 	}
 
@@ -223,215 +222,213 @@ var xPosMia;
 var yPosMia;
 var hpMia;
 
-io.on('connection', function (socket) {
-  var addedUser = false;
+io.on('connection', function(socket) {
+	var addedUser = false;
 
-  // when the client emits 'new message', this listens and executes
-  socket.on('new message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('new message', {
-      username: socket.username,
-      message: data
-    });
-  });
+	// when the client emits 'new message', this listens and executes
+	socket.on('new message', function(data) {
+		// we tell the client to execute 'new message'
+		socket.broadcast.emit('new message', {
+			username: socket.username,
+			message: data
+		});
+	});
 
-  // when the client emits 'add user', this listens and executes
-  socket.on('add user', function (data) {
-    if (addedUser) return;
+	// when the client emits 'add user', this listens and executes
+	socket.on('add user', function(data) {
+		if (addedUser) return;
 
-    // we store the username in the socket session for this client
-    socket.username = data.name;
-    ++numUsers;
-    // console.log("Action server: "+data.action);
-    playersonline.push({
-      name: data.name,
-      image: data.image,
-      weapon: data.weapon,
-      head: data.head,
-      xPos: data.xPos,
-      yPos: data.yPos,
-      direction: data.direction,
-      action: data.action,
-      width: data.width,
-      height: data.height,
-      hp: data.hp,
-      attack: data.attack,
-      defense: data.defense,
-      speed: data.speed
-    });
+		// we store the username in the socket session for this client
+		socket.username = data.name;
+		++numUsers;
+		// console.log("Action server: "+data.action);
+		playersonline.push({
+			name: data.name,
+			image: data.image,
+			weapon: data.weapon,
+			head: data.head,
+			xPos: data.xPos,
+			yPos: data.yPos,
+			direction: data.direction,
+			action: data.action,
+			width: data.width,
+			height: data.height,
+			hp: data.hp,
+			attack: data.attack,
+			defense: data.defense,
+			speed: data.speed
+		});
 
-    xPosMia = data.xPos;
-    yPosMia = data.yPos;
+		xPosMia = data.xPos;
+		yPosMia = data.yPos;
 
-    console.log("Añadimos alguien al array: "+JSON.stringify(playersonline));
+		console.log("Añadimos alguien al array: " + JSON.stringify(playersonline));
 
-    // console.log(JSON.stringify(playersonline));
+		// console.log(JSON.stringify(playersonline));
 
-    addedUser = true;
-    socket.emit('login', {
-      numUsers: numUsers,
-      username: socket.username
-    });
-    // echo globally (all clients) that a person has connected
-    socket.broadcast.emit('user joined', {
-      username: socket.username,
-      numUsers: numUsers,
-      playersonline: playersonline
-    });
-  });
+		addedUser = true;
+		socket.emit('login', {
+			numUsers: numUsers,
+			username: socket.username
+		});
+		// echo globally (all clients) that a person has connected
+		socket.broadcast.emit('user joined', {
+			username: socket.username,
+			numUsers: numUsers,
+			playersonline: playersonline
+		});
+	});
 
-  // when the client emits 'typing', we broadcast it to others
-  socket.on('typing', function () {
-    socket.broadcast.emit('typing', {
-      username: socket.username
-    });
-  });
+	// when the client emits 'typing', we broadcast it to others
+	socket.on('typing', function() {
+		socket.broadcast.emit('typing', {
+			username: socket.username
+		});
+	});
 
-  // when the client emits 'stop typing', we broadcast it to others
-  socket.on('stop typing', function () {
-    socket.broadcast.emit('stop typing', {
-      username: socket.username
-    });
-  });
+	// when the client emits 'stop typing', we broadcast it to others
+	socket.on('stop typing', function() {
+		socket.broadcast.emit('stop typing', {
+			username: socket.username
+		});
+	});
 
-  socket.on('rotation', function(data){
-    for (var i = playersonline.length - 1; i >= 0; i--) {
-      if(playersonline[i].name === data.player.name){
-        playersonline[i].direction = data.player.direction;
-      }
-    }
+	socket.on('rotation', function(data) {
+		for (var i = playersonline.length - 1; i >= 0; i--) {
+			if (playersonline[i].name === data.player.name) {
+				playersonline[i].direction = data.player.direction;
+			}
+		}
 
-    socket.broadcast.emit('someone rotated', {playersonline: playersonline, rotated: data.player});
-  });
+		socket.broadcast.emit('someone rotated', { playersonline: playersonline, rotated: data.player });
+	});
 
-  socket.on('move', function(data){
-  	for (var i = data.playersonline.length - 1; i >= 0; i--) {
-      playersonline[i].action = data.playersonline[i].action;
-  		if(playersonline[i].name === data.player.name){
-  			playersonline[i].xPos = data.player.xPos;
-  			playersonline[i].yPos = data.player.yPos;
-  			playersonline[i].direction = data.player.direction;
-  			if (data.player.name === sess.character_name) {
-  				xPosMia = data.player.xPos;
-	  			yPosMia = data.player.yPos;
-  			}
-  		}
-  	}
+	socket.on('move', function(data) {
+		for (var i = data.playersonline.length - 1; i >= 0; i--) {
+			playersonline[i].action = data.playersonline[i].action;
+			if (playersonline[i].name === data.player.name) {
+				playersonline[i].xPos = data.player.xPos;
+				playersonline[i].yPos = data.player.yPos;
+				playersonline[i].direction = data.player.direction;
+				if (data.player.name === sess.character_name) {
+					xPosMia = data.player.xPos;
+					yPosMia = data.player.yPos;
+				}
+			}
+		}
 
-  	//console.log('Alguien se ha movido y es posible que se haya dibujado: '+JSON.stringify(playersonline));
+		//console.log('Alguien se ha movido y es posible que se haya dibujado: '+JSON.stringify(playersonline));
 
-  	socket.broadcast.emit('someone moved', {playersonline: playersonline});
-  });
+		socket.broadcast.emit('someone moved', { playersonline: playersonline });
+	});
 
-  socket.on('attacking', function(data){
-  	for (var i = playersonline.length - 1; i >= 0; i--) {
-  		if(playersonline[i].name === data.attacker.name){
-        playersonline[i].action = data.attacker.action;
-  		}
-  	}
-  	socket.broadcast.emit('someone attacked', {playersonline: playersonline, attacker: data.attacker});
-  });
+	socket.on('attacking', function(data) {
+		for (var i = playersonline.length - 1; i >= 0; i--) {
+			if (playersonline[i].name === data.attacker.name) {
+				playersonline[i].action = data.attacker.action;
+			}
+		}
+		socket.broadcast.emit('someone attacked', { playersonline: playersonline, attacker: data.attacker });
+	});
 
-  socket.on('die', function(data){
-  	console.log("borramos de aqui: "+JSON.stringify(playersonline));
-  	console.log("esto: "+data.name);
+	socket.on('die', function(data) {
+		console.log("borramos de aqui: " + JSON.stringify(playersonline));
+		console.log("esto: " + JSON.stringify(data.name));
+		var name = JSON.stringify(data.name).replace(/"/g, '');
+		removeByAttr(playersonline, 'name', name);
 
-  	removeByAttr(playersonline, 'name', data.name);
+		console.log('Borramos al muerto y se queda asi: ' + JSON.stringify(playersonline));
 
-  	console.log('Borramos al muerto y se queda asi: '+JSON.stringify(playersonline));
+		socket.broadcast.emit('someone die', { playersonline: playersonline });
+	});
 
-  	socket.broadcast.emit('someone die', {playersonline: playersonline});
-  });
+	socket.on('hit', function(data) {
+		var enemyHP = parseFloat(JSON.stringify(data.enemy.hp).replace(/"/g, ''));
+		var enemyName = JSON.stringify(data.enemy.name).replace(/"/g, '')
+		for (var i = playersonline.length - 1; i >= 0; i--) {
+			if (playersonline[i].name === enemyName) {
+				playersonline[i].hp = enemyHP;
+				if (enemyName === sess.character_name) {
+					hpMia = enemyHP;
+				}
+			}
+		}
 
-  socket.on('hit', function (data) {
+		socket.broadcast.emit('someone hitted', { playersonline: playersonline, enemy: data.enemy });
 
-    for (var i = playersonline.length - 1; i >= 0; i--) {
-  		if(playersonline[i].name === data.enemy.name){
-  			playersonline[i].hp = data.enemy.hp;
-  			if (data.enemy.name === sess.character_name) {
-  				hpMia = data.enemy.hp;
-  			}
-  		}
-  	}
+	});
 
-  	socket.broadcast.emit('someone hitted', {playersonline: playersonline, enemy: data.enemy});
-
-  });
-
-  // when the user disconnects.. perform this
-  socket.on('disconnect', function () {
-    if (addedUser) {
-      --numUsers;
+	// when the user disconnects.. perform this
+	socket.on('disconnect', function() {
+		if (addedUser) {
+			--numUsers;
 
 
-  	console.log("borramos de aqui: "+JSON.stringify(playersonline));
-  	console.log("esto: "+sess.character_name);
+			console.log("borramos de aqui: " + JSON.stringify(playersonline));
+			console.log("esto: " + sess.character_name);
 
-      removeByAttr(playersonline, 'name', sess.character_name);
+			removeByAttr(playersonline, 'name', sess.character_name);
 
-  	console.log('Borramos al deslogueado y se queda asi: '+JSON.stringify(playersonline));
+			console.log('Borramos al deslogueado y se queda asi: ' + JSON.stringify(playersonline));
 
-        //guardamos los datos del pj
-  //       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
-		// var query_var = [xPosMia, yPosMia, sess.character_name];
+			//guardamos los datos del pj
+			//       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
+			// var query_var = [xPosMia, yPosMia, sess.character_name];
 
-		// db.Select(query, query_var).then(function(){
+			// db.Select(query, query_var).then(function(){
 			// echo globally that this client has left
-		      socket.broadcast.emit('user left', {
-		        username: socket.username,
-		        numUsers: numUsers,
-		        playersonline: playersonline
-		      });
-		// });
+			socket.broadcast.emit('user left', {
+				username: socket.username,
+				numUsers: numUsers,
+				playersonline: playersonline
+			});
+			// });
 
-    }
-  });
+		}
+	});
 });
 //FIN SOCKETIO
 
 //PANTALLA DEL CHARACTER
-app.all('/character', function(req,res){
+app.all('/character', function(req, res) {
 	sess = req.session;
-	if(sess.user && req.body.charname){
-	var query = "SELECT * FROM users_chars WHERE name=?";
-	var query_var = [req.body.charname];
-	db.Select(query, query_var).then(function(result){
-		sess.character_name = result[0].name;
-		sess.character_lvl = result[0].lvl;
-		sess.character_hp = result[0].hp;
-		sess.character_attack = result[0].attack;
-		sess.character_defense = result[0].defense;
-		sess.character_speed = result[0].speed;
-		res.render('character.html', {
-			sess: sess
+	if (sess.user && req.body.charname) {
+		var query = "SELECT * FROM users_chars WHERE name=?";
+		var query_var = [req.body.charname];
+		db.Select(query, query_var).then(function(result) {
+			sess.character_name = result[0].name;
+			sess.character_lvl = result[0].lvl;
+			sess.character_hp = result[0].hp;
+			sess.character_attack = result[0].attack;
+			sess.character_defense = result[0].defense;
+			sess.character_speed = result[0].speed;
+			sess.character_class = result[0].class;
+			res.render('character.html', {
+				sess: sess
+			});
 		});
-	});
-	}else{
+	} else {
 		res.redirect('/');
 	}
 });
 //FIN DE LA PANTALLA DEL CHARACTER
 
 //PANTALLA DE CREACION DE PJ
-app.all('/newchar', function(req,res){
+app.all('/newchar', function(req, res) {
 	sess = req.session;
-	if(sess.user && sess.characters_max<3){
-	var query = ""
-				+ "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed "
-				+ "FROM chars c "
-				+ "LEFT JOIN type_chars tc ON c.type_id=tc.id "
-				+ "WHERE tc.name='sample'";
+	if (sess.user && sess.characters_max < 3) {
+		var query = "" + "SELECT c.id, c.name, c.hp, c.attack, c.defense, c.speed " + "FROM chars c " + "LEFT JOIN type_chars tc ON c.type_id=tc.id " + "WHERE tc.name='sample'";
 
-	var query_var = [];
-	db.Select(query, query_var).then(function(result){
-		res.render('newcharacter.html', {
-			result: result,
-			sess: sess
+		var query_var = [];
+		db.Select(query, query_var).then(function(result) {
+			res.render('newcharacter.html', {
+				result: result,
+				sess: sess
+			});
 		});
-	});
-}else{
-	res.redirect('/');
-}
+	} else {
+		res.redirect('/');
+	}
 });
 //FIN DE LA PANTALLA DEL CHARACTER
 
@@ -440,33 +437,33 @@ app.all('/newchar', function(req,res){
 
 //LISTADO DE CHARS DE EJEMPLO PARA LA CREACION
 
-app.post('/loadsamplechars', function(req,res){
+app.post('/loadsamplechars', function(req, res) {
 	sess = req.session;
 
 	var query = "SELECT * FROM chars WHERE id=?";
 	var query_var = [req.body.search];
 
-	db.Select(query, query_var).then(function(result){
+	db.Select(query, query_var).then(function(result) {
 		res.send(result[0]);
 	});
 });
 
 //GUARDAMOS EL CHAR SELECCIONADO EN LA BASE DE DATOS PARA EL USUARIO
 
-app.post('/saveselectedchar', function(req,res){
+app.post('/saveselectedchar', function(req, res) {
 	sess = req.session;
 
-  if (req.body.class === "Arquero") {
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0)";
-  } else if (req.body.class === "Mago") {
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0)";
-  } else { //Guerrero
-    var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0)";
-  }
+	if (req.body.class === "Arquero") {
+		var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'clothes.png','greatbow.png','male_head.png',7,7,1,128,128,0,?,'bow.wav')";
+	} else if (req.body.class === "Mago") {
+		var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'leather_armor.png','greatstaff.png','male_head.png',7,7,1,128,128,0,?,'spell.wav')";
+	} else { //Guerrero
+		var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound) VALUES (?,1,?,?,?,?,?,'steel_armor.png','greatsword.png','male_head.png',7,7,1,128,128,0,?,'sword.wav')";
+	}
 
-	var query_var = [req.body.name,req.body.hp,req.body.attack,req.body.defense,req.body.speed,sess.userid];
-	db.Select(query, query_var).then(function(){
-		sess.characters.push({name: req.body.name});
+	var query_var = [req.body.name, req.body.hp, req.body.attack, req.body.defense, req.body.speed, sess.userid, req.body.class];
+	db.Select(query, query_var).then(function() {
+		sess.characters.push({ name: req.body.name });
 		sess.characters_max += 1;
 		sess.character_name = req.body.name;
 		sess.character_lvl = 1;
@@ -474,6 +471,7 @@ app.post('/saveselectedchar', function(req,res){
 		sess.character_attack = req.body.attack;
 		sess.character_defense = req.body.defense;
 		sess.character_speed = req.body.speed;
+		sess.character_class = req.body.class;
 		res.render('character.html', {
 			sess: sess
 		});
@@ -482,13 +480,13 @@ app.post('/saveselectedchar', function(req,res){
 
 // ELIMINAMOS EL PJ SELECCIONADO
 
-app.post('/deleteselectedchar', function(req,res){
+app.post('/deleteselectedchar', function(req, res) {
 	sess = req.session;
 
 	var query = "DELETE FROM users_chars WHERE user_id=? AND name=?";
-	var query_var = [sess.userid,req.body.name];
+	var query_var = [sess.userid, req.body.name];
 
-	db.Select(query, query_var).then(function(){
+	db.Select(query, query_var).then(function() {
 		removeByAttr(sess.characters, 'name', req.body.name);
 		sess.characters_max -= 1;
 		res.render('index.html', {
@@ -498,23 +496,22 @@ app.post('/deleteselectedchar', function(req,res){
 });
 
 Object.size = function(obj) {
-    var size = 0, key;
-    for (key in obj) {
-        if (obj.hasOwnProperty(key)) size++;
-    }
-    return size;
+	var size = 0,
+		key;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) size++;
+	}
+	return size;
 };
 
-var removeByAttr = function(arr, attr, value){
-    var i = arr.length;
-    while(i--){
-       if( arr[i]
-           && arr[i].hasOwnProperty(attr)
-           && (arguments.length > 2 && arr[i][attr] === value ) ){
+var removeByAttr = function(arr, attr, value) {
+	var i = arr.length;
+	while (i--) {
+		if (arr[i] && arr[i].hasOwnProperty(attr) && (arguments.length > 2 && arr[i][attr] === value)) {
 
-           arr.splice(i,1);
+			arr.splice(i, 1);
 
-       }
-    }
-    return arr;
+		}
+	}
+	return arr;
 };

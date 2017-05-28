@@ -7,11 +7,7 @@
 		<option value="{{char.id}}">{{char.name}}</option>
 		{% endfor %}
 	</select>
-	<select name="weaponType" id="weaponType">
-		{% for weapon in weapons %}
-		<option value="{{weapon.img}}">{{weapon.name}}</option>
-		{% endfor %}
-	</select>
+	<select name="weaponType" id="weaponType"></select>
   <ul id="charstats"></ul>
   <input type="text" id="name" placeholder="Nombre del personaje" required="required">
   <button id="guardar" class="btn btn-success">Confirmar</button>
@@ -22,7 +18,14 @@
 
 	function alCargar(){
     var parameters = {search: $('#samplechars').val()};
+
 		$.post( '/loadsamplechars', parameters, function(data) {
+
+			$('#weaponType').empty();
+			for (var i = 0; i < data[1].length; i++) {
+				$('#weaponType').append("<option value="+data[1][i].img+">"+data[1][i].name+"</option>");
+			}
+
 			$('#charstats').empty();
 			$('#charstats').append("<li id='hp' value='"+data[0].hp+"'>Vida: "+data[0].hp+"</li>");
 			$('#charstats').append("<li id='attack' value='"+data[0].attack+"'>Ataque: "+data[0].attack+"</li>");

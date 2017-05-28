@@ -129,6 +129,7 @@ CREATE TABLE users_chars (
 	user_id INT,
 	class varchar(50),
 	sound varchar(50),
+	kills INT,
 	FOREIGN KEY (user_id)
         REFERENCES users(id)
         ON DELETE CASCADE,

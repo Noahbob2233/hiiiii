@@ -4,7 +4,7 @@ const nunjucks = require('nunjucks');
 const bodyParser = require('body-parser');
 const app = express();
 
-//BASE D DATOS
+//BASE DE DATOS
 var db = require('./static/js/db.js');
 
 //SESIONES
@@ -22,7 +22,7 @@ server.listen(port, function() {
 	console.log('http://localhost:' + port);
 });
 
-// Set view engine
+//SISTEMA DE VISTAS
 app.set('view engine', 'html');
 var env = nunjucks.configure('views', {
 	autoescape: true,
@@ -36,16 +36,16 @@ app.use(session({
 	cookie: { secure: false }
 }));
 
-// Set views folder
+//DEFINIR CARPETA PARA VISTAS
 app.set('views', __dirname + '/views');
-// Set static files folder
+//DEFINIR CARPETA PARA JS, CSS, ETC
 app.use('/static', express.static(__dirname + '/static'));
-// Parseh pa kohe balyavreh der foln
+//BODYPARSER PARA RECIBIR DATOS DE FORM HTML
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use(bodyParser.json());
-// Global variables
+//VARIABLES GLOBALES
 env.addGlobal('url', '');
 
 var sess;
@@ -131,17 +131,20 @@ app.post('/signup', function(req, res) {
 	var pass = sha256(req.body.password) || "";
 	var page = req.body.url;
 	sess = req.session;
+	// SE COMPRUEBA QUE LAS DOS CONTRASEÑAS COINCIDEN
 	if (pass == sha256(req.body.passwordalt)) {
 		var query_select = "SELECT name FROM users WHERE name=?";
 		var query_select_var = [user];
 		var query_insert = "INSERT INTO users (name, password) VALUES (?,?)";
 		var query_insert_var = [user, pass];
-
+		// SE BUSCA SI EL USUARIO YA EXISTE
 		db.Select(query_select, query_select_var).then(function(result) {
+			// SI YA EXISTE, SE INFORMA AL USUARIO
 			if (typeof result[0] != 'undefined') {
 				sess.info = "Ya existe un Usuario con ese nombre.";
 				sess.infoType = "warning";
 				res.redirect(page);
+			// SI NO, SE INSERTA
 			} else {
 				db.Insert(query_insert, query_insert_var).then(function() {
 					sess.info = "Usuario creado correctamente. ¡Ya puedes iniciar sesión!";
@@ -152,6 +155,7 @@ app.post('/signup', function(req, res) {
 			}
 
 		}).catch((err) => setImmediate(() => { console.log(err); }));
+	// SI NO
 	} else {
 		sess.info = "Las contraseñas no coinciden";
 		sess.infoType = "warning";
@@ -165,11 +169,6 @@ app.post('/signup', function(req, res) {
 //LOGOUT
 app.post('/logout', function(req, res) {
 	sess = req.session;
-
-	//guardamos los datos del pj
-	//       var query = "UPDATE users_chars SET xPos=?, yPos=? WHERE name=?";
-	// var query_var = [xPosMia, yPosMia, sess.character_name];
-	// db.Select(query, query_var).then(function(){
 	delete sess.user;
 	delete sess.characters;
 	delete sess.characters_max;
@@ -177,7 +176,6 @@ app.post('/logout', function(req, res) {
 	res.render('index.html', {
 		sess: sess
 	});
-	// });
 });
 //FIN LOGOUT
 
@@ -242,23 +240,23 @@ var hpMia;
 io.on('connection', function(socket) {
 	var addedUser = false;
 
-	// when the client emits 'new message', this listens and executes
+	// CUANDO EL CLIENTE EMITE 'new message', EL SERVIDOR ESCUCHA Y ENVIA
 	socket.on('new message', function(data) {
-		// we tell the client to execute 'new message'
+		// LE ENVIAMOS ESTO AL CLIENTE 'new message'
 		socket.broadcast.emit('new message', {
 			username: socket.username,
 			message: data
 		});
 	});
 
-	// when the client emits 'add user', this listens and executes
+	// CUANDO EL CLIENTE EMITE 'add user', EL SERVIDOR ESCUCHA Y ENVIA
 	socket.on('add user', function(data) {
 		if (addedUser) return;
 
-		// we store the username in the socket session for this client
+		// GUARDAMOS EL NOMBRE DE USUARIO EN LA SESIÓN DE SOCKET PARA ESTE USUARIO
 		socket.username = data.name;
 		++numUsers;
-		// console.log("Action server: "+data.action);
+		// SE AÑADE EL PERSONAJE AL ARRAY DE PERSONAJES CON LOS DATOS QUE SE RECIBE DEL CLIENTE
 		playersonline.push({
 			name: data.name,
 			image: data.image,
@@ -282,14 +280,12 @@ io.on('connection', function(socket) {
 
 		console.log("Añadimos alguien al array: " + JSON.stringify(playersonline));
 
-		// console.log(JSON.stringify(playersonline));
-
 		addedUser = true;
 		socket.emit('login', {
 			numUsers: numUsers,
 			username: socket.username
 		});
-		// echo globally (all clients) that a person has connected
+		// INFORMAMOS A TODOS LOS CLIENTES DE QUE SE HA UNIDO ALGUIEN A LA SESIÓN
 		socket.broadcast.emit('user joined', {
 			username: socket.username,
 			numUsers: numUsers,
@@ -297,31 +293,35 @@ io.on('connection', function(socket) {
 		});
 	});
 
-	// when the client emits 'typing', we broadcast it to others
+	// CUANDO UN CLIENTE EMITE 'typing', INFORMAMOS A TODOS LOS CLIENTES
 	socket.on('typing', function() {
 		socket.broadcast.emit('typing', {
 			username: socket.username
 		});
 	});
 
-	// when the client emits 'stop typing', we broadcast it to others
+	// CUANDO UN CLIENTE EMITE 'stop typing', INFORMAMOS A TODOS LOS CLIENTES
 	socket.on('stop typing', function() {
 		socket.broadcast.emit('stop typing', {
 			username: socket.username
 		});
 	});
 
+	// CUANDO UN CLIENTE EMITE 'rotation'
 	socket.on('rotation', function(data) {
+		// ACTUALIZAMOS SU DIRECCIÓN EN EL ARRAY DEL SERVIDOR
 		for (var i = playersonline.length - 1; i >= 0; i--) {
 			if (playersonline[i].name === data.player.name) {
 				playersonline[i].direction = data.player.direction;
 			}
 		}
-
+		// INFORMAMOS A TODOS LOS CLIENTES SOBRE ESTE CAMBIO
 		socket.broadcast.emit('someone rotated', { playersonline: playersonline, rotated: data.player });
 	});
 
+	// CUANDO UN CLIENTE EMITE 'move'
 	socket.on('move', function(data) {
+		// ACTUALIZAMOS SU POSICIÓN Y DIRECCIÓN EN EL ARRAY DEL SERVIDOR
 		for (var i = data.playersonline.length - 1; i >= 0; i--) {
 			playersonline[i].action = data.playersonline[i].action;
 			if (playersonline[i].name === data.player.name) {
@@ -335,38 +335,37 @@ io.on('connection', function(socket) {
 			}
 		}
 
-		//console.log('Alguien se ha movido y es posible que se haya dibujado: '+JSON.stringify(playersonline));
-
+		// INFORMAMOS A TODOS LOS CLIENTES SOBRE ESTE CAMBIO
 		socket.broadcast.emit('someone moved', { playersonline: playersonline });
 	});
 
+	// CUANDO UN CLIENTE EMITE 'attacking'
 	socket.on('attacking', function(data) {
+		// SE ACTUALIZA EL ARRAY DEL SERVIDOR CON LA NUEVA ACCIÓN
 		for (var i = playersonline.length - 1; i >= 0; i--) {
 			if (playersonline[i].name === data.attacker.name) {
 				playersonline[i].action = data.attacker.action;
 			}
 		}
+		// SE INFORMA A TODOS LOS CLIENTES
 		socket.broadcast.emit('someone attacked', { playersonline: playersonline, attacker: data.attacker });
 	});
 
+	// CUANDO UN CLIENTE EMITE 'die'
 	socket.on('die', function(data) {
-		/*console.log("borramos de aqui: " + JSON.stringify(playersonline));
-		console.log("esto: " + JSON.stringify(data.name));
-		var name = JSON.stringify(data.name).replace(/"/g, '');*/
+		// SE IDENTIFICA A SU ATACANTE Y SE LE SUMA UNA MUERTE
 		var attackerName = JSON.stringify(data.attacker).replace(/"/g, '');
-
 		for (var i = 0; i < playersonline.length; i++) {
 			if (playersonline[i].name == attackerName) playersonline[i].kills += 1;
 		}
 
-		/*removeByAttr(playersonline, 'name', name);
-
-		console.log('Borramos al muerto y se queda asi: ' + JSON.stringify(playersonline));*/
-
+		// SE INFORMA A TODOS LOS CLIENTES
 		socket.broadcast.emit('someone die', { playersonline: playersonline });
 	});
 
+	// CUANDO UN CLIENTE EMITE 'hit'
 	socket.on('hit', function(data) {
+		// SE BUSCA EL CLIENTE QUE HA RECIBIDO EL ATAQUE Y SE LE ACTUALIZA LA VIDA
 		var enemyHP = parseFloat(JSON.stringify(data.enemy.hp).replace(/"/g, ''));
 		var enemyName = JSON.stringify(data.enemy.name).replace(/"/g, '');
 		for (var i = playersonline.length - 1; i >= 0; i--) {
@@ -377,12 +376,12 @@ io.on('connection', function(socket) {
 				}
 			}
 		}
-
+		// SE INFORMA A TODOS LOS CLIENTES
 		socket.broadcast.emit('someone hitted', { playersonline: playersonline, enemy: data.enemy, attacker: data.attacker });
 
 	});
 
-	// when the user disconnects.. perform this
+	// CUANDO UN CLIENTE SE DESCONECTA...
 	socket.on('disconnect', function() {
 		if (addedUser) {
 			--numUsers;
@@ -391,7 +390,7 @@ io.on('connection', function(socket) {
 			console.log("borramos de aqui: " + JSON.stringify(playersonline));
 			console.log("esto: " + socket.username);
 
-			//guardamos los datos del pj
+			// BUSCAMOS LAS MUERTES DEL CLIENTE EN LA BASE DE DATOS 
 			var query = "SELECT kills FROM users_chars WHERE name=?";
 			var query_var = [socket.username];
 
@@ -405,6 +404,7 @@ io.on('connection', function(socket) {
 					}
 
 				}
+				// SI LAS MUERTES DE LA SESIÓN SON MAYORES A LAS QUE CONSTAN EN LA BASE DE DATOS, SE ACTUALIZA SU VALOR
 				if (sessionKills > result[0].kills) {
 					var updateQuery = "UPDATE users_chars SET kills=? WHERE name=?";
 					var updateQuery_var = [sessionKills, socket.username];
@@ -413,9 +413,10 @@ io.on('connection', function(socket) {
 						console.log(result);
 					});
 				}
+				// BORRAMOS AL CLIENTE DEL ARRAY DE PERSONAJES
 				removeByAttr(playersonline, 'name', socket.username);
 				console.log('Borramos al deslogueado y se queda asi: ' + JSON.stringify(playersonline));
-				// echo globally that this client has left
+				// INFORMAMOS AL RESTO DE CLIENTES
 				socket.broadcast.emit('user left', {
 					username: socket.username,
 					numUsers: numUsers,

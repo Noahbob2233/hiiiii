@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    // INICIALIZAR VARIABLES GLOBALES
     var tileWidth = 120;
     var tileHeight = tileWidth / 2;
     var FADE_TIME = 150; // ms
@@ -9,10 +10,8 @@ $(document).ready(function() {
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
     var cont = 0;
-
-    // Initialize variables
     var $window = $(window);
-    var $usernameInput = $('.usernameInput'); // Input for username
+    var $usernameInput = $('.usernameInput');
     var $imageInput = $('.imageInput');
     var $weaponInput = $('.weaponInput');
     var $headInput = $('.headInput');
@@ -28,15 +27,14 @@ $(document).ready(function() {
     var $soundInput = $('.soundInput');
     var $heightInput = $('.heightInput');
     var $classInput = $('.classInput');
-    var $messages = $('.messages'); // Messages area
-    var $inputMessage = $('.inputMessage'); // Input message input box
-    var $loginPage = $('.login.page'); // The login page
-    var $chatPage = $('.chat.page'); // The chatroom page
+    var $messages = $('.messages');
+    var $inputMessage = $('.inputMessage');
+    var $loginPage = $('.login.page');
+    var $chatPage = $('.chat.page');
     var hBar = $('.health-bar'),
         bar = hBar.find('.bar'),
         hit = hBar.find('.hit');
 
-    // Prompt for setting a username
     var username;
     var playersonline = [];
     var connected = false;
@@ -45,6 +43,7 @@ $(document).ready(function() {
     var $currentInput = $usernameInput.focus();
 
     var socket = io();
+    // SE UTILIZA REQUIRE.JS PARA CARGAR LOS SCRIPTS NECESARIOS
     require([
             'jsiso/canvas/Control',
             'jsiso/canvas/Input',
@@ -72,8 +71,9 @@ $(document).ready(function() {
 
 
             function launch() {
-
+                // SE CARGAN LOS JSON NECESARIOS
                 jsonLoader(['../static/json/map.json', '../static/json/imageFiles.json']).then(function(jsonResponse) {
+                    // ESPECIFICAR IMÁGENES
                     var imgs = [];
                     for (var property in jsonResponse[0].tilesets[0].tiles) {
                         if (jsonResponse[0].tilesets[0].tiles.hasOwnProperty(property)) {
@@ -86,9 +86,11 @@ $(document).ready(function() {
                     }, {
                         graphics: jsonResponse[1].playerImages
                     }];
+                    // FIN
 
-
+                    // CARGAR IMÁGENES
                     imgLoader(images).then(function(imgResponse) {
+                        // FUNCIÓN PARA ADAPTAR EL JSON A LAS NECESIDADES DE JSISO
                         var finalMap = [],
                             finalHeight = [],
                             objectMap = [];
@@ -124,18 +126,18 @@ $(document).ready(function() {
                                 j = 0;
                             }
                         }
-                        // var newx = parseInt($xPosInput.val().trim());
-                        // var newy = parseInt($yPosInput.val().trim());
-                        // var newxrange = 15;
-                        // var newyrange = 15;
+                        // FIN
+
+                        // INSTANCIAR SISTEMA DE RENDERIZADO
                         var tileEngine = new main(0, 0, 15, 15, imgResponse[1]);
+                        // CONFIGURAR CAPAS Y PROPIEDADES
                         tileEngine.init([{
                             zIndex: 0,
-                            title: "Ground Layer",
-                            layout: finalMap,
-                            graphics: imgResponse[0].files,
+                            title: "Ground Layer", // NOMBRE DE LA CAPA
+                            layout: finalMap, // ARRAY DE LA CAPA
+                            graphics: imgResponse[0].files, // IMÁGENES
                             graphicsDictionary: imgResponse[0].dictionary,
-                            applyInteractions: true,
+                            applyInteractions: true, // INTERACCIONAR CON RATÓN (SI/NO)
                             shadowDistance: {
                                 color: '0,0,33',
                                 distance: 4,
@@ -146,19 +148,16 @@ $(document).ready(function() {
                                 verticalColor: '(5, 5, 30, 0.4)',
                                 horizontalColor: '(6, 5, 50, 0.5)'
                             },
-                            /*lightMap: [
-                                [5, 5, 4, 1],
-                                [20, 20, 4, 1]
-                            ],*/
-                            heightMap: {
-                                map: finalHeight,
-                                offset: 0,
-                                heightTile: imgResponse[0].files["height.png"]
+                            heightMap: { // ALTURA DE LA CAPA
+                                map: finalHeight, // ARRAY CON LA ALTURA
+                                offset: 0, // POSICIÓN
+                                heightTile: imgResponse[0].files["height.png"] // IMÁGEN PARA APILAR
                             },
-                            tileHeight: tileHeight,
-                            tileWidth: tileWidth
+                            tileHeight: tileHeight, // ALTURA DE CELDA
+                            tileWidth: tileWidth // ANCHURA DE CELDA
                         }, {
-                            zIndex: 1,
+                            // LO MISMO DE NUEVO
+                            zIndex: 1, 
                             title: "Object Layer",
                             layout: objectMap,
                             graphics: imgResponse[0].files,
@@ -174,11 +173,6 @@ $(document).ready(function() {
                                 distance: 4,
                                 darkness: 2
                             },
-                            //particleMap: jsonResponse[0].particles,
-                            /*lightMap: [
-                                [5, 5, 4, 1],
-                                [20, 20, 4, 1]
-                            ],*/
                             heightMap: {
                                 map: finalHeight,
                                 offset: tileHeight,
@@ -193,7 +187,7 @@ $(document).ready(function() {
 
 
             function main(x, y, xrange, yrange, playerImages) {
-
+                // SE CREA AL JUGADOR
                 var player = {
                     name: cleanInput($usernameInput.val().trim()),
                     class: cleanInput($classInput.val().trim()),
@@ -216,7 +210,8 @@ $(document).ready(function() {
                 var hitted = new Audio('static/music/hit.wav');
                 var hit_sound = new Audio('static/music/' + cleanInput($soundInput.val().trim()));
 
-                var enemy = [{
+                // ENEMIGOS QUE AL FINAL NO SE IMPLEMENTARON
+                /*var enemy = [{
                     id: 0,
                     image: playerImages.files["antlion.png"],
                     xPos: 0,
@@ -248,7 +243,7 @@ $(document).ready(function() {
                     direction: 1,
                     width: 128,
                     height: 128
-                }];
+                }];*/
 
                 var mapLayers = [];
                 var tile_coordinates = {};
@@ -261,71 +256,18 @@ $(document).ready(function() {
                 var canMove = true;
                 var canRotate = true;
 
+                // INSTANCIAR CANVAS
                 var context = CanvasControl.create("canvas_id", window.innerWidth, window.innerHeight, {
                     background: "#000022",
                     display: "block",
                     marginLeft: "auto",
                     marginRight: "auto",
                 });
-                //CanvasControl.fullScreen();
 
 
-
+                // INSTANCIAR INPUT
                 var input = new CanvasInput(document, CanvasControl());
-                // input.mouse_action(function(coords) {
-                //     //tile_coordinates = mapLayers[0].getXYCoords(coords.x, coords.y);
-                //     //if (coords.x)
-                //     // var height = mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y);
-                //     // tile_coordinates.x = tile_coordinates.x + height - 1;
-                //     // tile_coordinates.y = tile_coordinates.y + height - 1;
-                //     // mapLayers[0].applyFocus(tile_coordinates.x, tile_coordinates.y);
-                //     pathfind(player.id, [player.xPos, player.yPos], [tile_coordinates.x, tile_coordinates.y], mapLayers[0].getLayout(), true, true).then(function(data) {
-                //         var i = 0;
-                //         var move = setInterval(function() {
-                //             if (data.length > 0 && data[i] !== undefined) {
-                //                 player.xPos = data[i].x;
-                //                 player.yPos = data[i].y;
-                //                 if (startX > 0 && player.yPos <= mapLayers[0].getLayout().length - 1 - rangeY / 2) {
-                //                     mapLayers.map(function(layer) {
-                //                         layer.move("down");
-                //                     });
-                //                     startX--;
-                //                 } else if (startY + rangeY < mapLayers[0].getLayout().length && player.xPos >= 0 + 1 + rangeX / 2) {
-                //                     mapLayers.map(function(layer) {
-                //                         layer.move("left");
-                //                     });
-                //                     startY++;
-                //                 } else if (startX + rangeX < mapLayers[0].getLayout().length && player.yPos >= 0 + 1 + rangeY / 2) {
-                //                     mapLayers.map(function(layer) {
-                //                         layer.move("right");
-                //                     });
-                //                     startX++;
-                //                 } else if (startY > 0 && player.xPos <= mapLayers[0].getLayout().length - 1 - rangeX / 2) {
-                //                     mapLayers.map(function(layer) {
-                //                         layer.move("up");
-                //                     });
-                //                     startY--;
-                //                 }
-                //                 i++;
-                //                 if (i == data.length) {
-                //                     clearInterval(move);
-                //                     move = undefined;
-                //                 }
-                //             }
-                //         }, 100);
-
-                //     });
-                //     //mapLayers[0].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[0].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1); // Increase heightmap tile
-                //     //mapLayers[1].setHeightmapTile(tile_coordinates.x, tile_coordinates.y, mapLayers[1].getHeightMapTile(tile_coordinates.x, tile_coordinates.y) + 1);
-                //     // mapLayers[1].setTile(tile_coordinates.x, tile_coordinates.y, 3); // Force the chaning of tile graphic
-                //     // requestAnimFrame(draw);
-                // });
-                /*input.mouse_move(function(coords) {
-                    //tile_coordinates = mapLayers[0].applyMouseFocus(coords.x, coords.y);
-                    mapLayers.map(function(layer) {
-                        tile_coordinates = layer.applyMouseFocus(coords.x, coords.y); // Apply mouse rollover via mouse location X & Y
-                    });
-                });*/
+                // DEFINIR INPUT
                 input.keyboard(function(key, pressed) {
                     if (pressed) {
                         switch (key) {

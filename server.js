@@ -512,20 +512,38 @@ app.post('/saveselectedchar', function(req, res) {
 	sess = req.session;
 	var ropa;
 	var sonido;
-	if (req.body.class === "Arquero") {
-		ropa = "clothes.png";
-		sonido = "bow.wav";
-	} else if (req.body.class === "Mago") {
-		ropa = "leather_armor.png";
-		sonido = "spell.wav";
-	} else { //Guerrero
-		ropa = "steel_armor.png";
-		sonido = "sword.wav";
+	var cabeza;
+
+	if (req.body.gender === "Hombre") {
+		cabeza = "male_head.png";
+		if (req.body.class === "Arquero") {
+			ropa = "clothes.png";
+			sonido = "bow.wav";
+		} else if (req.body.class === "Mago") {
+			ropa = "leather_armor.png";
+			sonido = "spell.wav";
+		} else { //Guerrero
+			ropa = "steel_armor.png";
+			sonido = "sword.wav";
+		}
+	} else { //Mujer
+		cabeza = "female_head2.png";
+		// req.body.weapon = req.body.weapon.slice(0, req.body.weapon.length-4) + "2" + req.body.weapon.slice(req.body.weapon.length-4);
+		if (req.body.class === "Arquero") {
+			ropa = "clothes2.png";
+			sonido = "bow.wav";
+		} else if (req.body.class === "Mago") {
+			ropa = "leather_armor2.png";
+			sonido = "spell.wav";
+		} else { //Guerrero
+			ropa = "steel_armor2.png";
+			sonido = "sword.wav";
+		}
 	}
 
-	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound,kills) VALUES (?,1,?,?,?,?,?,?,?,'male_head.png',7,7,1,128,128,0,?,?,0)";
+	var query = "INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action,class,sound,kills) VALUES (?,1,?,?,?,?,?,?,?,?,7,7,1,128,128,0,?,?,0)";
 
-	var query_var = [req.body.name, req.body.hp, req.body.attack, req.body.defense, req.body.speed, sess.userid, ropa, req.body.weapon, req.body.class, sonido];
+	var query_var = [req.body.name, req.body.hp, req.body.attack, req.body.defense, req.body.speed, sess.userid, ropa, req.body.weapon, cabeza, req.body.class, sonido];
 	db.Select(query, query_var).then(function() {
 		sess.characters.push({ name: req.body.name });
 		sess.characters_max += 1;

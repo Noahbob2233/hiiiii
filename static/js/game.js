@@ -680,9 +680,6 @@ $(document).ready(function() {
                             mapLayers.map(function(layer) {
                                 //layer.setLight(player.xPos, player.yPos);
                                 if (i === player.xPos && j === player.yPos && layer.getTitle() === "Object Layer") {
-                                    //var player.animation = setInterval(function(a, b) {
-                                    // if (cont == 0) {
-                                    //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
                                     layer.draw(i, j, player.image, player.width, player.action, player.height, player.direction);
                                     layer.draw(i, j, player.head, player.width, player.action, player.height, player.direction);
                                     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
@@ -690,19 +687,6 @@ $(document).ready(function() {
                                     if (player.action == 4 || player.action == 15 || player.action == 27 || player.action == 31) {
                                         player.action = 0;
                                     }
-                                    // cont++;
-                                    // } else if (cont == 1) {
-                                    //context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                    // cont++;
-                                    // } else {
-                                    // context.clearRect(0, 0, CanvasControl().width, CanvasControl().height);
-                                    //     layer.draw(i, j, player.weapon, player.width, player.action, player.height, player.direction);
-                                    //     cont = 0;
-                                    // }
-                                    //}, 500, i, j);
-                                    //layer.draw(i, j, player.image, player.width, player.direction);
-                                    //layer.draw(i, j, player.head, player.width, player.direction);
-                                    //layer.draw(i, j, player.weapon, player.width, player.direction);
                                 } else {
                                     layer.draw(i, j);
                                 }

@@ -27,7 +27,7 @@ $(document).ready(function() {
     var $speedInput = $('.speedInput');
     var $soundInput = $('.soundInput');
     var $heightInput = $('.heightInput');
-    var $classInput = $('.classInput').val();
+    var $classInput = $('.classInput');
     var $messages = $('.messages'); // Messages area
     var $inputMessage = $('.inputMessage'); // Input message input box
     var $loginPage = $('.login.page'); // The login page
@@ -196,17 +196,14 @@ $(document).ready(function() {
 
                 var player = {
                     name: cleanInput($usernameInput.val().trim()),
+                    class: cleanInput($classInput.val().trim()),
                     image: playerImages.files[cleanInput($imageInput.val().trim())],
                     weapon: playerImages.files[cleanInput($weaponInput.val().trim())],
                     head: playerImages.files[cleanInput($headInput.val().trim())],
-                    // image: playerImages.files["armor.png"],
-                    // weapon: playerImages.files["greatstaff.png"],
-                    // head: playerImages.files["womenhead.png"],
                     xPos: parseInt(cleanInput($xPosInput.val().trim())),
                     yPos: parseInt(cleanInput($yPosInput.val().trim())),
-                    // direction: parseInt(cleanInput($directionInput.val().trim())),
-                    direction: 7, //aqui
-                    action: 0,
+                    direction: parseInt(cleanInput($directionInput.val().trim())),
+                    action: parseInt(cleanInput($actionInput.val().trim())),
                     width: parseInt(cleanInput($widthInput.val().trim())),
                     height: parseInt(cleanInput($heightInput.val().trim())),
                     hp: parseInt(cleanInput($hpInput.val().trim())),
@@ -521,13 +518,11 @@ $(document).ready(function() {
                                         canAttack = true;
                                         $('#autoattack').toggleClass('disabled');
                                     }, dps);
-                                    //console.log(player);
-                                    //if es arquero... 28, si es mago 24, si es guerrero 12
-                                    if ($classInput == 'Guerrero') {
+                                    if (player.class == 'Guerrero') {
                                         player.action = 12;
-                                    } else if ($classInput == 'Mago') {
+                                    } else if (player.class == 'Mago') {
                                         player.action = 24;
-                                    } else {
+                                    } else { //Arquero
                                         player.action = 28;
                                     }
 
@@ -536,49 +531,140 @@ $(document).ready(function() {
                                     playersonline.map(function(e) {
                                         var message;
                                         if (e.name != player.name) {
-                                            switch (player.direction) {
-                                                case 3:
-                                                    if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
-                                                        if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
-                                                            message = "Has atacado a " + e.name;
-                                                            log(message, {});
-                                                            socket.emit('hit', { enemy: e, attacker: player.name });
-                                                        }
+                                            switch (player.class) {
+                                                case 'Guerrero':
+                                                    switch (player.direction) {
+                                                        case 3:
+                                                            if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 5:
+                                                            if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 7:
+                                                            if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 1:
+                                                            if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
                                                     }
                                                     break;
-                                                case 5:
-                                                    if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos) {
-                                                        if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = "Has atacado a " + e.name;
-                                                            log(message, {});
-                                                            socket.emit('hit', { enemy: e, attacker: player.name });
-                                                        }
+                                                case 'Mago':
+                                                    switch (player.direction) {
+                                                        case 3:
+                                                            if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos || player.xPos === e.xPos && (player.yPos - 2) === e.yPos || player.xPos === e.xPos && (player.yPos - 3) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos - 1) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos - 2) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos - 3) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos - 1) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos - 2) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos - 3) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 5:
+                                                            if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos || (player.xPos + 2) === e.xPos && player.yPos === e.yPos || (player.xPos + 3) === e.xPos && player.yPos === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos + 2) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos + 3) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos - 1) === e.yPos || (player.xPos + 2) === e.xPos && (player.yPos - 1) === e.yPos || (player.xPos + 3) === e.xPos && (player.yPos - 1) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 7:
+                                                            if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos || player.xPos === e.xPos && (player.yPos + 2) === e.yPos || player.xPos === e.xPos && (player.yPos + 3) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos + 2) === e.yPos || (player.xPos + 1) === e.xPos && (player.yPos + 3) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos + 2) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos + 3) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 1:
+                                                            if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos || (player.xPos - 2) === e.xPos && player.yPos === e.yPos || (player.xPos - 3) === e.xPos && player.yPos === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos - 2) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos - 3) === e.xPos && (player.yPos + 1) === e.yPos || (player.xPos - 1) === e.xPos && (player.yPos - 1) === e.yPos || (player.xPos - 2) === e.xPos && (player.yPos - 1) === e.yPos || (player.xPos - 3) === e.xPos && (player.yPos - 1) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
                                                     }
                                                     break;
-                                                case 7:
-                                                    if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos) {
-                                                        if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = "Has atacado a " + e.name;
-                                                            log(message, {});
-                                                            socket.emit('hit', { enemy: e, attacker: player.name });
-                                                        }
-                                                    }
-                                                    break;
-                                                case 1:
-                                                    if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos) {
-                                                        if (e.xPos > 15 || e.yPos > 15) {
-                                                            e.hp = e.hp - (player.attack * ((e.defense / (e.defense + 100)) + 1));
-                                                            message = "Has atacado a " + e.name;
-                                                            log(message, {});
-                                                            socket.emit('hit', { enemy: e, attacker: player.name });
-                                                        }
+                                                case 'Arquero':
+                                                    switch (player.direction) {
+                                                        case 3:
+                                                            if (player.xPos === e.xPos && (player.yPos - 1) === e.yPos || player.xPos === e.xPos && (player.yPos - 2) === e.yPos || player.xPos === e.xPos && (player.yPos - 3) === e.yPos || player.xPos === e.xPos && (player.yPos - 4) === e.yPos || player.xPos === e.xPos && (player.yPos - 5) === e.yPos || player.xPos === e.xPos && (player.yPos - 6) === e.yPos || player.xPos === e.xPos && (player.yPos - 7) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 5:
+                                                            if ((player.xPos + 1) === e.xPos && player.yPos === e.yPos || (player.xPos + 2) === e.xPos && player.yPos === e.yPos || (player.xPos + 3) === e.xPos && player.yPos === e.yPos || (player.xPos + 4) === e.xPos && player.yPos === e.yPos || (player.xPos + 5) === e.xPos && player.yPos === e.yPos || (player.xPos + 6) === e.xPos && player.yPos === e.yPos || (player.xPos + 7) === e.xPos && player.yPos === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 7:
+                                                            if (player.xPos === e.xPos && (player.yPos + 1) === e.yPos || player.xPos === e.xPos && (player.yPos + 2) === e.yPos || player.xPos === e.xPos && (player.yPos + 3) === e.yPos || player.xPos === e.xPos && (player.yPos + 4) === e.yPos || player.xPos === e.xPos && (player.yPos + 5) === e.yPos || player.xPos === e.xPos && (player.yPos + 6) === e.yPos || player.xPos === e.xPos && (player.yPos + 7) === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
+                                                        case 1:
+                                                            if ((player.xPos - 1) === e.xPos && player.yPos === e.yPos || (player.xPos - 2) === e.xPos && player.yPos === e.yPos || (player.xPos - 3) === e.xPos && player.yPos === e.yPos || (player.xPos - 4) === e.xPos && player.yPos === e.yPos || (player.xPos - 5) === e.xPos && player.yPos === e.yPos || (player.xPos - 6) === e.xPos && player.yPos === e.yPos || (player.xPos - 7) === e.xPos && player.yPos === e.yPos) {
+                                                                if (e.xPos > 14 || e.yPos > 14) {
+                                                                    e.hp = e.hp - (player.attack * ((10 / (e.defense + 10)) + 1));
+                                                                    message = "Has atacado a " + e.name;
+                                                                    log(message, {});
+                                                                    socket.emit('hit', { enemy: e, attacker: player.name });
+                                                                }
+                                                            }
+                                                            break;
                                                     }
                                                     break;
                                             }
-
                                         }
 
                                     });
@@ -695,6 +781,7 @@ $(document).ready(function() {
                         // Tell the server who you are
                         socket.emit('add user', {
                             name: username,
+                            class: cleanInput($classInput.val().trim()),
                             image: cleanInput($imageInput.val().trim()),
                             weapon: cleanInput($weaponInput.val().trim()),
                             head: cleanInput($headInput.val().trim()),

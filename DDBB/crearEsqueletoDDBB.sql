@@ -101,8 +101,6 @@ CREATE TABLE users (
     UNIQUE (name)
 );
 
-INSERT INTO users (name,password,admin) VALUES ('admin', SHA2('admin', 256), true);
-
 
 -- TABLA D PJS POR USUARIO
 DROP TABLE IF EXISTS users_chars;
@@ -136,9 +134,6 @@ CREATE TABLE users_chars (
     UNIQUE (name)
 
 );
-
-INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES ("admin",100,1000,100,100,100,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128,0);
-INSERT INTO users_chars (name,lvl,hp,attack,defense,speed,user_id,image,weapon,head,xPos,yPos,direction,width,height,action) VALUES ("Admin2",200,2000,200,200,200,1,"armor.png","greatstaff.png","womenhead.png",7,7,1,128,128,0);
 
 DROP TABLE IF EXISTS inventories;
 
